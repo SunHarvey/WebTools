@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Password Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Random Password Generator</h1>
+
+        <div class="input-row">
+            <div class="input-group-inline">
+                <label for="length">Password Length:</label>
+                <select id="length">
+                    <option value="6">6</option>
+                    <option value="8">8</option>
+                    <option value="10" selected>10</option>
+                    <option value="12">12</option>
+                    <option value="16">16</option>
+                    <option value="20">20</option>
+                    <option value="24">24</option>
+                    <option value="32">32</option>
+                    <option value="48">48</option>
+                </select>
+            </div>
+            <div class="input-group-inline">
+                <label for="count">Number of Passwords:</label>
+                <select id="count">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5" selected>5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="checkbox-group">
+            <label><input type="checkbox" id="include-lowercase" checked> a-z</label>
+            <label><input type="checkbox" id="include-uppercase" checked> A-Z</label>
+            <label><input type="checkbox" id="include-numbers" checked> 0-9</label>
+            <label><input type="checkbox" id="include-symbols"> Symbols</label>
+        </div>
+
+        <div class="exclude-group">
+            <label><input type="checkbox" id="exclude-enabled"> Exclude Characters:</label>
+            <input type="text" id="exclude" value="iIl1o0O" disabled>
+        </div>
+
+        <button id="generate">Generate Password</button>
+        <textarea id="result" readonly></textarea>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
