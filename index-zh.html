@@ -1,28 +1,28 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Password Generator | Secure & Free Tool</title>
-    <meta name="description" content="Generate strong, random passwords with a single click. Customize length, character types, and exclude ambiguous characters for maximum security.">
+    <title>随机密码生成器 | 安全免费工具</title>
+    <meta name="description" content="一键生成强壮的随机密码。可自定义长度、字符类型，并可排除易混淆字符，兼顾安全与易用。">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="images/favicon-16x16.ico" sizes="16x16">
     <link rel="icon" type="image/x-icon" href="images/favicon-32x32.ico" sizes="32x32">
 
-
-    <meta name="keywords" content="password generator, random password, strong password, secure password, free password generator, online password tool, create password, generate password online">
+    <meta name="keywords" content="密码生成器, 随机密码, 强密码, 安全密码, 免费密码生成器, 在线密码工具, 创建密码, 在线生成密码">
 
     <!-- Open Graph (Facebook / LinkedIn / WhatsApp) -->
-    <meta property="og:title" content="Random Password Generator | Secure & Free Tool">
-    <meta property="og:description" content="Generate strong, random passwords instantly. Customize length, choose character types, and avoid ambiguous symbols for maximum security and convenience.">
+    <meta property="og:title" content="随机密码生成器 | 安全免费工具">
+    <meta property="og:description" content="即时生成强壮随机密码。可自定义长度、选择字符类型，并排除易混淆符号，最大化安全与便捷。">
     <meta property="og:url" content="https://www.genpass.top/">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://www.genpass.top/images/og-image.jpg">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Random Password Generator | Secure & Free Tool">
-    <meta name="twitter:description" content="Generate strong, random passwords instantly. Customize length, choose character types, and avoid ambiguous symbols for maximum security and convenience.">
+    <meta name="twitter:title" content="随机密码生成器 | 安全免费工具">
+    <meta name="twitter:description" content="即时生成强壮随机密码。可自定义长度、选择字符类型，并排除易混淆符号，最大化安全与便捷。">
     <meta name="twitter:image" content="https://www.genpass.top/images/og-image.jpg">
 
     <!-- Canonical URL -->
@@ -33,9 +33,9 @@
     {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "Random Password Generator",
+        "name": "随机密码生成器",
         "url": "https://www.genpass.top/",
-        "description": "Generate strong, secure, and random passwords instantly. Customize length, character types, and exclude ambiguous characters.",
+        "description": "即时生成强壮、安全、随机的密码。可自定义长度、字符类型，并排除易混淆字符。",
         "applicationCategory": "Utility",
         "operatingSystem": "Any",
         "image": "https://www.genpass.top/images/og-image.jpg"
@@ -46,41 +46,41 @@
 
 <body>
     <div class="container">
-        <h1>🔐 Random Password Generator</h1>
+        <h1>🔐 随机密码生成器</h1>
 
         <div class="settings-card">
-            <h2 class="settings-title">⚙️ Generation Settings</h2>
+            <h2 class="settings-title">⚙️ 生成设置</h2>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="passwordLength">Password Length</label>
+                    <label for="passwordLength">密码长度</label>
                     <input type="number" id="passwordLength" min="1" max="128" value="16">
                 </div>
 
                 <div class="form-group">
-                    <label for="passwordCount">Number of Passwords</label>
+                    <label for="passwordCount">生成数量</label>
                     <input type="number" id="passwordCount" min="1" max="100" value="5">
                 </div>
             </div>
 
             <div class="form-group" style="margin-bottom: 5px;">
-                <label>Character Types</label>
+                <label>字符类型</label>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
                         <input type="checkbox" id="includeUppercase" checked>
-                        <label for="includeUppercase">Uppercase (A-Z)</label>
+                        <label for="includeUppercase">大写字母 (A–Z)</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="includeLowercase" checked>
-                        <label for="includeLowercase">Lowercase (a-z)</label>
+                        <label for="includeLowercase">小写字母 (a–z)</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="includeNumbers" checked>
-                        <label for="includeNumbers">Numbers (0-9)</label>
+                        <label for="includeNumbers">数字 (0–9)</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="includeSpecial">
-                        <label for="includeSpecial">Special Characters (!@#$%^&amp;*()-_=+[]{};:,.&lt;&gt;?/|\`~)</label>
+                        <label for="includeSpecial">特殊字符 (!@#$%^&amp;*()-_=+[]{};:,.&lt;&gt;?/|\`~)</label>
                     </div>
                 </div>
             </div>
@@ -88,27 +88,25 @@
             <div class="form-group">
                 <div class="checkbox-item">
                     <input type="checkbox" id="excludeAmbiguous" checked>
-                    <label for="excludeAmbiguous">Exclude Ambiguous Characters <span class="excluded-chars">1iILl0oO</span></label>
+                    <label for="excludeAmbiguous">排除易混淆字符 <span class="excluded-chars">1iILl0oO</span></label>
                 </div>
             </div>
 
             <button class="generate-btn" onclick="generatePasswords()">
-                🚀 Generate Passwords
+                🚀 生成密码
             </button>
         </div>
 
-
-
         <div class="results-card" id="resultsCard">
             <div class="results-title">
-                <span>🔒 Generated Passwords</span>
-                <button class="copy-all-btn" onclick="copyAllPasswords()">📋 Copy All</button>
+                <span>🔒 已生成的密码</span>
+                <button class="copy-all-btn" onclick="copyAllPasswords()">📋 一键复制</button>
             </div>
 
             <div id="passwordList"></div>
 
             <div class="password-strength" id="strengthIndicator">
-                <span class="strength-text" id="strengthText">Strength: Strong</span>
+                <span class="strength-text" id="strengthText">强度：强</span>
                 <div class="strength-bar">
                     <div class="strength-fill strong" id="strengthFill"></div>
                 </div>
@@ -116,12 +114,12 @@
         </div>
 
         <div class="info-card">
-            <strong>💡 Security Tips:</strong><br>
-            • Recommended password length is at least 16 characters<br>
-            • Including uppercase, lowercase, numbers, and special characters significantly improves security<br>
-            • Excluding ambiguous characters can prevent input errors<br>
-            • Use a unique password for each account<br>
-            • Regularly change passwords for important accounts
+            <strong>💡 安全提示：</strong><br>
+            • 建议密码长度至少为 16 个字符<br>
+            • 同时包含大写字母、小写字母、数字与特殊字符能显著提升安全性<br>
+            • 排除易混淆字符有助于减少输入错误<br>
+            • 为不同账户使用不同的密码<br>
+            • 重要账户的密码应定期更换
         </div>
     </div>
 
