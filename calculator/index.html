@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="支持键盘输入和鼠标点击的基础网页计算器">
+    <title>Web Calculator · 网页计算器</title>
+    <link rel="stylesheet" href="calculator.css">
+</head>
+<body>
+    <main class="page-shell">
+        <section class="calculator" aria-label="基础计算器">
+            <div class="display-panel">
+                <output id="calculatorDisplay" class="calculator-display" aria-live="polite">0</output>
+            </div>
+
+            <div class="calculator-keys" aria-label="计算器按键">
+                <button type="button" class="key key-function" data-action="clear" aria-label="全部清除">AC</button>
+                <button type="button" class="key key-function" data-action="sign" aria-label="切换正负号">±</button>
+                <button type="button" class="key key-function" data-action="backspace" aria-label="退格">⌫</button>
+                <button type="button" class="key key-operator" data-operator="/" aria-label="除">÷</button>
+
+                <button type="button" class="key" data-digit="7">7</button>
+                <button type="button" class="key" data-digit="8">8</button>
+                <button type="button" class="key" data-digit="9">9</button>
+                <button type="button" class="key key-operator" data-operator="*" aria-label="乘">×</button>
+
+                <button type="button" class="key" data-digit="4">4</button>
+                <button type="button" class="key" data-digit="5">5</button>
+                <button type="button" class="key" data-digit="6">6</button>
+                <button type="button" class="key key-operator" data-operator="-" aria-label="减">−</button>
+
+                <button type="button" class="key" data-digit="1">1</button>
+                <button type="button" class="key" data-digit="2">2</button>
+                <button type="button" class="key" data-digit="3">3</button>
+                <button type="button" class="key key-operator" data-operator="+" aria-label="加">+</button>
+
+                <button type="button" class="key key-zero" data-digit="0">0</button>
+                <button type="button" class="key" data-action="decimal" aria-label="小数点">.</button>
+                <button type="button" class="key key-operator" data-action="equals" aria-label="等于">=</button>
+            </div>
+        </section>
+
+        <p class="keyboard-help">
+            键盘：数字、<kbd>+</kbd>、<kbd>-</kbd>、<kbd>*</kbd>、<kbd>/</kbd>、<kbd>Enter</kbd>、<kbd>Backspace</kbd>、<kbd>Esc</kbd>
+        </p>
+        <a class="back-link" href="../index.html">返回密码生成器</a>
+    </main>
+
+    <script src="calculator.js"></script>
+</body>
+</html>
