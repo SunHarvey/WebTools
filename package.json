@@ -1,0 +1,11 @@
+{
+  "name": "webtools-browser-utilities",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Privacy-first browser utilities with no server-side processing",
+  "scripts": {
+    "test": "node --test calculator/tests/*.test.cjs tests/*.test.cjs",
+    "check:js": "node --check script.js && node --check calculator/calculator.js && node --check json/json-tool.js && node --check text/text-tool.js && node --check encode/encode-tool.js && node --check timestamp/timestamp-tool.js && node --check uuid/uuid-tool.js && node --check hash/hash-tool.js"
+  },
+  "license": "GPL-3.0"
+}

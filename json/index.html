@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Formatter & Validator | WebTools</title>
+  <meta name="description" content="Format, minify and validate JSON instantly. Your data stays in your browser.">
+  <link rel="canonical" href="https://www.genpass.top/json/">
+  <link rel="icon" href="../images/favicon-32x32.ico">
+  <link rel="stylesheet" href="../shared/tools.css">
+  <meta property="og:title" content="JSON Formatter & Validator | WebTools">
+  <meta property="og:description" content="Format, minify and validate JSON instantly. Your data stays in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.genpass.top/json/">
+</head>
+<body>
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="../tools/">Web<span>Tools</span></a><div class="nav-links"><a href="../">Password</a><a href="../calculator/">Calculator</a><a href="../json/">JSON</a><a href="../text/">Text</a><a href="../encode/">Encode</a><a href="../timestamp/">Timestamp</a><a class="all-tools" href="../tools/">All tools</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><div class="eyebrow">Developer tool · 开发工具</div><h1>JSON Formatter & Validator</h1><p>Format, minify and validate JSON instantly. Your data stays in your browser.</p><div class="privacy-note">✓ Runs locally in your browser · 数据不会上传</div></section>
+  <section class="tool-card"><div class="grid-2"><div class="field"><label for="jsonInput">Input JSON</label><textarea id="jsonInput" spellcheck="false" placeholder='{"hello":"world"}'></textarea></div><div class="field"><label for="jsonOutput">Result</label><textarea id="jsonOutput" class="output" readonly spellcheck="false"></textarea></div></div><div class="actions"><select id="jsonIndent" aria-label="Indentation"><option value="2">2 spaces</option><option value="4">4 spaces</option></select><button id="formatJson">Format</button><button id="minifyJson" class="secondary">Minify</button><button id="validateJson" class="secondary">Validate</button><button id="copyJson" class="secondary">Copy result</button><button id="clearJson" class="danger">Clear</button></div><div id="jsonStatus" class="status" role="status">Ready</div></section><aside class="info-card"><strong>Safe parsing:</strong> Uses <code>JSON.parse</code> and <code>JSON.stringify</code>. It never evaluates input as code.</aside>
+</main>
+<footer>WebTools · Private, fast, client-side utilities</footer>
+<script src="json-tool.js"></script>
+</body>
+</html>
