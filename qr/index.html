@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Private QR Code Generator | WebTools</title>
+  <meta name="description" content="Create text, URL and Wi-Fi QR codes locally in your browser. No data is uploaded.">
+  <link rel="canonical" href="https://www.genpass.top/qr/">
+  <link rel="icon" href="../images/favicon-32x32.ico">
+  <link rel="stylesheet" href="../shared/tools.css">
+  <link rel="stylesheet" href="qr.css">
+</head>
+<body>
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="../tools/">Web<span>Tools</span></a><div class="nav-links"><a href="../">Password</a><a href="../calculator/">Calculator</a><a href="../json/">JSON</a><a href="../text/">Text</a><a href="../encode/">Encode</a><a class="all-tools" href="../tools/">All tools</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><div class="eyebrow">Local generator · 本地二维码</div><h1>QR Code Generator</h1><p>Create text, URL and Wi-Fi QR codes without sending content to a server.</p><div class="privacy-note">✓ Generated entirely in your browser · 内容不会上传</div></section>
+  <section class="tool-card qr-layout">
+    <div class="qr-controls">
+      <div class="field"><label for="qrMode">Content type</label><select id="qrMode"><option value="text">Text or URL</option><option value="wifi">Wi-Fi network</option></select></div>
+      <div class="field"><label for="qrContent">Text or URL</label><textarea id="qrContent" placeholder="https://www.genpass.top/" maxlength="2950"></textarea></div>
+      <div id="wifiFields" hidden>
+        <div class="field"><label for="wifiSsid">Network name (SSID)</label><input id="wifiSsid" type="text" maxlength="128"></div>
+        <div class="field"><label for="wifiPassword">Password</label><input id="wifiPassword" type="password" maxlength="256" autocomplete="new-password"></div>
+        <div class="grid-2"><div class="field"><label for="wifiSecurity">Security</label><select id="wifiSecurity"><option>WPA</option><option>WEP</option><option value="nopass">No password</option></select></div><div class="field checkbox-row"><label><input id="wifiHidden" type="checkbox"> Hidden network</label></div></div>
+      </div>
+      <div class="grid-2"><div class="field"><label for="qrSize">Image size</label><select id="qrSize"><option>256</option><option selected>320</option><option>512</option><option>768</option><option>1024</option></select></div><div class="field"><label for="qrLevel">Error correction</label><select id="qrLevel"><option>L</option><option selected>M</option><option>Q</option><option>H</option></select></div></div>
+      <div class="grid-2"><div class="field"><label for="qrMargin">Quiet zone</label><select id="qrMargin"><option selected>4</option><option>6</option><option>8</option></select></div><div class="qr-colors"><label>Colors</label><div><input id="qrDark" type="color" value="#000000" aria-label="Dark color"><input id="qrLight" type="color" value="#ffffff" aria-label="Light color"></div></div></div>
+      <div class="actions"><button id="generateQr">Generate QR code</button><button id="downloadQr" class="secondary" disabled>Download PNG</button></div><div id="qrStatus" class="status" role="status">Ready</div>
+    </div>
+    <div class="qr-preview"><canvas id="qrCanvas" width="320" height="320" aria-label="Generated QR code"></canvas><p>Scan-test important codes before sharing.</p></div>
+  </section>
+  <aside class="info-card"><strong>Local dependency:</strong> QR encoding uses vendored <code>qrcode-generator 1.4.4</code> under the MIT license. No CDN or remote API is used.</aside>
+</main>
+<footer>WebTools · Private, fast, client-side utilities</footer>
+<script src="vendor/qrcode-generator-1.4.4.js"></script>
+<script src="qr-tool.js"></script>
+</body>
+</html>

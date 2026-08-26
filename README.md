@@ -16,6 +16,10 @@
 | Unix时间戳转换 | [`/timestamp/`](timestamp/) | 秒/毫秒自动识别、本地时间、UTC、ISO 8601 |
 | UUID v4生成器 | [`/uuid/`](uuid/) | Web Crypto、批量生成、大小写与连字符选项 |
 | SHA哈希计算器 | [`/hash/`](hash/) | 文本/文件SHA-256、SHA-384、SHA-512与哈希比较 |
+| 二维码生成器 | [`/qr/`](qr/) | 文本、URL、Wi-Fi二维码，本地PNG导出 |
+| 单位换算器 | [`/unit/`](unit/) | 长度、质量、温度、面积、体积、数据大小 |
+| 颜色与对比度 | [`/color/`](color/) | HEX/RGB/HSL互转、WCAG对比度 |
+| 图片压缩与缩放 | [`/image/`](image/) | 本地调整尺寸，导出PNG/JPEG/WebP |
 | 工具中心 | [`/tools/`](tools/) | 所有工具的统一导航入口 |
 
 ## 安全与隐私
@@ -28,6 +32,8 @@
 - JSON工具使用`JSON.parse()`，不使用`eval()`
 - Base64工具通过`TextEncoder`/`TextDecoder`正确处理Unicode
 - 文件哈希限制为32 MiB，因为Web Crypto需要在内存中处理完整缓冲区
+- 二维码使用仓库内固定版本的`qrcode-generator 1.4.4`，不加载CDN或远程API
+- 图片压缩通过File API与Canvas在本地处理，源文件和结果均不上传
 
 复制结果后，内容可能保留在系统剪贴板中，请根据需要覆盖或清理剪贴板。
 
@@ -48,6 +54,10 @@ WebTools/
 ├── timestamp/                  # Unix时间戳转换
 ├── uuid/                       # UUID v4生成
 ├── hash/                       # SHA文本与文件哈希
+├── qr/                         # 文本、URL和Wi-Fi二维码
+├── unit/                       # 六类单位换算
+├── color/                      # 颜色格式与WCAG对比度
+├── image/                      # 图片压缩、缩放与格式转换
 ├── tests/                      # 新工具核心逻辑测试
 └── package.json                # 测试与语法检查命令
 ```
@@ -67,6 +77,30 @@ http://127.0.0.1:8000/tools/
 ```
 
 正式部署建议使用HTTPS，以确保Web Crypto、Clipboard和File API在安全上下文中正常工作。
+
+## Cloudflare Pages部署
+
+该项目是无构建步骤的纯静态站点。连接GitHub仓库后，在Cloudflare Pages中使用以下设置：
+
+| 配置项 | 值 |
+|---|---|
+| Framework preset | `None` |
+| Production branch | `main` |
+| Build command | `exit 0`（控制台允许留空时也可留空） |
+| Build output directory | `.` |
+| Root directory | 仓库根目录（留空） |
+| Environment variables | 不需要 |
+
+部署后的检查与切流顺序：
+
+1. 先使用`*.pages.dev`地址验证全部工具、`/404.html`、响应头及移动端布局。
+2. 在Pages项目的 **Custom domains** 中添加`www.genpass.top`，不要只手工创建DNS记录。
+3. 确认证书Active后，再将`genpass.top`通过Cloudflare **Single Redirect**永久重定向到`https://www.genpass.top`；Pages的`_redirects`不支持域名级重定向。
+4. 如域名存在CAA限制，先确保允许Cloudflare文档列出的签发机构。
+5. 不为当前未指纹化的JS/CSS添加长期自定义缓存规则；Cloudflare Pages已有ETag、压缩和部署缓存失效机制。
+6. 验证未知路径返回自定义404，而不是以200状态回退到首页。
+
+仓库根目录的`_headers`提供CSP、点击劫持防护和权限策略；`404.html`阻止Pages把本项目误判为SPA；`robots.txt`与`sitemap.xml`使用规范主机`www.genpass.top`。该项目不需要Pages Functions、Wrangler或运行时密钥。
 
 ## 测试
 
@@ -88,6 +122,7 @@ npm run check:js
 - `TextEncoder`与`TextDecoder`
 - `navigator.clipboard.writeText`
 - File API
+- Canvas API与`canvas.toBlob()`
 - ES2020 JavaScript
 - CSS Grid
 

@@ -268,6 +268,11 @@ async function copyAllPasswords() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const generateButton = document.getElementById('generateButton');
+    const copyAllButton = document.getElementById('copyAllButton');
+    if (generateButton) generateButton.addEventListener('click', generatePasswords);
+    if (copyAllButton) copyAllButton.addEventListener('click', copyAllPasswords);
+
     document.addEventListener('keydown', event => {
         if (event.key === 'Enter') {
             generatePasswords();

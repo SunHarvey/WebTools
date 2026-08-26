@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit Converter · 单位换算器 | WebTools</title>
+  <meta name="description" content="Convert length, mass, temperature, area, volume and data sizes locally in your browser.">
+  <link rel="canonical" href="https://www.genpass.top/unit/">
+  <link rel="icon" href="../images/favicon-32x32.ico">
+  <link rel="stylesheet" href="../shared/tools.css">
+  <link rel="stylesheet" href="unit.css">
+  <meta property="og:title" content="Unit Converter · 单位换算器 | WebTools">
+  <meta property="og:description" content="Fast, private conversions across common measurement units.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.genpass.top/unit/">
+</head>
+<body>
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="../tools/">Web<span>Tools</span></a><div class="nav-links"><a href="../">Password</a><a href="../calculator/">Calculator</a><a href="../json/">JSON</a><a href="../text/">Text</a><a href="../timestamp/">Timestamp</a><a class="all-tools" href="../tools/">All tools</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero">
+    <div class="eyebrow">Everyday utility · 日常工具</div>
+    <h1>Unit Converter <span>单位换算器</span></h1>
+    <p>Convert common measurements instantly · 长度、质量、温度、面积、体积和数据大小即时互转</p>
+    <div class="privacy-note">✓ Runs locally in your browser · 所有换算均在本地完成</div>
+  </section>
+  <section class="tool-card converter-card" aria-labelledby="converterTitle">
+    <h2 id="converterTitle" class="sr-only">Conversion controls</h2>
+    <div class="field category-field">
+      <label for="unitCategory">Category · 换算类别</label>
+      <select id="unitCategory"></select>
+    </div>
+    <div class="conversion-grid">
+      <div class="field value-panel">
+        <label for="unitValue">From · 从</label>
+        <input id="unitValue" type="text" inputmode="decimal" value="1" autocomplete="off" aria-describedby="unitStatus">
+        <select id="fromUnit" aria-label="Source unit · 原单位"></select>
+      </div>
+      <button id="swapUnits" class="secondary swap-button" type="button" aria-label="Swap units · 交换单位"><span aria-hidden="true">⇄</span><small>Swap · 交换</small></button>
+      <div class="field value-panel result-panel">
+        <label for="unitResult">To · 到</label>
+        <div class="result-wrap"><input id="unitResult" class="output" type="text" readonly aria-live="polite"><span id="resultUnit" aria-hidden="true"></span></div>
+        <select id="toUnit" aria-label="Target unit · 目标单位"></select>
+      </div>
+    </div>
+    <div class="actions"><button id="convertUnit" type="button">Convert · 换算</button></div>
+    <div id="unitStatus" class="status" role="status">Ready · 就绪</div>
+  </section>
+  <aside class="info-card"><strong>Precision without clutter · 精确且简洁</strong><br>Results retain useful significant digits while insignificant floating-point noise is removed. SI and binary data units are clearly distinguished.<br>结果保留合理有效数字并消除浮点噪声；十进制与二进制数据单位分别标注。</aside>
+</main>
+<footer>WebTools · Private, fast, client-side utilities</footer>
+<script src="unit-tool.js"></script>
+</body>
+</html>

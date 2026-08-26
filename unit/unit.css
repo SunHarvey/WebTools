@@ -1,0 +1,24 @@
+.hero h1 span { color: var(--primary); }
+.converter-card { max-width: 900px; margin: 0 auto; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.category-field { max-width: 420px; margin: 0 auto 26px; }
+.conversion-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: end; gap: 16px; }
+.value-panel { min-width: 0; }
+.value-panel input { min-height: 64px; font-size: clamp(1.3rem, 4vw, 2rem); font-weight: 750; font-variant-numeric: tabular-nums; }
+.value-panel select { margin-top: 2px; }
+.result-wrap { position: relative; }
+.result-wrap input { padding-right: 76px; color: var(--primary); }
+#resultUnit { position: absolute; top: 50%; right: 15px; max-width: 58px; overflow: hidden; color: var(--muted); transform: translateY(-50%); font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.swap-button { align-self: center; display: grid; place-items: center; gap: 2px; min-width: 74px; margin-top: 22px; }
+.swap-button span { font-size: 1.5rem; line-height: 1; }
+.swap-button small { font-size: 0.68rem; }
+.converter-card .actions { justify-content: center; margin-bottom: 8px; }
+.converter-card .actions button { min-width: 180px; }
+.converter-card .status { text-align: center; }
+
+@media (max-width: 680px) {
+  .conversion-grid { grid-template-columns: 1fr; gap: 12px; }
+  .swap-button { justify-self: center; margin: 0; display: flex; min-width: 140px; }
+  .swap-button span { transform: rotate(90deg); }
+  .value-panel input { min-height: 58px; }
+}

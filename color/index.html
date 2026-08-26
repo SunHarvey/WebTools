@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Converter & Contrast Checker | WebTools</title>
+  <meta name="description" content="Convert HEX, RGB and HSL colors and check WCAG contrast locally in your browser.">
+  <link rel="canonical" href="https://www.genpass.top/color/">
+  <link rel="icon" href="../images/favicon-32x32.ico">
+  <link rel="stylesheet" href="../shared/tools.css">
+  <link rel="stylesheet" href="color.css">
+</head>
+<body>
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="../tools/">Web<span>Tools</span></a><div class="nav-links"><a href="../">Password</a><a href="../calculator/">Calculator</a><a href="../json/">JSON</a><a href="../text/">Text</a><a class="all-tools" href="../tools/">All tools</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero">
+    <div class="eyebrow">Color utility · 颜色工具</div>
+    <h1>Color Converter</h1>
+    <p>Convert HEX, RGB and HSL, preview colors, and check WCAG accessibility contrast. · 转换颜色并检查无障碍对比度。</p>
+    <div class="privacy-note">✓ Runs locally in your browser · 数据不会上传</div>
+  </section>
+
+  <section class="tool-card" aria-labelledby="converterTitle">
+    <h2 id="converterTitle">Convert a color · 颜色转换</h2>
+    <div class="converter-layout">
+      <div class="format-fields">
+        <div class="field">
+          <label for="hexInput">HEX (3 or 6 digits · 3或6位)</label>
+          <div class="inline-action"><input id="hexInput" type="text" value="#336699" maxlength="7" spellcheck="false"><button id="fromHex" type="button">Convert · 转换</button></div>
+        </div>
+        <fieldset><legend>RGB (0–255)</legend><div class="channel-grid">
+          <label>R<input id="rgbR" type="number" value="51" inputmode="decimal"></label>
+          <label>G<input id="rgbG" type="number" value="102" inputmode="decimal"></label>
+          <label>B<input id="rgbB" type="number" value="153" inputmode="decimal"></label>
+        </div><button id="fromRgb" class="secondary convert-button" type="button">Convert from RGB · 从 RGB 转换</button></fieldset>
+        <fieldset><legend>HSL (H: any · S/L: 0–100)</legend><div class="channel-grid">
+          <label>H<input id="hslH" type="number" value="210" inputmode="decimal"></label>
+          <label>S %<input id="hslS" type="number" value="50" inputmode="decimal"></label>
+          <label>L %<input id="hslL" type="number" value="40" inputmode="decimal"></label>
+        </div><button id="fromHsl" class="secondary convert-button" type="button">Convert from HSL · 从 HSL 转换</button></fieldset>
+      </div>
+      <div class="preview-panel">
+        <div id="colorPreview" class="color-preview" aria-label="Color preview"></div>
+        <div class="result-lines"><code id="hexResult">#336699</code><code id="rgbResult">rgb(51, 102, 153)</code><code id="hslResult">hsl(210, 50%, 40%)</code></div>
+        <button id="copyResults" class="secondary" type="button">Copy results · 复制结果</button>
+      </div>
+    </div>
+    <div id="convertStatus" class="status" role="status">Ready · 就绪</div>
+  </section>
+
+  <section class="tool-card contrast-card" aria-labelledby="contrastTitle">
+    <h2 id="contrastTitle">WCAG contrast · WCAG 对比度</h2>
+    <p class="section-help">Enter two HEX colors. Large text means at least 18pt, or 14pt bold. · 输入两种 HEX 颜色；大字指至少 18pt 或 14pt 粗体。</p>
+    <div class="contrast-inputs">
+      <div class="field"><label for="contrastA">Text / Color A · 文字色</label><div class="color-input-row"><input id="contrastA" type="text" value="#000000" maxlength="7"><input id="pickerA" type="color" value="#000000" aria-label="Choose color A"></div></div>
+      <div class="field"><label for="contrastB">Background / Color B · 背景色</label><div class="color-input-row"><input id="contrastB" type="text" value="#FFFFFF" maxlength="7"><input id="pickerB" type="color" value="#ffffff" aria-label="Choose color B"></div></div>
+    </div>
+    <div class="actions"><button id="checkContrast" type="button">Check contrast · 检查对比度</button><button id="copyContrast" class="secondary" type="button">Copy result · 复制结果</button></div>
+    <div id="contrastSample" class="contrast-sample">Readable text sample · 可读性预览</div>
+    <div class="ratio-line"><strong id="contrastRatio">21.00:1</strong><span>Contrast ratio · 对比度</span></div>
+    <div class="wcag-grid" aria-label="WCAG results">
+      <div><span>AA Normal · 普通</span><strong id="aaNormal">Pass · 通过</strong></div>
+      <div><span>AA Large · 大字</span><strong id="aaLarge">Pass · 通过</strong></div>
+      <div><span>AAA Normal · 普通</span><strong id="aaaNormal">Pass · 通过</strong></div>
+      <div><span>AAA Large · 大字</span><strong id="aaaLarge">Pass · 通过</strong></div>
+    </div>
+    <div id="contrastStatus" class="status" role="status">Ready · 就绪</div>
+  </section>
+</main>
+<footer>WebTools · Private, fast, client-side utilities</footer>
+<script src="color-tool.js"></script>
+</body>
+</html>

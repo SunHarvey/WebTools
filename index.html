@@ -27,6 +27,8 @@
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://www.genpass.top/">
+    <link rel="alternate" hreflang="en" href="https://www.genpass.top/">
+    <link rel="alternate" hreflang="zh-CN" href="https://www.genpass.top/index-zh">
 
     <!-- JSON-LD -->
     <script type="application/ld+json">
@@ -63,7 +65,7 @@
                 </div>
             </div>
 
-            <div class="form-group" style="margin-bottom: 5px;">
+            <div class="form-group character-types-group">
                 <label>Character Types</label>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
@@ -92,7 +94,7 @@
                 </div>
             </div>
 
-            <button class="generate-btn" onclick="generatePasswords()">
+            <button class="generate-btn" id="generateButton" type="button">
                 🚀 Generate Passwords
             </button>
         </div>
@@ -102,7 +104,7 @@
         <div class="results-card" id="resultsCard">
             <div class="results-title">
                 <span>🔒 Generated Passwords</span>
-                <button class="copy-all-btn" onclick="copyAllPasswords()">📋 Copy All</button>
+                <button class="copy-all-btn" id="copyAllButton" type="button">📋 Copy All</button>
             </div>
 
             <div id="passwordList"></div>

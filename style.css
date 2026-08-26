@@ -70,6 +70,10 @@ h1 {
     margin-bottom: 0;
 }
 
+.character-types-group {
+    margin-bottom: 5px;
+}
+
 label {
     margin-bottom: 4px;
     color: #34495e;
