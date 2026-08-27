@@ -136,6 +136,13 @@ test('keeps generic local-processing claims off individual tool heroes', () => {
     assert.match(nav, /class="brand-cluster"/, `${file} does not group the logo and privacy claim`);
     assert.match(nav, /class="nav-trust"/, `${file} lacks the navigation privacy claim`);
     assert.doesNotMatch(nav, /✓/, `${file} still prefixes the privacy claim with a checkmark`);
+    if (file.startsWith('zh/')) {
+      assert.match(nav, />仅在本地处理，不会上传<\/span>/, `${file} has ambiguous Chinese trust copy`);
+      assert.doesNotMatch(nav, /保留在此设备/, `${file} still implies storage`);
+    } else {
+      assert.match(nav, />Processed locally — never uploaded<\/span>/, `${file} has ambiguous English trust copy`);
+      assert.doesNotMatch(nav, /input stays on this device/i, `${file} still implies storage`);
+    }
   }
 });
 
