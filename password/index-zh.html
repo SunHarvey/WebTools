@@ -12,7 +12,8 @@
   <meta name="theme-color" content="#08111f">
     <title>随机密码生成器 | 安全免费工具</title>
     <meta name="description" content="一键生成强壮的随机密码。可自定义长度、字符类型，并可排除易混淆字符，兼顾安全与易用。">
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="/shared/tools.css">
+    <link rel="stylesheet" href="/style.css">
 
     <meta name="keywords" content="密码生成器, 随机密码, 强密码, 安全密码, 免费密码生成器, 在线密码工具, 创建密码, 在线生成密码">
 
@@ -49,13 +50,11 @@
     </script>
 
 </head>
-
-<body>
-    <div class="container">
-        <a class="home-brand" href="/" aria-label="Open UtilCover tools"><img src="/images/logo-light.svg" alt="UtilCover" width="195" height="48"></a>
-        <h1>🔐 随机密码生成器</h1>
-
-        <div class="settings-card">
+<body class="tool-directory-page password-page">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/password/" aria-current="page">Password</a><a href="/calculator/">Calculator</a><a href="/json/">JSON</a><a href="/text/">Text</a><a href="/encode/">Encode</a><a href="/timestamp/">Timestamp</a><a href="/uuid/">UUID</a><a href="/hash/">Hash</a><a href="/qr/">QR</a><a href="/unit/">Unit</a><a href="/color/">Color</a><a href="/image/">Image</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>随机密码生成器</h1><p>在浏览器本地生成安全随机密码，可自定义长度、字符类型并排除易混淆字符。</p><div class="privacy-note">✓ 在浏览器本地运行 · 密码不会上传</div></section>
+<section class="tool-card settings-card password-tool">
             <h2 class="settings-title">⚙️ 生成设置</h2>
 
             <div class="form-row">
@@ -102,9 +101,9 @@
             <button class="generate-btn" id="generateButton" type="button">
                 🚀 生成密码
             </button>
-        </div>
+        </section>
 
-        <div class="results-card" id="resultsCard">
+        <section class="tool-card results-card" id="resultsCard">
             <div class="results-title">
                 <span>🔒 已生成的密码</span>
                 <button class="copy-all-btn" id="copyAllButton" type="button">📋 一键复制</button>
@@ -118,23 +117,23 @@
                     <div class="strength-fill strong" id="strengthFill"></div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="info-card">
+        <aside class="info-card">
             <strong>💡 安全提示：</strong><br>
             • 建议密码长度至少为 16 个字符<br>
             • 同时包含大写字母、小写字母、数字与特殊字符能显著提升安全性<br>
             • 排除易混淆字符有助于减少输入错误<br>
             • 为不同账户使用不同的密码<br>
             • 重要账户的密码应定期更换
-        </div>
+        </aside>
 
-        <div class="info-card">
+        <aside class="info-card">
             <strong>🧰 更多浏览器工具：</strong><br>
             <a href="/">打开 UtilCover 工具中心</a> — 计算器、JSON、文本、编解码、时间戳、UUID 与 SHA 哈希。
-        </div>
-    </div>
-
-    <script src="../script.js"></script>
+        </aside>
+</main>
+<footer>UtilCover · Private, fast, client-side utilities</footer>
+<script src="../script.js"></script>
 </body>
 </html>

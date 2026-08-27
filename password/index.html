@@ -11,7 +11,8 @@
   <meta name="theme-color" content="#08111f">
     <title>Random Password Generator | Secure & Free Tool</title>
     <meta name="description" content="Generate strong, random passwords with a single click. Customize length, character types, and exclude ambiguous characters for maximum security.">
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="/shared/tools.css">
+    <link rel="stylesheet" href="/style.css">
 
 
     <meta name="keywords" content="password generator, random password, strong password, secure password, free password generator, online password tool, create password, generate password online">
@@ -49,13 +50,11 @@
     </script>
 
 </head>
-
-<body>
-    <div class="container">
-        <a class="home-brand" href="/" aria-label="Open UtilCover tools"><img src="/images/logo-light.svg" alt="UtilCover" width="195" height="48"></a>
-        <h1>🔐 Random Password Generator</h1>
-
-        <div class="settings-card">
+<body class="tool-directory-page password-page">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/password/" aria-current="page">Password</a><a href="/calculator/">Calculator</a><a href="/json/">JSON</a><a href="/text/">Text</a><a href="/encode/">Encode</a><a href="/timestamp/">Timestamp</a><a href="/uuid/">UUID</a><a href="/hash/">Hash</a><a href="/qr/">QR</a><a href="/unit/">Unit</a><a href="/color/">Color</a><a href="/image/">Image</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>Random Password Generator</h1><p>Generate secure random passwords locally with custom length, character types and ambiguity controls.</p><div class="privacy-note">✓ Runs locally in your browser · Passwords are never uploaded</div></section>
+<section class="tool-card settings-card password-tool">
             <h2 class="settings-title">⚙️ Generation Settings</h2>
 
             <div class="form-row">
@@ -102,11 +101,9 @@
             <button class="generate-btn" id="generateButton" type="button">
                 🚀 Generate Passwords
             </button>
-        </div>
+        </section>
 
-
-
-        <div class="results-card" id="resultsCard">
+        <section class="tool-card results-card" id="resultsCard">
             <div class="results-title">
                 <span>🔒 Generated Passwords</span>
                 <button class="copy-all-btn" id="copyAllButton" type="button">📋 Copy All</button>
@@ -120,23 +117,23 @@
                     <div class="strength-fill strong" id="strengthFill"></div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="info-card">
+        <aside class="info-card">
             <strong>💡 Security Tips:</strong><br>
             • Recommended password length is at least 16 characters<br>
             • Including uppercase, lowercase, numbers, and special characters significantly improves security<br>
             • Excluding ambiguous characters can prevent input errors<br>
             • Use a unique password for each account<br>
             • Regularly change passwords for important accounts
-        </div>
+        </aside>
 
-        <div class="info-card">
+        <aside class="info-card">
             <strong>🧰 More browser tools:</strong><br>
             <a href="/">Open the UtilCover collection</a> — calculator, JSON, text, encoding, timestamps, UUIDs and SHA hashes.
-        </div>
-    </div>
-
-    <script src="../script.js"></script>
+        </aside>
+</main>
+<footer>UtilCover · Private, fast, client-side utilities</footer>
+<script src="../script.js"></script>
 </body>
 </html>

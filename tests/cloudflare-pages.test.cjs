@@ -98,6 +98,26 @@ test('shows direct links to all twelve tools in every shared top navigation', ()
   }
 });
 
+test('removes nonessential utility-category labels from individual tool pages', () => {
+  const toolPages = ['json', 'text', 'encode', 'timestamp', 'uuid', 'hash', 'qr', 'unit', 'color', 'image'];
+  for (const tool of toolPages) assert.doesNotMatch(read(`${tool}/index.html`), /class="eyebrow"/, `${tool} still has a category label`);
+});
+
+test('uses the shared UtilCover layout for password and calculator pages', () => {
+  for (const file of ['password/index.html', 'password/index-zh.html', 'calculator/index.html']) {
+    const html = read(file);
+    assert.match(html, /href="\/shared\/tools\.css"/);
+    assert.match(html, /class="site-header"/);
+    assert.match(html, /class="nav-links"/);
+    assert.match(html, /<body class="tool-directory-page/);
+    assert.match(html, /class="tool-card/);
+  }
+  assert.match(read('password/index.html'), /id="generateButton"/);
+  assert.match(read('calculator/index.html'), /id="calculatorDisplay"/);
+  assert.doesNotMatch(read('calculator/calculator.css'), /border-radius:\s*50%/);
+  assert.doesNotMatch(read('calculator/calculator.css'), /border-radius:\s*38px/);
+});
+
 test('provides a top-level Cloudflare Pages 404 instead of SPA fallback', () => {
   const html = read('404.html');
   assert.match(html, /<!DOCTYPE html>/i);
