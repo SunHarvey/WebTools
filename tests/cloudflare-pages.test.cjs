@@ -78,6 +78,26 @@ test('keeps the homepage introduction compact so tools remain above the fold', (
   assert.match(css, /\.home-directory \.privacy-note\s*\{[^}]*margin-top:\s*10px/s);
 });
 
+test('keeps every tool-page introduction and title compact', () => {
+  const css = read('shared/tools.css');
+  assert.match(css, /\.tool-directory-page \.page-shell\s*\{[^}]*padding:\s*32px 0 72px/s);
+  assert.match(css, /\.tool-directory-page \.hero\s*\{[^}]*margin:\s*0 auto 20px/s);
+  assert.match(css, /\.tool-directory-page h1\s*\{[^}]*font-size:\s*clamp\(1\.7rem, 4vw, 2\.5rem\)/s);
+  assert.match(css, /\.tool-directory-page \.privacy-note\s*\{[^}]*margin-top:\s*10px/s);
+  assert.match(read('json/index.html'), /<body class="tool-directory-page">/);
+});
+
+test('shows direct links to all twelve tools in every shared top navigation', () => {
+  const routes = ['/password/', '/calculator/', '/json/', '/text/', '/encode/', '/timestamp/', '/uuid/', '/hash/', '/qr/', '/unit/', '/color/', '/image/'];
+  const pages = fs.readdirSync(root, { recursive: true }).filter(name => name.endsWith('.html') && read(name).includes('class="nav-links"'));
+  assert.ok(pages.length >= 12);
+  for (const file of pages) {
+    const html = read(file);
+    const nav = html.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1] || '';
+    for (const route of routes) assert.match(nav, new RegExp(`href="${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`), `${file} navigation is missing ${route}`);
+  }
+});
+
 test('provides a top-level Cloudflare Pages 404 instead of SPA fallback', () => {
   const html = read('404.html');
   assert.match(html, /<!DOCTYPE html>/i);
