@@ -78,6 +78,15 @@ test('keeps the homepage introduction compact so tools remain above the fold', (
   assert.match(css, /\.nav-trust\s*\{/);
 });
 
+test('uses a one-line English desktop introduction and a four-by-three homepage grid', () => {
+  const css = read('shared/tools.css');
+  assert.match(css, /html\[lang="en"\] \.home-directory \.hero p\s*\{[^}]*white-space:\s*nowrap/s);
+  assert.match(css, /\.home-directory \.tool-grid\s*\{[^}]*grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/s);
+  for (const file of ['index.html', 'tools/index.html', 'zh/index.html', 'zh/tools/index.html']) {
+    assert.equal((read(file).match(/class="tool-tile"/g) || []).length, 12, `${file} does not have twelve tools`);
+  }
+});
+
 test('keeps every tool-page introduction and title compact', () => {
   const css = read('shared/tools.css');
   assert.match(css, /\.tool-directory-page \.page-shell\s*\{[^}]*padding:\s*32px 0 72px/s);
