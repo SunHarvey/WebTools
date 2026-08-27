@@ -3,12 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
     <meta name="description" content="支持键盘输入和鼠标点击的基础网页计算器">
     <title>Web Calculator · 网页计算器</title>
     <link rel="stylesheet" href="calculator.css">
 </head>
 <body>
     <main class="page-shell">
+        <a class="calculator-brand" href="../tools/" aria-label="Open UtilCover tools"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a>
         <section class="calculator" aria-label="基础计算器">
             <div class="display-panel">
                 <output id="calculatorDisplay" class="calculator-display" aria-live="polite">0</output>
@@ -44,7 +51,7 @@
         <p class="keyboard-help">
             键盘：数字、<kbd>+</kbd>、<kbd>-</kbd>、<kbd>*</kbd>、<kbd>/</kbd>、<kbd>Enter</kbd>、<kbd>Backspace</kbd>、<kbd>Esc</kbd>
         </p>
-        <a class="back-link" href="../tools/">返回 WebTools 工具中心</a>
+        <a class="back-link" href="../tools/">返回 UtilCover 工具中心</a>
     </main>
 
     <script src="calculator.js"></script>

@@ -31,6 +31,17 @@ a {
     justify-items: center;
 }
 
+.calculator-brand {
+    display: block;
+    width: 168px;
+}
+
+.calculator-brand img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
 .calculator {
     width: 100%;
     padding: 26px 18px 22px;

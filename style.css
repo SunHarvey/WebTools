@@ -21,6 +21,18 @@ body {
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
 }
 
+.home-brand {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 8px;
+}
+
+.home-brand img {
+    display: block;
+    width: clamp(160px, 34vw, 195px);
+    height: auto;
+}
+
 h1 {
     text-align: center;
     color: #2c3e50;

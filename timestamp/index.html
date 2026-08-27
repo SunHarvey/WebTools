@@ -3,23 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unix Timestamp Converter | WebTools</title>
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>Unix Timestamp Converter | UtilCover</title>
   <meta name="description" content="Convert Unix seconds, milliseconds, local dates and ISO 8601 UTC times.">
   <link rel="canonical" href="https://www.utilcover.com/timestamp/">
-  <link rel="icon" href="../images/favicon-32x32.ico">
   <link rel="stylesheet" href="../shared/tools.css">
-  <meta property="og:title" content="Unix Timestamp Converter | WebTools">
+  <meta property="og:title" content="Unix Timestamp Converter | UtilCover">
   <meta property="og:description" content="Convert Unix seconds, milliseconds, local dates and ISO 8601 UTC times.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/timestamp/">
 </head>
 <body>
-<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="../tools/">Web<span>Tools</span></a><div class="nav-links"><a href="../">Password</a><a href="../calculator/">Calculator</a><a href="../json/">JSON</a><a href="../text/">Text</a><a href="../encode/">Encode</a><a href="../timestamp/">Timestamp</a><a class="all-tools" href="../tools/">All tools</a></div></nav></header>
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="../tools/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="../">Password</a><a href="../calculator/">Calculator</a><a href="../json/">JSON</a><a href="../text/">Text</a><a href="../encode/">Encode</a><a href="../timestamp/">Timestamp</a><a class="all-tools" href="../tools/">All tools</a></div></nav></header>
 <main class="page-shell">
   <section class="hero"><div class="eyebrow">Date utility · 时间工具</div><h1>Unix Timestamp Converter</h1><p>Convert Unix seconds, milliseconds, local dates and ISO 8601 UTC times.</p><div class="privacy-note">✓ Runs locally in your browser · 数据不会上传</div></section>
   <section class="tool-card"><div class="grid-2"><div class="field"><label for="unixInput">Unix timestamp</label><input id="unixInput" type="text" inputmode="decimal"><select id="unixUnit" aria-label="Timestamp unit"><option value="auto">Auto detect (modern dates)</option><option value="seconds">Seconds</option><option value="milliseconds">Milliseconds</option></select><button id="convertUnix">Convert timestamp</button></div><div class="field"><label for="dateInput">Local date and time</label><input id="dateInput" type="datetime-local"><button id="convertDate">Convert date</button></div></div><div class="actions"><button id="useCurrentTime" class="secondary">Use current time</button><span class="status">Timezone: <strong id="currentTimezone"></strong></span></div><div class="result-grid"><div class="result-item"><span>Unix seconds</span><code id="resultSeconds">—</code><button class="secondary" data-copy-target="resultSeconds">Copy</button></div><div class="result-item"><span>Unix milliseconds</span><code id="resultMilliseconds">—</code><button class="secondary" data-copy-target="resultMilliseconds">Copy</button></div><div class="result-item"><span>ISO 8601 / UTC</span><code id="resultIso">—</code><button class="secondary" data-copy-target="resultIso">Copy</button></div><div class="result-item"><span>Local time</span><code id="resultLocal">—</code><button class="secondary" data-copy-target="resultLocal">Copy</button></div></div><div id="timestampStatus" class="status" role="status">Ready</div></section>
 </main>
-<footer>WebTools · Private, fast, client-side utilities</footer>
+<footer>UtilCover · Private, fast, client-side utilities</footer>
 <script src="timestamp-tool.js"></script>
 </body>
 </html>

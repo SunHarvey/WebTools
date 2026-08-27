@@ -23,6 +23,36 @@ test('configures Workers Builds static assets without exposing repository files'
   }
 });
 
+test('publishes a complete UtilCover icon and installable brand set on every page', () => {
+  const requiredAssets = [
+    'images/favicon.svg',
+    'images/favicon.ico',
+    'images/favicon-32x32.png',
+    'images/apple-touch-icon.png',
+    'images/icon-192.png',
+    'images/icon-512.png',
+    'images/icon-maskable-192.png',
+    'images/icon-maskable-512.png',
+    'images/logo.svg',
+    'images/logo-light.svg',
+    'images/og-image.jpg'
+  ];
+  for (const asset of requiredAssets) assert.ok(fs.statSync(path.join(root, asset)).size > 0, `${asset} is empty`);
+
+  const manifest = JSON.parse(read('site.webmanifest'));
+  assert.equal(manifest.short_name, 'UtilCover');
+  assert.equal(manifest.theme_color, '#08111f');
+  assert.ok(manifest.icons.some(icon => icon.sizes === '512x512' && icon.purpose === 'maskable'));
+
+  for (const file of fs.readdirSync(root, { recursive: true }).filter(name => name.endsWith('.html'))) {
+    const html = read(file);
+    assert.match(html, /href="\/images\/favicon\.svg"/i, `${file} is missing the SVG favicon`);
+    assert.match(html, /rel="apple-touch-icon"/i, `${file} is missing the Apple touch icon`);
+    assert.match(html, /href="\/site\.webmanifest"/i, `${file} is missing the web manifest`);
+    assert.match(html, /name="theme-color" content="#08111f"/i, `${file} is missing the theme color`);
+  }
+});
+
 test('provides a top-level Cloudflare Pages 404 instead of SPA fallback', () => {
   const html = read('404.html');
   assert.match(html, /<!DOCTYPE html>/i);
@@ -51,7 +81,7 @@ test('defines hardened static response headers without inline script execution',
 });
 
 test('production HTML avoids inline event handlers required by strict CSP', () => {
-  for (const file of fs.readdirSync(root).filter(name => name.endsWith('.html'))) {
+  for (const file of fs.readdirSync(root, { recursive: true }).filter(name => name.endsWith('.html'))) {
     const html = read(file);
     assert.doesNotMatch(html, /\son[a-z]+\s*=/i, `${file} contains an inline event handler`);
   }
