@@ -31,6 +31,10 @@ function imageMessage(key, language) {
   return IMAGE_MESSAGES[key][locale];
 }
 
+function imageSelectedFileName(file, language) {
+  return file?.name || imageMessage('noImage', language);
+}
+
 function normalizeOutputMime(value) {
   const mime = OUTPUT_MIME_TYPES.get(String(value).trim().toLowerCase());
   if (!mime) throw new RangeError('Unsupported output format.');
@@ -238,6 +242,7 @@ function loadImage(url) {
 function attachImageTool() {
   const language = document.documentElement.lang;
   const fileInput = document.getElementById('imageFile');
+  const fileName = document.getElementById('imageFileName');
   const originalPreview = document.getElementById('originalPreview');
   const resultPreview = document.getElementById('resultPreview');
   const widthInput = document.getElementById('targetWidth');
@@ -300,6 +305,7 @@ function attachImageTool() {
 
   fileInput.addEventListener('change', async () => {
     const selected = fileInput.files && fileInput.files[0];
+    if (fileName) fileName.textContent = imageSelectedFileName(selected, language);
     const currentSelection = ++selectionId;
     runCompression.cancel();
     clearResult();
@@ -394,5 +400,6 @@ if (typeof module !== 'undefined' && module.exports) {
     validatePixelCount,
     createLatestTaskRunner,
     imageMessage,
+    imageSelectedFileName,
   };
 }

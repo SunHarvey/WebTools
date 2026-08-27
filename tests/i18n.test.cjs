@@ -76,6 +76,20 @@ test('Chinese calculator help text is localized', () => {
   assert.match(html, /键盘快捷键：/);
 });
 
+test('file pickers use page-localized controls instead of native browser labels', () => {
+  for (const route of ['hash', 'image']) {
+    const english = read(`${route}/index.html`);
+    const chinese = read(`zh/${route}/index.html`);
+    assert.match(english, /class="file-input-native"/);
+    assert.match(english, />Choose file<\/label>/);
+    assert.match(english, />No (?:file|image) selected<\/span>/);
+    assert.match(chinese, /class="file-input-native"/);
+    assert.match(chinese, />选择文件<\/label>/);
+    assert.match(chinese, />尚未选择(?:文件|图片)<\/span>/);
+  }
+  assert.match(read('shared/tools.css'), /\.file-input-native/);
+});
+
 test('redirects Chinese browsers unless English is explicitly requested', () => {
   const { chooseChineseUrl, sameHostPath } = require('../shared/locale-redirect.js');
   assert.equal(chooseChineseUrl(['zh-CN', 'en'], '', '/zh/json/'), '/zh/json/');

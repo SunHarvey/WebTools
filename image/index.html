@@ -27,8 +27,8 @@
   </section>
   <section class="tool-card"><p class="local-processing-note">Images are processed on this device and never uploaded.</p>
     <div class="field">
-      <label for="imageFile">Choose image</label>
-      <input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp">
+      <span class="field-label">Image file</span>
+      <div class="file-picker-row"><input id="imageFile" class="file-input-native" type="file" accept="image/png,image/jpeg,image/webp" aria-describedby="imageFileName"><label class="file-picker-button button-link secondary" for="imageFile">Choose file</label><span id="imageFileName" class="file-picker-name">No image selected</span></div>
       <small>PNG, JPEG or WebP only; maximum 16 MiB / 12 megapixels</small>
     </div>
     <div class="preview-grid" aria-live="polite">

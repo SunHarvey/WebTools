@@ -27,8 +27,8 @@
   </section>
   <section class="tool-card"><p class="local-processing-note">图片仅在本设备上处理，绝不会上传。</p>
     <div class="field">
-      <label for="imageFile">选择图片</label>
-      <input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp">
+      <span class="field-label">图片文件</span>
+      <div class="file-picker-row"><input id="imageFile" class="file-input-native" type="file" accept="image/png,image/jpeg,image/webp" aria-describedby="imageFileName"><label class="file-picker-button button-link secondary" for="imageFile">选择文件</label><span id="imageFileName" class="file-picker-name">尚未选择图片</span></div>
       <small>仅支持 PNG、JPEG 或 WebP；最大 16 MiB / 1200 万像素</small>
     </div>
     <div class="preview-grid" aria-live="polite">

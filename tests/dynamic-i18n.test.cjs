@@ -21,11 +21,21 @@ test('color statuses resolve to one language', () => {
 });
 
 test('image statuses resolve to one language', () => {
-  const { imageMessage } = require('../image/image-tool.js');
+  const { imageMessage, imageSelectedFileName } = require('../image/image-tool.js');
   assert.doesNotMatch(imageMessage('noResult', 'en'), cjk);
   assert.match(imageMessage('noResult', 'zh'), cjk);
   assert.doesNotMatch(imageMessage('processing', 'en'), cjk);
   assert.match(imageMessage('processing', 'zh'), cjk);
+  assert.equal(imageSelectedFileName({ name: 'photo.png' }, 'en'), 'photo.png');
+  assert.equal(imageSelectedFileName(null, 'en'), 'No image selected');
+  assert.equal(imageSelectedFileName(null, 'zh-CN'), '尚未选择图片');
+});
+
+test('hash file-name display resolves to one language', () => {
+  const { hashSelectedFileName } = require('../hash/hash-tool.js');
+  assert.equal(hashSelectedFileName({ name: 'archive.zip' }, 'en'), 'archive.zip');
+  assert.equal(hashSelectedFileName(null, 'en'), 'No file selected');
+  assert.equal(hashSelectedFileName(null, 'zh-CN'), '尚未选择文件');
 });
 
 test('calculator error display resolves to one language', () => {

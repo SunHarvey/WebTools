@@ -12,11 +12,16 @@ const HASH_MESSAGES = {
   noMatch: { en: 'Hashes do not match', zh: '哈希值不匹配' },
   copied: { en: 'Copied', zh: '已复制' },
   copyFailed: { en: 'Copy failed', zh: '复制失败' },
+  noFile: { en: 'No file selected', zh: '尚未选择文件' },
 };
 
 function hashMessage(key, language) {
   const locale = String(language).toLowerCase().startsWith('zh') ? 'zh' : 'en';
   return HASH_MESSAGES[key][locale];
+}
+
+function hashSelectedFileName(file, language) {
+  return file?.name || hashMessage('noFile', language);
 }
 
 function normalizeAlgorithm(algorithm) {
@@ -73,6 +78,7 @@ function attachHashTool() {
   const language = document.documentElement.lang;
   const text = document.getElementById('hashText');
   const file = document.getElementById('hashFile');
+  const fileName = document.getElementById('hashFileName');
   const algorithm = document.getElementById('hashAlgorithm');
   const output = document.getElementById('hashOutput');
   const expected = document.getElementById('expectedHash');
@@ -97,6 +103,9 @@ function attachHashTool() {
   });
 
   document.getElementById('hashTextButton').addEventListener('click', () => run(() => hashText(text.value, algorithm.value)));
+  file.addEventListener('change', () => {
+    if (fileName) fileName.textContent = hashSelectedFileName(file.files?.[0], language);
+  });
   document.getElementById('hashFileButton').addEventListener('click', () => run(async () => {
     const selected = file.files[0];
     if (!selected) throw new Error('Choose a file first.');
@@ -116,4 +125,4 @@ function attachHashTool() {
 }
 
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachHashTool);
-if (typeof module !== 'undefined' && module.exports) module.exports = { hashText, hashBuffer, compareHash, validateFileSize, createLatestTaskRunner, hashMessage };
+if (typeof module !== 'undefined' && module.exports) module.exports = { hashText, hashBuffer, compareHash, validateFileSize, createLatestTaskRunner, hashMessage, hashSelectedFileName };
