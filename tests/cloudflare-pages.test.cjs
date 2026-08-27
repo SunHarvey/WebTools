@@ -133,8 +133,17 @@ test('keeps generic local-processing claims off individual tool heroes', () => {
     const hero = html.match(/<section class="hero">([\s\S]*?)<\/section>/)?.[1] || '';
     const nav = html.match(/<nav class="nav-shell"[\s\S]*?<\/nav>/)?.[0] || '';
     assert.doesNotMatch(hero, /class="privacy-note"/, `${file} still has the privacy claim in its hero`);
+    assert.match(nav, /class="brand-cluster"/, `${file} does not group the logo and privacy claim`);
     assert.match(nav, /class="nav-trust"/, `${file} lacks the navigation privacy claim`);
+    assert.doesNotMatch(nav, /✓/, `${file} still prefixes the privacy claim with a checkmark`);
   }
+});
+
+test('styles the homepage trust message as a distinct logo-adjacent brand signal', () => {
+  const css = read('shared/tools.css');
+  assert.match(css, /\.brand-cluster\s*\{[^}]*gap:\s*10px/s);
+  assert.match(css, /\.nav-trust\s*\{[^}]*font-size:\s*0\.82rem/s);
+  assert.match(css, /\.nav-trust\s*\{[^}]*border-left:\s*2px solid/s);
 });
 
 test('places concise privacy notes beside sensitive inputs only', () => {
