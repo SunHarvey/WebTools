@@ -118,6 +118,20 @@ test('shows direct links to all twelve tools in every shared top navigation', ()
   }
 });
 
+test('orders every shared navigation like the homepage and keeps language last', () => {
+  const routes = ['/json/', '/image/', '/qr/', '/encode/', '/password/', '/text/', '/timestamp/', '/uuid/', '/hash/', '/color/', '/unit/', '/calculator/'];
+  const pages = fs.readdirSync(root, { recursive: true }).filter(name => name.endsWith('.html') && read(name).includes('class="nav-links"'));
+  assert.equal(pages.length, 32);
+  for (const file of pages) {
+    const html = read(file);
+    const nav = html.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1] || '';
+    const anchors = [...nav.matchAll(/<a([^>]*)href="([^"]+)"[^>]*>/g)].map(match => ({ attrs: match[1], href: match[2] }));
+    const expected = /<html lang="zh-CN">/.test(html) ? routes.map(route => `/zh${route}`) : routes;
+    assert.deepEqual(anchors.filter(anchor => !anchor.attrs.includes('language-link')).map(anchor => anchor.href), expected, `${file} navigation order differs`);
+    assert.match(anchors.at(-1)?.attrs || '', /language-link/, `${file} language switch is not last`);
+  }
+});
+
 test('removes nonessential utility-category labels from all visible page heroes', () => {
   const toolPages = ['json', 'text', 'encode', 'timestamp', 'uuid', 'hash', 'qr', 'unit', 'color', 'image'];
   for (const tool of toolPages) assert.doesNotMatch(read(`${tool}/index.html`), /class="eyebrow"/, `${tool} still has a category label`);
