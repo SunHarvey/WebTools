@@ -118,6 +118,23 @@ test('uses the shared UtilCover layout for password and calculator pages', () =>
   assert.doesNotMatch(read('calculator/calculator.css'), /border-radius:\s*38px/);
 });
 
+test('keeps generic local-processing claims off individual tool heroes', () => {
+  const toolPages = ['password/index.html', 'password/index-zh.html', 'index-zh.html', 'calculator/index.html', 'json/index.html', 'text/index.html', 'encode/index.html', 'timestamp/index.html', 'uuid/index.html', 'hash/index.html', 'qr/index.html', 'unit/index.html', 'color/index.html', 'image/index.html'];
+  for (const file of toolPages) {
+    const html = read(file);
+    const hero = html.match(/<section class="hero">([\s\S]*?)<\/section>/)?.[1] || '';
+    assert.doesNotMatch(hero, /class="privacy-note"/, `${file} still repeats the privacy claim in its hero`);
+  }
+  assert.match(read('index.html'), /class="privacy-note"/);
+});
+
+test('places concise privacy notes beside sensitive inputs only', () => {
+  const sensitivePages = ['password/index.html', 'json/index.html', 'text/index.html', 'encode/index.html', 'hash/index.html', 'qr/index.html', 'image/index.html'];
+  for (const file of sensitivePages) assert.match(read(file), /class="local-processing-note"/, `${file} lacks a contextual local-processing note`);
+  const css = read('shared/tools.css');
+  assert.match(css, /\.local-processing-note\s*\{[^}]*font-size:\s*0\.78rem/s);
+});
+
 test('provides a top-level Cloudflare Pages 404 instead of SPA fallback', () => {
   const html = read('404.html');
   assert.match(html, /<!DOCTYPE html>/i);
