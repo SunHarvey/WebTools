@@ -2,7 +2,7 @@
   "name": "UtilCover Browser Tools",
   "short_name": "UtilCover",
   "description": "Private browser tools that run locally on your device.",
-  "start_url": "/tools/",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#08111f",

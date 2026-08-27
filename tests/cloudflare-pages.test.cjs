@@ -41,6 +41,7 @@ test('publishes a complete UtilCover icon and installable brand set on every pag
 
   const manifest = JSON.parse(read('site.webmanifest'));
   assert.equal(manifest.short_name, 'UtilCover');
+  assert.equal(manifest.start_url, '/');
   assert.equal(manifest.theme_color, '#08111f');
   assert.ok(manifest.icons.some(icon => icon.sizes === '512x512' && icon.purpose === 'maskable'));
 
@@ -53,11 +54,35 @@ test('publishes a complete UtilCover icon and installable brand set on every pag
   }
 });
 
+test('uses the tool directory as the canonical homepage and keeps password generation at its own route', () => {
+  const homepage = read('index.html');
+  const toolsAlias = read('tools/index.html');
+  const password = read('password/index.html');
+
+  assert.match(homepage, /<body class="home-directory">/);
+  assert.match(homepage, /<h1>Useful tools\. Zero uploads\.<\/h1>/);
+  assert.match(homepage, /<link rel="canonical" href="https:\/\/www\.utilcover\.com\/">/);
+  assert.match(homepage, /href="\/password\/"/);
+  assert.doesNotMatch(homepage, /id="generateButton"/);
+
+  assert.match(password, /id="generateButton"/);
+  assert.match(password, /<link rel="canonical" href="https:\/\/www\.utilcover\.com\/password\/">/);
+  assert.match(toolsAlias, /<link rel="canonical" href="https:\/\/www\.utilcover\.com\/">/);
+});
+
+test('keeps the homepage introduction compact so tools remain above the fold', () => {
+  const css = read('shared/tools.css');
+  assert.match(css, /\.home-directory \.page-shell\s*\{[^}]*padding:\s*28px 0 72px/s);
+  assert.match(css, /\.home-directory \.hero\s*\{[^}]*margin:\s*0 auto 20px/s);
+  assert.match(css, /\.home-directory h1\s*\{[^}]*font-size:\s*clamp\(1\.75rem, 4vw, 2\.65rem\)/s);
+  assert.match(css, /\.home-directory \.privacy-note\s*\{[^}]*margin-top:\s*10px/s);
+});
+
 test('provides a top-level Cloudflare Pages 404 instead of SPA fallback', () => {
   const html = read('404.html');
   assert.match(html, /<!DOCTYPE html>/i);
   assert.match(html, /Page not found/i);
-  assert.match(html, /href="\/tools\/"/);
+  assert.match(html, /href="\/"/);
 });
 
 test('defines hardened static response headers without inline script execution', () => {
@@ -72,7 +97,7 @@ test('defines hardened static response headers without inline script execution',
   assert.match(headers, /X-Content-Type-Options: nosniff/);
   assert.match(headers, /Permissions-Policy:/);
 
-  for (const file of ['index.html', 'index-zh.html']) {
+  for (const file of ['password/index.html', 'password/index-zh.html']) {
     const match = read(file).match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
     assert.ok(match, `${file} must contain JSON-LD`);
     const hash = crypto.createHash('sha256').update(match[1]).digest('base64');
@@ -91,8 +116,9 @@ test('publishes robots and sitemap entries for every public tool route', () => {
   const robots = read('robots.txt');
   const sitemap = read('sitemap.xml');
   assert.match(robots, /Sitemap: https:\/\/www\.utilcover\.com\/sitemap\.xml/);
-  const routes = ['/', '/index-zh', '/tools/', '/calculator/', '/json/', '/text/', '/encode/', '/timestamp/', '/uuid/', '/hash/', '/qr/', '/unit/', '/color/', '/image/'];
+  const routes = ['/', '/password/', '/password/index-zh', '/calculator/', '/json/', '/text/', '/encode/', '/timestamp/', '/uuid/', '/hash/', '/qr/', '/unit/', '/color/', '/image/'];
   for (const route of routes) assert.match(sitemap, new RegExp(`<loc>https://www\\.utilcover\\.com${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}</loc>`));
+  assert.doesNotMatch(sitemap, /<loc>https:\/\/www\.utilcover\.com\/tools\/<\/loc>/);
 });
 
 test('documents exact Workers Builds settings and custom-domain canonical host', () => {

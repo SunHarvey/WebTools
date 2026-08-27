@@ -1,142 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="/images/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-    <title>Random Password Generator | Secure & Free Tool</title>
-    <meta name="description" content="Generate strong, random passwords with a single click. Customize length, character types, and exclude ambiguous characters for maximum security.">
-    <link rel="stylesheet" href="style.css">
-
-
-    <meta name="keywords" content="password generator, random password, strong password, secure password, free password generator, online password tool, create password, generate password online">
-
-    <!-- Open Graph (Facebook / LinkedIn / WhatsApp) -->
-    <meta property="og:title" content="Random Password Generator | Secure & Free Tool">
-    <meta property="og:description" content="Generate strong, random passwords instantly. Customize length, choose character types, and avoid ambiguous symbols for maximum security and convenience.">
-    <meta property="og:url" content="https://www.utilcover.com/">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Random Password Generator | Secure & Free Tool">
-    <meta name="twitter:description" content="Generate strong, random passwords instantly. Customize length, choose character types, and avoid ambiguous symbols for maximum security and convenience.">
-    <meta name="twitter:image" content="https://www.utilcover.com/images/og-image.jpg">
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://www.utilcover.com/">
-    <link rel="alternate" hreflang="en" href="https://www.utilcover.com/">
-    <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/index-zh">
-
-    <!-- JSON-LD -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "Random Password Generator",
-        "url": "https://www.utilcover.com/",
-        "description": "Generate strong, secure, and random passwords instantly. Customize length, character types, and exclude ambiguous characters.",
-        "applicationCategory": "Utility",
-        "operatingSystem": "Any",
-        "image": "https://www.utilcover.com/images/og-image.jpg"
-    }
-    </script>
-
+  <title>Free Browser Tools | UtilCover</title>
+  <meta name="description" content="Private browser tools for passwords, calculations, JSON, QR codes, unit and color conversion, image compression, timestamps, UUIDs and hashes.">
+  <link rel="canonical" href="https://www.utilcover.com/"><link rel="stylesheet" href="/shared/tools.css">
 </head>
-
-<body>
-    <div class="container">
-        <a class="home-brand" href="tools/" aria-label="Open UtilCover tools"><img src="images/logo-light.svg" alt="UtilCover" width="195" height="48"></a>
-        <h1>🔐 Random Password Generator</h1>
-
-        <div class="settings-card">
-            <h2 class="settings-title">⚙️ Generation Settings</h2>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="passwordLength">Password Length</label>
-                    <input type="number" id="passwordLength" min="1" max="128" value="16">
-                </div>
-
-                <div class="form-group">
-                    <label for="passwordCount">Number of Passwords</label>
-                    <input type="number" id="passwordCount" min="1" max="100" value="5">
-                </div>
-            </div>
-
-            <div class="form-group character-types-group">
-                <label>Character Types</label>
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="includeUppercase" checked>
-                        <label for="includeUppercase">Uppercase (A-Z)</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="includeLowercase" checked>
-                        <label for="includeLowercase">Lowercase (a-z)</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="includeNumbers" checked>
-                        <label for="includeNumbers">Numbers (0-9)</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="includeSpecial">
-                        <label for="includeSpecial">Special Characters (!@#$%^&amp;*()-_=+[]{};:,.&lt;&gt;?/|\`~)</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="checkbox-item">
-                    <input type="checkbox" id="excludeAmbiguous" checked>
-                    <label for="excludeAmbiguous">Exclude Ambiguous Characters <span class="excluded-chars">1iILl0oO</span></label>
-                </div>
-            </div>
-
-            <button class="generate-btn" id="generateButton" type="button">
-                🚀 Generate Passwords
-            </button>
-        </div>
-
-
-
-        <div class="results-card" id="resultsCard">
-            <div class="results-title">
-                <span>🔒 Generated Passwords</span>
-                <button class="copy-all-btn" id="copyAllButton" type="button">📋 Copy All</button>
-            </div>
-
-            <div id="passwordList"></div>
-
-            <div class="password-strength" id="strengthIndicator">
-                <span class="strength-text" id="strengthText">Strength: Strong</span>
-                <div class="strength-bar">
-                    <div class="strength-fill strong" id="strengthFill"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="info-card">
-            <strong>💡 Security Tips:</strong><br>
-            • Recommended password length is at least 16 characters<br>
-            • Including uppercase, lowercase, numbers, and special characters significantly improves security<br>
-            • Excluding ambiguous characters can prevent input errors<br>
-            • Use a unique password for each account<br>
-            • Regularly change passwords for important accounts
-        </div>
-
-        <div class="info-card">
-            <strong>🧰 More browser tools:</strong><br>
-            <a href="tools/">Open the UtilCover collection</a> — calculator, JSON, text, encoding, timestamps, UUIDs and SHA hashes.
-        </div>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
+<body class="home-directory">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/password/">Password</a><a href="/calculator/">Calculator</a><a href="/json/">JSON</a><a href="/text/">Text</a><a href="/encode/">Encode</a><a href="/timestamp/">Timestamp</a><a class="all-tools" href="/">All tools</a></div></nav></header><main class="page-shell"><section class="hero"><div class="eyebrow">Browser utilities · 浏览器工具</div><h1>Useful tools. Zero uploads.</h1><p>Fast everyday utilities that run entirely in your browser. No accounts, no tracking, no server-side processing.</p><div class="privacy-note">✓ Your input stays on this device</div></section>
+<section class="tool-grid" aria-label="Available tools">
+<a class="tool-tile" href="/password/"><div class="tool-icon">🔐</div><h2>Password Generator</h2><p>Generate secure random passwords with Web Crypto.</p></a>
+<a class="tool-tile" href="/calculator/"><div class="tool-icon">🧮</div><h2>Calculator</h2><p>Keyboard-friendly everyday arithmetic.</p></a>
+<a class="tool-tile" href="/json/"><div class="tool-icon">{ }</div><h2>JSON Formatter</h2><p>Format, minify and validate JSON locally.</p></a>
+<a class="tool-tile" href="/text/"><div class="tool-icon">Aa</div><h2>Text Toolkit</h2><p>Count, clean, deduplicate, sort and transform text.</p></a>
+<a class="tool-tile" href="/encode/"><div class="tool-icon">⇄</div><h2>Base64 & URL</h2><p>Unicode-safe Base64 and URL component encoding.</p></a>
+<a class="tool-tile" href="/timestamp/"><div class="tool-icon">🕒</div><h2>Timestamp Converter</h2><p>Convert Unix seconds, milliseconds, local time and UTC.</p></a>
+<a class="tool-tile" href="/uuid/"><div class="tool-icon">#</div><h2>UUID Generator</h2><p>Generate RFC 4122 version 4 UUIDs securely.</p></a>
+<a class="tool-tile" href="/hash/"><div class="tool-icon">⌁</div><h2>SHA Hash Tool</h2><p>Hash text and files with SHA-256, SHA-384 or SHA-512.</p></a>
+<a class="tool-tile" href="/qr/"><div class="tool-icon">▦</div><h2>QR Code Generator</h2><p>Create text, URL and Wi-Fi QR codes entirely in your browser.</p></a>
+<a class="tool-tile" href="/unit/"><div class="tool-icon">⇆</div><h2>Unit Converter</h2><p>Convert length, mass, temperature, area, volume and data sizes.</p></a>
+<a class="tool-tile" href="/color/"><div class="tool-icon">◉</div><h2>Color & Contrast</h2><p>Convert HEX, RGB and HSL, then verify WCAG contrast.</p></a>
+<a class="tool-tile" href="/image/"><div class="tool-icon">▧</div><h2>Image Compressor</h2><p>Resize and compress PNG, JPEG or WebP images locally.</p></a>
+</section></main><footer>UtilCover · All processing happens locally in your browser</footer></body></html>

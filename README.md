@@ -8,7 +8,7 @@
 
 | 工具 | 入口 | 核心功能 |
 |---|---|---|
-| 安全随机密码生成器 | [`/`](index.html)、[`/index-zh.html`](index-zh.html) | Web Crypto、安全随机、批量生成、字符规则 |
+| 安全随机密码生成器 | [`/password/`](password/)、[`/password/index-zh`](password/index-zh.html) | Web Crypto、安全随机、批量生成、字符规则 |
 | 网页计算器 | [`/calculator/`](calculator/) | 鼠标与键盘、四则运算、连续计算 |
 | JSON格式化与校验 | [`/json/`](json/) | 格式化、压缩、语法校验 |
 | 文本统计与整理 | [`/text/`](text/) | 字符/单词/中文/行数统计、去重、排序、大小写 |
@@ -20,7 +20,7 @@
 | 单位换算器 | [`/unit/`](unit/) | 长度、质量、温度、面积、体积、数据大小 |
 | 颜色与对比度 | [`/color/`](color/) | HEX/RGB/HSL互转、WCAG对比度 |
 | 图片压缩与缩放 | [`/image/`](image/) | 本地调整尺寸，导出PNG/JPEG/WebP |
-| 工具中心 | [`/tools/`](tools/) | 所有工具的统一导航入口 |
+| 工具中心 | [`/`](index.html) | 所有工具的主页导航入口；`/tools/`保留为兼容别名 |
 
 ## 安全与隐私
 
@@ -41,11 +41,12 @@
 
 ```text
 WebTools/
-├── index.html                  # 英文密码生成器
-├── index-zh.html               # 中文密码生成器
+├── index.html                  # 工具中心主页
+├── index-zh.html               # 旧中文密码入口（canonical指向新路径）
 ├── script.js                   # 密码生成逻辑
 ├── style.css                   # 密码生成器样式
-├── tools/                      # 工具中心
+├── tools/                      # 工具中心兼容入口（canonical指向主页）
+├── password/                   # 中英文密码生成器
 ├── shared/tools.css            # 新工具共享响应式样式
 ├── calculator/                 # 网页计算器
 ├── json/                       # JSON格式化与校验
@@ -73,7 +74,7 @@ python3 -m http.server 8000
 访问工具中心：
 
 ```text
-http://127.0.0.1:8000/tools/
+http://127.0.0.1:8000/
 ```
 
 正式部署建议使用HTTPS，以确保Web Crypto、Clipboard和File API在安全上下文中正常工作。
