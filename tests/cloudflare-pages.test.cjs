@@ -87,6 +87,17 @@ test('uses a one-line English desktop introduction and a four-by-three homepage 
   }
 });
 
+test('orders homepage tools by the requested three-row workflow', () => {
+  const englishOrder = ['/json/', '/image/', '/qr/', '/encode/', '/password/', '/text/', '/timestamp/', '/uuid/', '/hash/', '/color/', '/unit/', '/calculator/'];
+  for (const file of ['index.html', 'tools/index.html', 'zh/index.html', 'zh/tools/index.html']) {
+    const html = read(file);
+    const grid = html.match(/<section class="tool-grid"[\s\S]*?<\/section>/)?.[0] || '';
+    const actual = [...grid.matchAll(/<a class="tool-tile" href="([^"]+)"/g)].map(match => match[1]);
+    const expected = file.startsWith('zh/') ? englishOrder.map(route => `/zh${route}`) : englishOrder;
+    assert.deepEqual(actual, expected, `${file} has the wrong tool order`);
+  }
+});
+
 test('keeps every tool-page introduction and title compact', () => {
   const css = read('shared/tools.css');
   assert.match(css, /\.tool-directory-page \.page-shell\s*\{[^}]*padding:\s*32px 0 72px/s);
