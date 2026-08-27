@@ -1,0 +1,16 @@
+.git/
+.github/
+.idea/
+.wrangler/
+node_modules/
+tests/
+.gitignore
+.assetsignore
+.dev.vars
+.env
+.env.*
+package.json
+package-lock.json
+README.md
+LICENSE
+wrangler.json

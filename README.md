@@ -78,29 +78,30 @@ http://127.0.0.1:8000/tools/
 
 正式部署建议使用HTTPS，以确保Web Crypto、Clipboard和File API在安全上下文中正常工作。
 
-## Cloudflare Pages部署
+## Cloudflare Workers静态资产部署
 
-该项目是无构建步骤的纯静态站点。连接GitHub仓库后，在Cloudflare Pages中使用以下设置：
+当前项目使用Workers Builds连接GitHub，并通过Workers Static Assets部署。仓库根目录的`wrangler.json`是部署配置来源；无需Worker脚本或运行时密钥。
 
 | 配置项 | 值 |
 |---|---|
-| Framework preset | `None` |
 | Production branch | `main` |
-| Build command | `exit 0`（控制台允许留空时也可留空） |
-| Build output directory | `.` |
+| Build command | `exit 0`（纯静态站无构建步骤） |
+| Deploy command | `npx wrangler deploy` |
 | Root directory | 仓库根目录（留空） |
 | Environment variables | 不需要 |
 
 部署后的检查与切流顺序：
 
-1. 先使用`*.pages.dev`地址验证全部工具、`/404.html`、响应头及移动端布局。
-2. 在Pages项目的 **Custom domains** 中添加`www.genpass.top`，不要只手工创建DNS记录。
-3. 确认证书Active后，再将`genpass.top`通过Cloudflare **Single Redirect**永久重定向到`https://www.genpass.top`；Pages的`_redirects`不支持域名级重定向。
+1. 先使用Worker提供的`*.workers.dev`地址验证全部工具、未知路径404、响应头及移动端布局。
+2. 在Worker的 **Settings > Domains & Routes** 中添加`www.genpass.top`，不要只手工创建DNS记录。
+3. 确认证书Active后，再将`genpass.top`通过Cloudflare **Single Redirect**永久重定向到`https://www.genpass.top`；静态资产的`_redirects`不支持域名级重定向。
 4. 如域名存在CAA限制，先确保允许Cloudflare文档列出的签发机构。
-5. 不为当前未指纹化的JS/CSS添加长期自定义缓存规则；Cloudflare Pages已有ETag、压缩和部署缓存失效机制。
+5. 不为当前未指纹化的JS/CSS添加长期自定义缓存规则；Workers Static Assets已有ETag和部署缓存失效机制。
 6. 验证未知路径返回自定义404，而不是以200状态回退到首页。
 
-仓库根目录的`_headers`提供CSP、点击劫持防护和权限策略；`404.html`阻止Pages把本项目误判为SPA；`robots.txt`与`sitemap.xml`使用规范主机`www.genpass.top`。该项目不需要Pages Functions、Wrangler或运行时密钥。
+`wrangler.json`配置`404-page`行为；`.assetsignore`阻止测试、Git元数据和部署配置成为公开资源；`_headers`提供CSP、点击劫持防护和权限策略；`robots.txt`与`sitemap.xml`使用规范主机`www.genpass.top`。
+
+如果另行创建传统Cloudflare Pages Git Integration项目，则不需要`wrangler.json`：Framework preset选`None`，Build command留空，Build output directory设为`.`。不要混用Pages的`wrangler pages deploy`与Workers Builds的`wrangler deploy`。
 
 ## 测试
 
