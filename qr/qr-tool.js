@@ -4,6 +4,18 @@ const qrFactory = typeof module !== 'undefined' && module.exports
   ? require('./vendor/qrcode-generator-1.4.4.js')
   : globalThis.qrcode;
 
+const QR_MESSAGES = {
+  failed: { en: 'QR generation failed', zh: '二维码生成失败' },
+};
+
+function qrMessage(key, language, parameters = {}) {
+  const locale = String(language).toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  if (key === 'generated') return locale === 'zh'
+    ? `${parameters.size}×${parameters.size} 个模块 · 已在本地生成`
+    : `${parameters.size}×${parameters.size} modules · Generated locally`;
+  return QR_MESSAGES[key][locale];
+}
+
 function normalizeHex(value) {
   const text = String(value ?? '').trim().toLowerCase();
   if (/^#[0-9a-f]{3}$/u.test(text)) return `#${[...text.slice(1)].map(char => char + char).join('')}`;
@@ -90,6 +102,7 @@ function renderQrToCanvas(canvas, matrix, options) {
 }
 
 function attachQrTool() {
+  const language = document.documentElement.lang;
   const ids = ['qrMode', 'qrContent', 'wifiFields', 'wifiSsid', 'wifiPassword', 'wifiSecurity', 'wifiHidden', 'qrSize', 'qrLevel', 'qrMargin', 'qrDark', 'qrLight', 'generateQr', 'downloadQr', 'qrCanvas', 'qrStatus'];
   const elements = Object.fromEntries(ids.map(id => [id, document.getElementById(id)]));
   if (Object.values(elements).some(value => !value)) return;
@@ -121,11 +134,11 @@ function attachQrTool() {
       const matrix = createQrMatrix(content, options.level);
       renderQrToCanvas(elements.qrCanvas, matrix, options);
       elements.downloadQr.disabled = false;
-      elements.qrStatus.textContent = `${matrix.size}×${matrix.size} modules · Generated locally`;
+      elements.qrStatus.textContent = qrMessage('generated', language, { size: matrix.size });
       elements.qrStatus.dataset.state = 'success';
     } catch (error) {
       elements.downloadQr.disabled = true;
-      elements.qrStatus.textContent = error instanceof Error ? error.message : 'QR generation failed';
+      elements.qrStatus.textContent = String(language).toLowerCase().startsWith('zh') ? qrMessage('failed', language) : (error instanceof Error ? error.message : qrMessage('failed', language));
       elements.qrStatus.dataset.state = 'error';
     }
   };
@@ -142,4 +155,4 @@ function attachQrTool() {
 }
 
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachQrTool);
-if (typeof module !== 'undefined' && module.exports) module.exports = { normalizeQrOptions, buildWifiPayload, createQrMatrix, calculateQrLayout, renderQrToCanvas };
+if (typeof module !== 'undefined' && module.exports) module.exports = { normalizeQrOptions, buildWifiPayload, createQrMatrix, calculateQrLayout, renderQrToCanvas, qrMessage };

@@ -150,7 +150,23 @@
     };
   }
 
+  const COLOR_MESSAGES = {
+    converted: { en: 'Converted', zh: '转换完成' },
+    pass: { en: 'Pass', zh: '通过' },
+    fail: { en: 'Fail', zh: '未通过' },
+    contrastCalculated: { en: 'Contrast calculated', zh: '对比度已计算' },
+    copied: { en: 'Copied', zh: '已复制' },
+    invalidColor: { en: 'Invalid color', zh: '颜色无效' },
+    copyFailed: { en: 'Copy failed', zh: '复制失败' },
+  };
+
+  function colorMessage(key, language) {
+    const locale = String(language).toLowerCase().startsWith('zh') ? 'zh' : 'en';
+    return COLOR_MESSAGES[key][locale];
+  }
+
   function attachColorTool(documentRef = document, navigatorRef = navigator) {
+    const language = documentRef.documentElement?.lang || 'en';
     const ids = ['hexInput', 'rgbR', 'rgbG', 'rgbB', 'hslH', 'hslS', 'hslL', 'colorPreview', 'hexResult', 'rgbResult', 'hslResult', 'fromHex', 'fromRgb', 'fromHsl', 'copyResults', 'convertStatus', 'contrastA', 'contrastB', 'pickerA', 'pickerB', 'checkContrast', 'copyContrast', 'contrastSample', 'contrastRatio', 'aaNormal', 'aaLarge', 'aaaNormal', 'aaaLarge', 'contrastStatus'];
     const elements = Object.fromEntries(ids.map(id => [id, documentRef.getElementById(id)]));
     if (Object.values(elements).some(element => !element)) return false;
@@ -174,11 +190,16 @@
       elements.rgbResult.textContent = `rgb(${normalized.r}, ${normalized.g}, ${normalized.b})`;
       elements.hslResult.textContent = formatHsl(hsl);
       elements.colorPreview.style.backgroundColor = hex;
-      status(elements.convertStatus, 'Converted · 转换完成', 'success');
+      status(elements.convertStatus, colorMessage('converted', language), 'success');
     };
     const runColor = operation => {
       try { renderColor(operation()); }
-      catch (error) { status(elements.convertStatus, error instanceof Error ? error.message : 'Invalid color', 'error'); }
+      catch (error) {
+        const message = String(language).toLowerCase().startsWith('zh')
+          ? colorMessage('invalidColor', language)
+          : (error instanceof Error ? error.message : colorMessage('invalidColor', language));
+        status(elements.convertStatus, message, 'error');
+      }
     };
     const renderContrast = () => {
       try {
@@ -194,22 +215,30 @@
         elements.pickerB.value = backgroundHex.toLowerCase();
         elements.contrastRatio.textContent = `${formatContrastRatio(ratio)}:1`;
         for (const [key, passed] of Object.entries(compliance)) {
-          elements[key].textContent = passed ? 'Pass · 通过' : 'Fail · 未通过';
+          elements[key].textContent = colorMessage(passed ? 'pass' : 'fail', language);
           elements[key].dataset.pass = String(passed);
         }
         elements.contrastSample.style.color = foregroundHex;
         elements.contrastSample.style.backgroundColor = backgroundHex;
-        status(elements.contrastStatus, 'Contrast calculated · 对比度已计算', 'success');
+        status(elements.contrastStatus, colorMessage('contrastCalculated', language), 'success');
       } catch (error) {
-        status(elements.contrastStatus, error instanceof Error ? error.message : 'Invalid color', 'error');
+        const message = String(language).toLowerCase().startsWith('zh')
+          ? colorMessage('invalidColor', language)
+          : (error instanceof Error ? error.message : colorMessage('invalidColor', language));
+        status(elements.contrastStatus, message, 'error');
       }
     };
     const copy = async (text, target) => {
       try {
         if (!navigatorRef.clipboard || !navigatorRef.clipboard.writeText) throw new Error('Clipboard is unavailable.');
         await navigatorRef.clipboard.writeText(text);
-        status(target, 'Copied · 已复制', 'success');
-      } catch (error) { status(target, error instanceof Error ? error.message : 'Copy failed', 'error'); }
+        status(target, colorMessage('copied', language), 'success');
+      } catch (error) {
+        const message = String(language).toLowerCase().startsWith('zh')
+          ? colorMessage('copyFailed', language)
+          : (error instanceof Error ? error.message : colorMessage('copyFailed', language));
+        status(target, message, 'error');
+      }
     };
 
     elements.fromHex.addEventListener('click', () => runColor(() => parseHex(elements.hexInput.value)));
@@ -237,6 +266,7 @@
     contrastRatio,
     formatContrastRatio,
     getWcagCompliance,
+    colorMessage,
     attachColorTool,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

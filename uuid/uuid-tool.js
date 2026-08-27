@@ -1,5 +1,18 @@
 'use strict';
 
+const UUID_MESSAGES = {
+  copied: { en: 'Copied', zh: '已复制' },
+  copyFailed: { en: 'Copy failed', zh: '复制失败' },
+  ready: { en: 'Ready', zh: '就绪' },
+  failed: { en: 'Generation failed', zh: '生成失败' },
+};
+
+function uuidMessage(key, language, parameters = {}) {
+  const locale = String(language).toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  if (key === 'generated') return locale === 'zh' ? `已生成 ${parameters.count} 个 UUID` : `${parameters.count} UUID${parameters.count === 1 ? '' : 's'} generated`;
+  return UUID_MESSAGES[key][locale];
+}
+
 function uuidFromBytes(source, { uppercase = false, hyphens = true } = {}) {
   if (!(source instanceof Uint8Array) || source.length !== 16) throw new TypeError('UUID requires exactly 16 random bytes.');
   const bytes = new Uint8Array(source);
@@ -24,6 +37,7 @@ function generateUuids(count, options = {}) {
 }
 
 function attachUuidTool() {
+  const language = document.documentElement.lang;
   const count = document.getElementById('uuidCount');
   const output = document.getElementById('uuidOutput');
   const status = document.getElementById('uuidStatus');
@@ -35,22 +49,22 @@ function attachUuidTool() {
         hyphens: document.getElementById('uuidHyphens').checked,
       });
       output.value = values.join('\n');
-      status.textContent = `${values.length} UUID${values.length === 1 ? '' : 's'} generated`;
+      status.textContent = uuidMessage('generated', language, { count: values.length });
       status.dataset.state = 'success';
     } catch (error) {
       output.value = '';
-      status.textContent = error instanceof Error ? error.message : 'Generation failed';
+      status.textContent = String(language).toLowerCase().startsWith('zh') ? uuidMessage('failed', language) : (error instanceof Error ? error.message : uuidMessage('failed', language));
       status.dataset.state = 'error';
     }
   };
   document.getElementById('generateUuid').addEventListener('click', generate);
   document.getElementById('copyUuid').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(output.value); status.textContent = 'Copied'; }
-    catch { status.textContent = 'Copy failed'; status.dataset.state = 'error'; }
+    try { await navigator.clipboard.writeText(output.value); status.textContent = uuidMessage('copied', language); }
+    catch { status.textContent = uuidMessage('copyFailed', language); status.dataset.state = 'error'; }
   });
-  document.getElementById('clearUuid').addEventListener('click', () => { output.value = ''; status.textContent = 'Ready'; });
+  document.getElementById('clearUuid').addEventListener('click', () => { output.value = ''; status.textContent = uuidMessage('ready', language); });
   generate();
 }
 
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachUuidTool);
-if (typeof module !== 'undefined' && module.exports) module.exports = { uuidFromBytes, generateUuid, generateUuids };
+if (typeof module !== 'undefined' && module.exports) module.exports = { uuidFromBytes, generateUuid, generateUuids, uuidMessage };

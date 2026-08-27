@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>网页计算器 | UtilCover</title>
+  <meta name="description" content="支持键盘输入和鼠标点击的快速基础网页计算器，所有计算均在浏览器本地完成。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/calculator/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/calculator/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/calculator/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/calculator/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/calculator/calculator.css">
+</head>
+<body class="tool-directory-page calculator-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/zh/password/">密码</a><a href="/zh/calculator/" aria-current="page">计算器</a><a href="/zh/json/">JSON</a><a href="/zh/text/">文本</a><a href="/zh/encode/">编解码</a><a href="/zh/timestamp/">时间戳</a><a href="/zh/uuid/">UUID</a><a href="/zh/hash/">哈希</a><a href="/zh/qr/">二维码</a><a href="/zh/unit/">单位</a><a href="/zh/color/">颜色</a><a href="/zh/image/">图片</a><a class="language-link" href="/calculator/?lang=en">英文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>网页计算器</h1><p>支持鼠标和键盘操作的快速日常算术计算。</p></section>
+  <section class="tool-card calculator-panel" aria-label="基础计算器">
+    <div class="display-panel">
+      <output id="calculatorDisplay" class="calculator-display" aria-live="polite">0</output>
+    </div>
+    <div class="calculator-keys" aria-label="计算器按键">
+      <button type="button" class="key key-function" data-action="clear" aria-label="全部清除">AC</button>
+      <button type="button" class="key key-function" data-action="sign" aria-label="切换正负号">±</button>
+      <button type="button" class="key key-function" data-action="backspace" aria-label="退格">⌫</button>
+      <button type="button" class="key key-operator" data-operator="/" aria-label="除">÷</button>
+      <button type="button" class="key" data-digit="7">7</button>
+      <button type="button" class="key" data-digit="8">8</button>
+      <button type="button" class="key" data-digit="9">9</button>
+      <button type="button" class="key key-operator" data-operator="*" aria-label="乘">×</button>
+      <button type="button" class="key" data-digit="4">4</button>
+      <button type="button" class="key" data-digit="5">5</button>
+      <button type="button" class="key" data-digit="6">6</button>
+      <button type="button" class="key key-operator" data-operator="-" aria-label="减">−</button>
+      <button type="button" class="key" data-digit="1">1</button>
+      <button type="button" class="key" data-digit="2">2</button>
+      <button type="button" class="key" data-digit="3">3</button>
+      <button type="button" class="key key-operator" data-operator="+" aria-label="加">+</button>
+      <button type="button" class="key key-zero" data-digit="0">0</button>
+      <button type="button" class="key" data-action="decimal" aria-label="小数点">.</button>
+      <button type="button" class="key key-equals" data-action="equals" aria-label="等于">=</button>
+    </div>
+  </section>
+  <aside class="info-card keyboard-help"><strong>键盘快捷键：</strong>数字键、<kbd>+</kbd>、<kbd>-</kbd>、<kbd>*</kbd>、<kbd>/</kbd>、<kbd>Enter</kbd>、<kbd>Backspace</kbd>、<kbd>Esc</kbd></aside>
+</main>
+<footer>UtilCover · 私密、快速的浏览器本地工具</footer>
+<script src="/calculator/calculator.js"></script>
+</body>
+</html>

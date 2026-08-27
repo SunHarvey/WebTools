@@ -12,56 +12,57 @@
   <title>Image Compressor & Resizer | UtilCover</title>
   <meta name="description" content="Compress and resize PNG, JPEG and WebP images privately in your browser.">
   <link rel="canonical" href="https://www.utilcover.com/image/">
-  <link rel="stylesheet" href="../shared/tools.css">
-  <link rel="stylesheet" href="image-tool.css">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/image/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/image/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/image/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/image/image-tool.css">
 </head>
 <body class="tool-directory-page">
-<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/password/">Password</a><a href="/calculator/">Calculator</a><a href="/json/">JSON</a><a href="/text/">Text</a><a href="/encode/">Encode</a><a href="/timestamp/">Timestamp</a><a href="/uuid/">UUID</a><a href="/hash/">Hash</a><a href="/qr/">QR</a><a href="/unit/">Unit</a><a href="/color/">Color</a><a href="/image/" aria-current="page">Image</a></div></nav></header>
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/password/">Password</a><a href="/calculator/">Calculator</a><a href="/json/">JSON</a><a href="/text/">Text</a><a href="/encode/">Encode</a><a href="/timestamp/">Timestamp</a><a href="/uuid/">UUID</a><a href="/hash/">Hash</a><a href="/qr/">QR</a><a href="/unit/">Unit</a><a href="/color/">Color</a><a href="/image/" aria-current="page">Image</a><a class="language-link" href="/zh/image/">Chinese</a></div></nav></header>
 <main class="page-shell">
   <section class="hero">
     <h1>Image Compressor & Resizer</h1>
-    <p>Resize and convert PNG, JPEG, or WebP without sending the image anywhere. · 在浏览器本地缩放、压缩和转换图片。</p>
+    <p>Resize and convert PNG, JPEG, or WebP without sending the image anywhere.</p>
   </section>
-
-  <section class="tool-card"><p class="local-processing-note">Images are processed on this device and never uploaded. · 图片不会上传</p>
+  <section class="tool-card"><p class="local-processing-note">Images are processed on this device and never uploaded.</p>
     <div class="field">
-      <label for="imageFile">Choose image · 选择图片</label>
+      <label for="imageFile">Choose image</label>
       <input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp">
-      <small>PNG, JPEG or WebP only · 最大 16 MiB / 12 megapixels</small>
+      <small>PNG, JPEG or WebP only; maximum 16 MiB / 12 megapixels</small>
     </div>
-
     <div class="preview-grid" aria-live="polite">
       <article class="preview-panel">
-        <h2>Original · 原图</h2>
+        <h2>Original</h2>
         <div class="preview-frame"><img id="originalPreview" alt="Original image preview" hidden></div>
-        <p id="originalInfo">No image selected · 尚未选择图片</p>
+        <p id="originalInfo">No image selected</p>
       </article>
       <article class="preview-panel">
-        <h2>Result · 结果</h2>
+        <h2>Result</h2>
         <div class="preview-frame"><img id="resultPreview" alt="Compressed image preview" hidden></div>
-        <p id="resultInfo">No result yet · 尚无结果</p>
+        <p id="resultInfo">No result yet</p>
       </article>
     </div>
-
     <div class="settings-grid">
-      <div class="field"><label for="targetWidth">Width · 宽度</label><input id="targetWidth" type="number" min="1" max="8192" value="1" inputmode="numeric"></div>
-      <div class="field"><label for="targetHeight">Height · 高度</label><input id="targetHeight" type="number" min="1" max="8192" value="1" inputmode="numeric"></div>
-      <div class="field"><label for="outputFormat">Output · 输出格式</label><select id="outputFormat"><option value="image/jpeg">JPEG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></div>
-      <div class="field" id="qualityField"><label for="quality">Quality · 质量 <output id="qualityValue">80%</output></label><input id="quality" type="range" min="1" max="100" value="80"></div>
+      <div class="field"><label for="targetWidth">Width</label><input id="targetWidth" type="number" min="1" max="8192" value="1" inputmode="numeric"></div>
+      <div class="field"><label for="targetHeight">Height</label><input id="targetHeight" type="number" min="1" max="8192" value="1" inputmode="numeric"></div>
+      <div class="field"><label for="outputFormat">Output format</label><select id="outputFormat"><option value="image/jpeg">JPEG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></div>
+      <div class="field" id="qualityField"><label for="quality">Quality <output id="qualityValue">80%</output></label><input id="quality" type="range" min="1" max="100" value="80"></div>
     </div>
     <div class="checkbox-row options">
-      <label><input id="keepAspect" type="checkbox" checked> Keep aspect ratio · 保持比例</label>
-      <label><input id="preventUpscale" type="checkbox" checked> Do not enlarge · 禁止放大</label>
+      <label><input id="keepAspect" type="checkbox" checked> Keep aspect ratio</label>
+      <label><input id="preventUpscale" type="checkbox" checked> Do not enlarge</label>
     </div>
     <div class="actions">
-      <button id="compressButton" disabled>Compress & resize · 压缩缩放</button>
-      <a id="downloadLink" class="button-link secondary" hidden>Download result · 下载结果</a>
+      <button id="compressButton" disabled>Compress & resize</button>
+      <a id="downloadLink" class="button-link secondary" hidden>Download result</a>
     </div>
-    <div id="imageStatus" class="status" role="status">Ready — choose an image · 就绪，请选择图片</div>
+    <div id="imageStatus" class="status" role="status">Ready — choose an image</div>
   </section>
-  <aside class="info-card"><strong>Privacy · 隐私：</strong> Canvas processing happens entirely on this device. Files are never uploaded. SVG and animated GIF are intentionally rejected. · 所有处理都在本设备完成，不会上传；不支持 SVG 和动态 GIF。</aside>
+  <aside class="info-card"><strong>Privacy:</strong> Canvas processing happens entirely on this device. Files are never uploaded. SVG and animated GIF are intentionally rejected.</aside>
 </main>
 <footer>UtilCover · Private, fast, client-side utilities</footer>
-<script src="image-tool.js"></script>
+<script src="/shared/locale-redirect.js"></script>
+<script src="/image/image-tool.js"></script>
 </body>
 </html>

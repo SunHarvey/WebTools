@@ -1,5 +1,16 @@
 'use strict';
 
+const TEXT_MESSAGES = {
+  ready: { en: 'Ready', zh: '就绪' },
+  copied: { en: 'Copied', zh: '已复制' },
+  copyFailed: { en: 'Copy failed', zh: '复制失败' },
+};
+
+function textMessage(key, language) {
+  const locale = String(language).toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  return TEXT_MESSAGES[key][locale];
+}
+
 function textStats(text) {
   const value = String(text ?? '');
   const wordMatches = value.match(/[\p{L}\p{N}]+/gu) || [];
@@ -42,6 +53,7 @@ function toTitleCase(text) {
 }
 
 function attachTextTool() {
+  const language = document.documentElement.lang;
   const area = document.getElementById('textInput');
   if (!area) return;
   const statElements = Object.fromEntries(['characters', 'charactersNoSpaces', 'words', 'chineseCharacters', 'lines', 'paragraphs'].map(key => [key, document.querySelector(`[data-stat="${key}"]`)]));
@@ -63,14 +75,14 @@ function attachTextTool() {
   };
 
   document.querySelectorAll('[data-text-action]').forEach(button => button.addEventListener('click', () => apply(actions[button.dataset.textAction])));
-  document.getElementById('clearText').addEventListener('click', () => { area.value = ''; status.textContent = 'Ready'; refresh(); });
+  document.getElementById('clearText').addEventListener('click', () => { area.value = ''; status.textContent = textMessage('ready', language); refresh(); });
   document.getElementById('copyText').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(area.value); status.textContent = 'Copied'; }
-    catch { status.textContent = 'Copy failed'; }
+    try { await navigator.clipboard.writeText(area.value); status.textContent = textMessage('copied', language); }
+    catch { status.textContent = textMessage('copyFailed', language); }
   });
   area.addEventListener('input', refresh);
   refresh();
 }
 
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachTextTool);
-if (typeof module !== 'undefined' && module.exports) module.exports = { textStats, removeBlankLines, deduplicateLines, sortLines, trimLines, toTitleCase };
+if (typeof module !== 'undefined' && module.exports) module.exports = { textStats, removeBlankLines, deduplicateLines, sortLines, trimLines, toTitleCase, textMessage };

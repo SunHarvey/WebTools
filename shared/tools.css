@@ -58,6 +58,12 @@ a { color: inherit; }
   font-size: 0.78rem;
 }
 .nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--text); background: rgba(97, 218, 251, 0.1); }
+.nav-links .language-link {
+  margin-left: 4px;
+  color: #bbf7d0;
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  background: rgba(74, 222, 128, 0.06);
+}
 
 .page-shell { width: min(1080px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0 72px; }
 .hero { text-align: center; margin: 0 auto 32px; max-width: 790px; }

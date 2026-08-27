@@ -1,5 +1,19 @@
 'use strict';
 
+const ENCODE_MESSAGES = {
+  done: { en: 'Done', zh: '完成' },
+  failed: { en: 'Conversion failed', zh: '转换失败' },
+  swapped: { en: 'Swapped', zh: '已交换' },
+  ready: { en: 'Ready', zh: '就绪' },
+  copied: { en: 'Copied', zh: '已复制' },
+  copyFailed: { en: 'Copy failed', zh: '复制失败' },
+};
+
+function encodeMessage(key, language) {
+  const locale = String(language).toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  return ENCODE_MESSAGES[key][locale];
+}
+
 function bytesToBinary(bytes) {
   let binary = '';
   const size = 0x8000;
@@ -35,25 +49,30 @@ function decodeUrl(value) {
 }
 
 function attachEncodeTool() {
+  const language = document.documentElement.lang;
   const input = document.getElementById('encodeInput');
   const output = document.getElementById('encodeOutput');
   const status = document.getElementById('encodeStatus');
   if (!input || !output || !status) return;
   const run = operation => {
-    try { output.value = operation(input.value); status.textContent = 'Done'; status.dataset.state = 'success'; }
-    catch (error) { output.value = ''; status.textContent = error instanceof Error ? error.message : 'Conversion failed'; status.dataset.state = 'error'; }
+    try { output.value = operation(input.value); status.textContent = encodeMessage('done', language); status.dataset.state = 'success'; }
+    catch (error) {
+      output.value = '';
+      status.textContent = String(language).toLowerCase().startsWith('zh') ? encodeMessage('failed', language) : (error instanceof Error ? error.message : encodeMessage('failed', language));
+      status.dataset.state = 'error';
+    }
   };
   document.getElementById('base64Encode').addEventListener('click', () => run(encodeBase64));
   document.getElementById('base64Decode').addEventListener('click', () => run(decodeBase64));
   document.getElementById('urlEncode').addEventListener('click', () => run(encodeUrl));
   document.getElementById('urlDecode').addEventListener('click', () => run(decodeUrl));
-  document.getElementById('swapEncode').addEventListener('click', () => { [input.value, output.value] = [output.value, input.value]; status.textContent = 'Swapped'; });
-  document.getElementById('clearEncode').addEventListener('click', () => { input.value = ''; output.value = ''; status.textContent = 'Ready'; });
+  document.getElementById('swapEncode').addEventListener('click', () => { [input.value, output.value] = [output.value, input.value]; status.textContent = encodeMessage('swapped', language); });
+  document.getElementById('clearEncode').addEventListener('click', () => { input.value = ''; output.value = ''; status.textContent = encodeMessage('ready', language); });
   document.getElementById('copyEncode').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(output.value); status.textContent = 'Copied'; }
-    catch { status.textContent = 'Copy failed'; status.dataset.state = 'error'; }
+    try { await navigator.clipboard.writeText(output.value); status.textContent = encodeMessage('copied', language); }
+    catch { status.textContent = encodeMessage('copyFailed', language); status.dataset.state = 'error'; }
   });
 }
 
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachEncodeTool);
-if (typeof module !== 'undefined' && module.exports) module.exports = { encodeBase64, decodeBase64, encodeUrl, decodeUrl };
+if (typeof module !== 'undefined' && module.exports) module.exports = { encodeBase64, decodeBase64, encodeUrl, decodeUrl, encodeMessage };

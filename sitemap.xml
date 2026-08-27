@@ -2,7 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://www.utilcover.com/</loc></url>
   <url><loc>https://www.utilcover.com/password/</loc></url>
-  <url><loc>https://www.utilcover.com/password/index-zh</loc></url>
   <url><loc>https://www.utilcover.com/calculator/</loc></url>
   <url><loc>https://www.utilcover.com/json/</loc></url>
   <url><loc>https://www.utilcover.com/text/</loc></url>
@@ -14,4 +13,17 @@
   <url><loc>https://www.utilcover.com/unit/</loc></url>
   <url><loc>https://www.utilcover.com/color/</loc></url>
   <url><loc>https://www.utilcover.com/image/</loc></url>
+  <url><loc>https://www.utilcover.com/zh/</loc></url>
+  <url><loc>https://www.utilcover.com/zh/password/</loc></url>
+  <url><loc>https://www.utilcover.com/zh/calculator/</loc></url>
+  <url><loc>https://www.utilcover.com/zh/json/</loc></url>
+  <url><loc>https://www.utilcover.com/zh/text/</loc></url>
+  <url><loc>https://www.utilcover.com/zh/encode/</loc></url>
+  <url><loc>https://www.utilcover.com/zh/timestamp/</loc></url>
+  <url><loc>https://www.utilcover.com/zh/uuid/</loc></url>
+  <url><loc>https://www.utilcover.com/zh/hash/</loc></url>
+  <url><loc>https://www.utilcover.com/zh/qr/</loc></url>
+  <url><loc>https://www.utilcover.com/zh/unit/</loc></url>
+  <url><loc>https://www.utilcover.com/zh/color/</loc></url>
+  <url><loc>https://www.utilcover.com/zh/image/</loc></url>
 </urlset>

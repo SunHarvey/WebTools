@@ -3,6 +3,22 @@
 const SUPPORTED_ALGORITHMS = new Set(['SHA-256', 'SHA-384', 'SHA-512']);
 const MAX_FILE_BYTES = 32 * 1024 * 1024;
 
+const HASH_MESSAGES = {
+  calculating: { en: 'Calculating…', zh: '正在计算…' },
+  calculated: { en: 'Hash calculated locally', zh: '哈希已在本地计算完成' },
+  failed: { en: 'Hashing failed', zh: '哈希计算失败' },
+  bothRequired: { en: 'Calculate and enter both hashes first', zh: '请先计算并输入两个哈希值' },
+  match: { en: 'Hashes match', zh: '哈希值匹配' },
+  noMatch: { en: 'Hashes do not match', zh: '哈希值不匹配' },
+  copied: { en: 'Copied', zh: '已复制' },
+  copyFailed: { en: 'Copy failed', zh: '复制失败' },
+};
+
+function hashMessage(key, language) {
+  const locale = String(language).toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  return HASH_MESSAGES[key][locale];
+}
+
 function normalizeAlgorithm(algorithm) {
   const value = String(algorithm).toUpperCase();
   if (!SUPPORTED_ALGORITHMS.has(value)) throw new RangeError('Unsupported hash algorithm.');
@@ -54,6 +70,7 @@ function createLatestTaskRunner({ onStart = () => {}, onSuccess = () => {}, onEr
 }
 
 function attachHashTool() {
+  const language = document.documentElement.lang;
   const text = document.getElementById('hashText');
   const file = document.getElementById('hashFile');
   const algorithm = document.getElementById('hashAlgorithm');
@@ -64,17 +81,17 @@ function attachHashTool() {
 
   const run = createLatestTaskRunner({
     onStart: () => {
-      status.textContent = 'Calculating…';
+      status.textContent = hashMessage('calculating', language);
       status.dataset.state = '';
     },
     onSuccess: value => {
       output.value = value;
-      status.textContent = 'Hash calculated locally';
+      status.textContent = hashMessage('calculated', language);
       status.dataset.state = 'success';
     },
     onError: error => {
       output.value = '';
-      status.textContent = error instanceof Error ? error.message : 'Hashing failed';
+      status.textContent = String(language).toLowerCase().startsWith('zh') ? hashMessage('failed', language) : (error instanceof Error ? error.message : hashMessage('failed', language));
       status.dataset.state = 'error';
     },
   });
@@ -87,16 +104,16 @@ function attachHashTool() {
     return hashBuffer(await selected.arrayBuffer(), algorithm.value);
   }));
   document.getElementById('compareHash').addEventListener('click', () => {
-    if (!output.value || !expected.value.trim()) { status.textContent = 'Calculate and enter both hashes first'; status.dataset.state = 'error'; return; }
+    if (!output.value || !expected.value.trim()) { status.textContent = hashMessage('bothRequired', language); status.dataset.state = 'error'; return; }
     const matches = compareHash(output.value, expected.value);
-    status.textContent = matches ? 'Hashes match' : 'Hashes do not match';
+    status.textContent = hashMessage(matches ? 'match' : 'noMatch', language);
     status.dataset.state = matches ? 'success' : 'error';
   });
   document.getElementById('copyHash').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(output.value); status.textContent = 'Copied'; }
-    catch { status.textContent = 'Copy failed'; status.dataset.state = 'error'; }
+    try { await navigator.clipboard.writeText(output.value); status.textContent = hashMessage('copied', language); }
+    catch { status.textContent = hashMessage('copyFailed', language); status.dataset.state = 'error'; }
   });
 }
 
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachHashTool);
-if (typeof module !== 'undefined' && module.exports) module.exports = { hashText, hashBuffer, compareHash, validateFileSize, createLatestTaskRunner };
+if (typeof module !== 'undefined' && module.exports) module.exports = { hashText, hashBuffer, compareHash, validateFileSize, createLatestTaskRunner, hashMessage };

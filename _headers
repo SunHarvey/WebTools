@@ -1,5 +1,5 @@
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-ge4IwApDgQcDxSqSpjM+vFBhcCliROZsIbAVUk5o0ls=' 'sha256-XGNs/1UDHTyYc4qVJdI5ZDjOu8Q/mq4LMKKZjNbrGoo='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-ge4IwApDgQcDxSqSpjM+vFBhcCliROZsIbAVUk5o0ls=' 'sha256-To61cb8PZyPuMDzco7lhwfMZMhLaCEX/c/BTgQ4VJdY='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

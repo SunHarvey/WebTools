@@ -1,5 +1,18 @@
 'use strict';
 
+const JSON_MESSAGES = {
+  valid: { en: 'Valid JSON', zh: 'JSON 有效' },
+  invalid: { en: 'Invalid JSON.', zh: 'JSON 无效。' },
+  copied: { en: 'Copied', zh: '已复制' },
+  copyFailed: { en: 'Copy failed', zh: '复制失败' },
+  ready: { en: 'Ready', zh: '就绪' },
+};
+
+function jsonMessage(key, language) {
+  const locale = String(language).toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  return JSON_MESSAGES[key][locale];
+}
+
 function parseJson(input) {
   if (typeof input !== 'string') throw new TypeError('JSON input must be text.');
   return JSON.parse(input);
@@ -29,6 +42,7 @@ async function copyText(value) {
 }
 
 function attachJsonTool() {
+  const language = document.documentElement.lang;
   const input = document.getElementById('jsonInput');
   const output = document.getElementById('jsonOutput');
   const status = document.getElementById('jsonStatus');
@@ -38,11 +52,13 @@ function attachJsonTool() {
   const run = operation => {
     try {
       output.value = operation(input.value);
-      status.textContent = 'Valid JSON';
+      status.textContent = jsonMessage('valid', language);
       status.dataset.state = 'success';
     } catch (error) {
       output.value = '';
-      status.textContent = error instanceof Error ? error.message : 'Invalid JSON.';
+      status.textContent = String(language).toLowerCase().startsWith('zh')
+        ? jsonMessage('invalid', language)
+        : (error instanceof Error ? error.message : jsonMessage('invalid', language));
       status.dataset.state = 'error';
     }
   };
@@ -51,26 +67,26 @@ function attachJsonTool() {
   document.getElementById('minifyJson').addEventListener('click', () => run(minifyJson));
   document.getElementById('validateJson').addEventListener('click', () => {
     const result = validateJson(input.value);
-    status.textContent = result.valid ? 'Valid JSON' : result.error;
+    status.textContent = result.valid ? jsonMessage('valid', language) : (String(language).toLowerCase().startsWith('zh') ? jsonMessage('invalid', language) : result.error);
     status.dataset.state = result.valid ? 'success' : 'error';
   });
   document.getElementById('copyJson').addEventListener('click', async () => {
     try {
       await copyText(output.value);
-      status.textContent = 'Copied';
+      status.textContent = jsonMessage('copied', language);
       status.dataset.state = 'success';
     } catch {
-      status.textContent = 'Copy failed';
+      status.textContent = jsonMessage('copyFailed', language);
       status.dataset.state = 'error';
     }
   });
   document.getElementById('clearJson').addEventListener('click', () => {
     input.value = '';
     output.value = '';
-    status.textContent = 'Ready';
+    status.textContent = jsonMessage('ready', language);
     status.dataset.state = '';
   });
 }
 
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachJsonTool);
-if (typeof module !== 'undefined' && module.exports) module.exports = { formatJson, minifyJson, validateJson };
+if (typeof module !== 'undefined' && module.exports) module.exports = { formatJson, minifyJson, validateJson, jsonMessage };

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -9,45 +9,49 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>Web Calculator · 网页计算器 | UtilCover</title>
-  <meta name="description" content="支持键盘输入和鼠标点击的快速基础网页计算器，所有计算均在浏览器本地完成。">
+  <title>Web Calculator | UtilCover</title>
+  <meta name="description" content="A fast, keyboard-friendly web calculator for everyday arithmetic. All calculations happen locally in your browser.">
   <link rel="canonical" href="https://www.utilcover.com/calculator/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/calculator/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/calculator/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/calculator/">
   <link rel="stylesheet" href="/shared/tools.css">
-  <link rel="stylesheet" href="calculator.css">
+  <link rel="stylesheet" href="/calculator/calculator.css">
 </head>
 <body class="tool-directory-page calculator-page">
-<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/password/">Password</a><a href="/calculator/" aria-current="page">Calculator</a><a href="/json/">JSON</a><a href="/text/">Text</a><a href="/encode/">Encode</a><a href="/timestamp/">Timestamp</a><a href="/uuid/">UUID</a><a href="/hash/">Hash</a><a href="/qr/">QR</a><a href="/unit/">Unit</a><a href="/color/">Color</a><a href="/image/">Image</a></div></nav></header>
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/password/">Password</a><a href="/calculator/" aria-current="page">Calculator</a><a href="/json/">JSON</a><a href="/text/">Text</a><a href="/encode/">Encode</a><a href="/timestamp/">Timestamp</a><a href="/uuid/">UUID</a><a href="/hash/">Hash</a><a href="/qr/">QR</a><a href="/unit/">Unit</a><a href="/color/">Color</a><a href="/image/">Image</a><a class="language-link" href="/zh/calculator/">Chinese</a></div></nav></header>
 <main class="page-shell">
-  <section class="hero"><h1>Web Calculator <span>· 网页计算器</span></h1><p>Fast everyday arithmetic with mouse and keyboard support.</p></section>
-  <section class="tool-card calculator-panel" aria-label="基础计算器">
+  <section class="hero"><h1>Web Calculator</h1><p>Fast everyday arithmetic with mouse and keyboard support.</p></section>
+  <section class="tool-card calculator-panel" aria-label="Basic calculator">
     <div class="display-panel">
       <output id="calculatorDisplay" class="calculator-display" aria-live="polite">0</output>
     </div>
-    <div class="calculator-keys" aria-label="计算器按键">
-      <button type="button" class="key key-function" data-action="clear" aria-label="全部清除">AC</button>
-      <button type="button" class="key key-function" data-action="sign" aria-label="切换正负号">±</button>
-      <button type="button" class="key key-function" data-action="backspace" aria-label="退格">⌫</button>
-      <button type="button" class="key key-operator" data-operator="/" aria-label="除">÷</button>
+    <div class="calculator-keys" aria-label="Calculator keys">
+      <button type="button" class="key key-function" data-action="clear" aria-label="Clear all">AC</button>
+      <button type="button" class="key key-function" data-action="sign" aria-label="Toggle sign">±</button>
+      <button type="button" class="key key-function" data-action="backspace" aria-label="Backspace">⌫</button>
+      <button type="button" class="key key-operator" data-operator="/" aria-label="Divide">÷</button>
       <button type="button" class="key" data-digit="7">7</button>
       <button type="button" class="key" data-digit="8">8</button>
       <button type="button" class="key" data-digit="9">9</button>
-      <button type="button" class="key key-operator" data-operator="*" aria-label="乘">×</button>
+      <button type="button" class="key key-operator" data-operator="*" aria-label="Multiply">×</button>
       <button type="button" class="key" data-digit="4">4</button>
       <button type="button" class="key" data-digit="5">5</button>
       <button type="button" class="key" data-digit="6">6</button>
-      <button type="button" class="key key-operator" data-operator="-" aria-label="减">−</button>
+      <button type="button" class="key key-operator" data-operator="-" aria-label="Subtract">−</button>
       <button type="button" class="key" data-digit="1">1</button>
       <button type="button" class="key" data-digit="2">2</button>
       <button type="button" class="key" data-digit="3">3</button>
-      <button type="button" class="key key-operator" data-operator="+" aria-label="加">+</button>
+      <button type="button" class="key key-operator" data-operator="+" aria-label="Add">+</button>
       <button type="button" class="key key-zero" data-digit="0">0</button>
-      <button type="button" class="key" data-action="decimal" aria-label="小数点">.</button>
-      <button type="button" class="key key-equals" data-action="equals" aria-label="等于">=</button>
+      <button type="button" class="key" data-action="decimal" aria-label="Decimal point">.</button>
+      <button type="button" class="key key-equals" data-action="equals" aria-label="Equals">=</button>
     </div>
   </section>
-  <aside class="info-card keyboard-help"><strong>Keyboard shortcuts · 键盘：</strong> 数字、<kbd>+</kbd>、<kbd>-</kbd>、<kbd>*</kbd>、<kbd>/</kbd>、<kbd>Enter</kbd>、<kbd>Backspace</kbd>、<kbd>Esc</kbd></aside>
+  <aside class="info-card keyboard-help"><strong>Keyboard shortcuts:</strong> Numbers, <kbd>+</kbd>、<kbd>-</kbd>、<kbd>*</kbd>、<kbd>/</kbd>、<kbd>Enter</kbd>、<kbd>Backspace</kbd>、<kbd>Esc</kbd></aside>
 </main>
 <footer>UtilCover · Private, fast, client-side utilities</footer>
-<script src="calculator.js"></script>
+<script src="/shared/locale-redirect.js"></script>
+<script src="/calculator/calculator.js"></script>
 </body>
 </html>

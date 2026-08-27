@@ -1,5 +1,18 @@
 'use strict';
 
+const TIMESTAMP_MESSAGES = {
+  converted: { en: 'Converted', zh: '转换完成' },
+  failed: { en: 'Conversion failed', zh: '转换失败' },
+  copied: { en: 'Copied', zh: '已复制' },
+  copyFailed: { en: 'Copy failed', zh: '复制失败' },
+  localTime: { en: 'Local time', zh: '本地时间' },
+};
+
+function timestampMessage(key, language) {
+  const locale = String(language).toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  return TIMESTAMP_MESSAGES[key][locale];
+}
+
 function resultFromMilliseconds(milliseconds) {
   const date = new Date(milliseconds);
   const normalizedMilliseconds = date.getTime();
@@ -24,6 +37,7 @@ function dateToUnix(value) {
 }
 
 function attachTimestampTool() {
+  const language = document.documentElement.lang;
   const unixInput = document.getElementById('unixInput');
   const unixUnit = document.getElementById('unixUnit');
   const dateInput = document.getElementById('dateInput');
@@ -35,12 +49,15 @@ function attachTimestampTool() {
     document.getElementById('resultMilliseconds').textContent = String(result.milliseconds);
     document.getElementById('resultIso').textContent = result.iso;
     document.getElementById('resultLocal').textContent = new Date(result.milliseconds).toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'long' });
-    status.textContent = 'Converted';
+    status.textContent = timestampMessage('converted', language);
     status.dataset.state = 'success';
   };
   const run = operation => {
     try { render(operation()); }
-    catch (error) { status.textContent = error instanceof Error ? error.message : 'Conversion failed'; status.dataset.state = 'error'; }
+    catch (error) {
+      status.textContent = String(language).toLowerCase().startsWith('zh') ? timestampMessage('failed', language) : (error instanceof Error ? error.message : timestampMessage('failed', language));
+      status.dataset.state = 'error';
+    }
   };
 
   document.getElementById('convertUnix').addEventListener('click', () => run(() => parseUnixTimestamp(unixInput.value, unixUnit.value)));
@@ -54,12 +71,12 @@ function attachTimestampTool() {
   });
   document.querySelectorAll('[data-copy-target]').forEach(button => button.addEventListener('click', async () => {
     const value = document.getElementById(button.dataset.copyTarget)?.textContent || '';
-    try { await navigator.clipboard.writeText(value); status.textContent = 'Copied'; }
-    catch { status.textContent = 'Copy failed'; status.dataset.state = 'error'; }
+    try { await navigator.clipboard.writeText(value); status.textContent = timestampMessage('copied', language); }
+    catch { status.textContent = timestampMessage('copyFailed', language); status.dataset.state = 'error'; }
   }));
-  document.getElementById('currentTimezone').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local time';
+  document.getElementById('currentTimezone').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || timestampMessage('localTime', language);
   document.getElementById('useCurrentTime').click();
 }
 
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachTimestampTool);
-if (typeof module !== 'undefined' && module.exports) module.exports = { parseUnixTimestamp, dateToUnix };
+if (typeof module !== 'undefined' && module.exports) module.exports = { parseUnixTimestamp, dateToUnix, timestampMessage };

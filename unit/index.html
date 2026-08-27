@@ -9,48 +9,52 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>Unit Converter · 单位换算器 | UtilCover</title>
+  <title>Unit Converter | UtilCover</title>
   <meta name="description" content="Convert length, mass, temperature, area, volume and data sizes locally in your browser.">
   <link rel="canonical" href="https://www.utilcover.com/unit/">
-  <link rel="stylesheet" href="../shared/tools.css">
-  <link rel="stylesheet" href="unit.css">
-  <meta property="og:title" content="Unit Converter · 单位换算器 | UtilCover">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/unit/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/unit/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/unit/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/unit/unit.css">
+  <meta property="og:title" content="Unit Converter | UtilCover">
   <meta property="og:description" content="Fast, private conversions across common measurement units.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/unit/">
 </head>
 <body class="tool-directory-page">
-<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/password/">Password</a><a href="/calculator/">Calculator</a><a href="/json/">JSON</a><a href="/text/">Text</a><a href="/encode/">Encode</a><a href="/timestamp/">Timestamp</a><a href="/uuid/">UUID</a><a href="/hash/">Hash</a><a href="/qr/">QR</a><a href="/unit/" aria-current="page">Unit</a><a href="/color/">Color</a><a href="/image/">Image</a></div></nav></header>
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/password/">Password</a><a href="/calculator/">Calculator</a><a href="/json/">JSON</a><a href="/text/">Text</a><a href="/encode/">Encode</a><a href="/timestamp/">Timestamp</a><a href="/uuid/">UUID</a><a href="/hash/">Hash</a><a href="/qr/">QR</a><a href="/unit/" aria-current="page">Unit</a><a href="/color/">Color</a><a href="/image/">Image</a><a class="language-link" href="/zh/unit/">Chinese</a></div></nav></header>
 <main class="page-shell">
   <section class="hero">
-    <h1>Unit Converter <span>单位换算器</span></h1>
-    <p>Convert common measurements instantly · 长度、质量、温度、面积、体积和数据大小即时互转</p>
+    <h1>Unit Converter</h1>
+    <p>Convert common measurements instantly, including length, mass, temperature, area, volume and data size.</p>
   </section>
   <section class="tool-card converter-card" aria-labelledby="converterTitle">
     <h2 id="converterTitle" class="sr-only">Conversion controls</h2>
     <div class="field category-field">
-      <label for="unitCategory">Category · 换算类别</label>
+      <label for="unitCategory">Category</label>
       <select id="unitCategory"></select>
     </div>
     <div class="conversion-grid">
       <div class="field value-panel">
-        <label for="unitValue">From · 从</label>
+        <label for="unitValue">From</label>
         <input id="unitValue" type="text" inputmode="decimal" value="1" autocomplete="off" aria-describedby="unitStatus">
-        <select id="fromUnit" aria-label="Source unit · 原单位"></select>
+        <select id="fromUnit" aria-label="Source unit"></select>
       </div>
-      <button id="swapUnits" class="secondary swap-button" type="button" aria-label="Swap units · 交换单位"><span aria-hidden="true">⇄</span><small>Swap · 交换</small></button>
+      <button id="swapUnits" class="secondary swap-button" type="button" aria-label="Swap units"><span aria-hidden="true">⇄</span><small>Swap</small></button>
       <div class="field value-panel result-panel">
-        <label for="unitResult">To · 到</label>
+        <label for="unitResult">To</label>
         <div class="result-wrap"><input id="unitResult" class="output" type="text" readonly aria-live="polite"><span id="resultUnit" aria-hidden="true"></span></div>
-        <select id="toUnit" aria-label="Target unit · 目标单位"></select>
+        <select id="toUnit" aria-label="Target unit"></select>
       </div>
     </div>
-    <div class="actions"><button id="convertUnit" type="button">Convert · 换算</button></div>
-    <div id="unitStatus" class="status" role="status">Ready · 就绪</div>
+    <div class="actions"><button id="convertUnit" type="button">Convert</button></div>
+    <div id="unitStatus" class="status" role="status">Ready</div>
   </section>
-  <aside class="info-card"><strong>Precision without clutter · 精确且简洁</strong><br>Results retain useful significant digits while insignificant floating-point noise is removed. SI and binary data units are clearly distinguished.<br>结果保留合理有效数字并消除浮点噪声；十进制与二进制数据单位分别标注。</aside>
+  <aside class="info-card"><strong>Precision without clutter</strong><br>Results retain useful significant digits while insignificant floating-point noise is removed. SI and binary data units are clearly distinguished.</aside>
 </main>
 <footer>UtilCover · Private, fast, client-side utilities</footer>
-<script src="unit-tool.js"></script>
+<script src="/shared/locale-redirect.js"></script>
+<script src="/unit/unit-tool.js"></script>
 </body>
 </html>

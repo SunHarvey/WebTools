@@ -60,6 +60,21 @@ const UNIT_CATEGORIES = {
   },
 };
 
+function localizeUnitLabel(label, language) {
+  const [english, chinese = english] = String(label).split(' · ');
+  return String(language).toLowerCase().startsWith('zh') ? chinese : english;
+}
+
+const UNIT_MESSAGES = {
+  converted: { en: 'Converted', zh: '换算完成' },
+  invalid: { en: 'Enter a valid number.', zh: '请输入有效数值。' },
+};
+
+function unitMessage(key, language) {
+  const locale = String(language).toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  return UNIT_MESSAGES[key][locale];
+}
+
 function convertValue(categoryKey, value, fromKey, toKey) {
   const category = UNIT_CATEGORIES[categoryKey];
   if (!category) throw new RangeError('Choose a valid category.');
@@ -101,6 +116,7 @@ function formatResult(value) {
 }
 
 function attachUnitTool() {
+  const language = document.documentElement.lang;
   const categorySelect = document.getElementById('unitCategory');
   const valueInput = document.getElementById('unitValue');
   const fromSelect = document.getElementById('fromUnit');
@@ -115,7 +131,7 @@ function attachUnitTool() {
   const option = (key, definition) => {
     const item = document.createElement('option');
     item.value = key;
-    item.textContent = `${definition.label} (${definition.symbol})`;
+    item.textContent = `${localizeUnitLabel(definition.label, language)} (${definition.symbol})`;
     return item;
   };
   const populateUnits = () => {
@@ -129,12 +145,14 @@ function attachUnitTool() {
       const result = convertValue(categorySelect.value, valueInput.value, fromSelect.value, toSelect.value);
       resultOutput.value = formatResult(result);
       resultUnit.textContent = UNIT_CATEGORIES[categorySelect.value].units[toSelect.value].symbol;
-      status.textContent = 'Converted · 换算完成';
+      status.textContent = unitMessage('converted', language);
       status.dataset.state = 'success';
     } catch (error) {
       resultOutput.value = '';
       resultUnit.textContent = '';
-      status.textContent = `${error instanceof Error ? error.message : 'Conversion failed'} · 请输入有效数值`;
+      status.textContent = String(language).toLowerCase().startsWith('zh')
+        ? unitMessage('invalid', language)
+        : (error instanceof Error ? error.message : unitMessage('invalid', language));
       status.dataset.state = 'error';
     }
   };
@@ -142,7 +160,7 @@ function attachUnitTool() {
   for (const [key, category] of Object.entries(UNIT_CATEGORIES)) {
     const item = document.createElement('option');
     item.value = key;
-    item.textContent = category.label;
+    item.textContent = localizeUnitLabel(category.label, language);
     categorySelect.append(item);
   }
   categorySelect.addEventListener('change', () => { populateUnits(); render(); });
@@ -161,4 +179,4 @@ function attachUnitTool() {
 }
 
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachUnitTool);
-if (typeof module !== 'undefined' && module.exports) module.exports = { UNIT_CATEGORIES, convertValue, formatResult };
+if (typeof module !== 'undefined' && module.exports) module.exports = { UNIT_CATEGORIES, convertValue, formatResult, localizeUnitLabel, unitMessage };

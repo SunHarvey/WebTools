@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>私密二维码生成器 | UtilCover</title>
+  <meta name="description" content="在浏览器本地创建文本、网址和 Wi-Fi 二维码，不会上传任何数据。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/qr/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/qr/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/qr/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/qr/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/qr/qr.css">
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/zh/password/">密码</a><a href="/zh/calculator/">计算器</a><a href="/zh/json/">JSON</a><a href="/zh/text/">文本</a><a href="/zh/encode/">编解码</a><a href="/zh/timestamp/">时间戳</a><a href="/zh/uuid/">UUID</a><a href="/zh/hash/">哈希</a><a href="/zh/qr/" aria-current="page">二维码</a><a href="/zh/unit/">单位</a><a href="/zh/color/">颜色</a><a href="/zh/image/">图片</a><a class="language-link" href="/qr/?lang=en">英文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>二维码生成器</h1><p>创建文本、网址和 Wi-Fi 二维码，无需将内容发送到服务器。</p></section>
+  <section class="tool-card qr-layout"><p class="local-processing-note">二维码内容（包括 Wi-Fi 详细信息）绝不会离开此浏览器。</p>
+    <div class="qr-controls">
+      <div class="field"><label for="qrMode">内容类型</label><select id="qrMode"><option value="text">文本或网址</option><option value="wifi">Wi-Fi 网络</option></select></div>
+      <div class="field"><label for="qrContent">文本或网址</label><textarea id="qrContent" placeholder="https://www.utilcover.com/" maxlength="2950"></textarea></div>
+      <div id="wifiFields" hidden>
+        <div class="field"><label for="wifiSsid">网络名称（SSID）</label><input id="wifiSsid" type="text" maxlength="128"></div>
+        <div class="field"><label for="wifiPassword">密码</label><input id="wifiPassword" type="password" maxlength="256" autocomplete="new-password"></div>
+        <div class="grid-2"><div class="field"><label for="wifiSecurity">安全类型</label><select id="wifiSecurity"><option>WPA</option><option>WEP</option><option value="nopass">无密码</option></select></div><div class="field checkbox-row"><label><input id="wifiHidden" type="checkbox"> 隐藏网络</label></div></div>
+      </div>
+      <div class="grid-2"><div class="field"><label for="qrSize">图片尺寸</label><select id="qrSize"><option>256</option><option selected>320</option><option>512</option><option>768</option><option>1024</option></select></div><div class="field"><label for="qrLevel">纠错级别</label><select id="qrLevel"><option>L</option><option selected>M</option><option>Q</option><option>H</option></select></div></div>
+      <div class="grid-2"><div class="field"><label for="qrMargin">静区</label><select id="qrMargin"><option selected>4</option><option>6</option><option>8</option></select></div><div class="qr-colors"><label>颜色</label><div><input id="qrDark" type="color" value="#000000" aria-label="深色"><input id="qrLight" type="color" value="#ffffff" aria-label="浅色"></div></div></div>
+      <div class="actions"><button id="generateQr">生成二维码</button><button id="downloadQr" class="secondary" disabled>下载 PNG</button></div><div id="qrStatus" class="status" role="status">就绪</div>
+    </div>
+    <div class="qr-preview"><canvas id="qrCanvas" width="320" height="320" aria-label="生成的二维码"></canvas><p>分享重要二维码前，请先扫码测试。</p></div>
+  </section>
+  <aside class="info-card"><strong>本地依赖：</strong>二维码编码使用采用 MIT 许可证的内置 <code>qrcode-generator 1.4.4</code>。未使用 CDN 或远程 API。</aside>
+</main>
+<footer>UtilCover · 私密、快速的浏览器端工具</footer>
+<script src="/qr/vendor/qrcode-generator-1.4.4.js"></script>
+<script src="/qr/qr-tool.js"></script>
+</body>
+</html>

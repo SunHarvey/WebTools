@@ -12,19 +12,23 @@
   <title>Secure UUID v4 Generator | UtilCover</title>
   <meta name="description" content="Generate one or many cryptographically secure RFC 4122 UUID version 4 values.">
   <link rel="canonical" href="https://www.utilcover.com/uuid/">
-  <link rel="stylesheet" href="../shared/tools.css">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/uuid/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/uuid/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/uuid/">
+  <link rel="stylesheet" href="/shared/tools.css">
   <meta property="og:title" content="Secure UUID v4 Generator | UtilCover">
   <meta property="og:description" content="Generate one or many cryptographically secure RFC 4122 UUID version 4 values.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/uuid/">
+  <script src="/shared/locale-redirect.js"></script>
 </head>
 <body class="tool-directory-page">
-<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/password/">Password</a><a href="/calculator/">Calculator</a><a href="/json/">JSON</a><a href="/text/">Text</a><a href="/encode/">Encode</a><a href="/timestamp/">Timestamp</a><a href="/uuid/" aria-current="page">UUID</a><a href="/hash/">Hash</a><a href="/qr/">QR</a><a href="/unit/">Unit</a><a href="/color/">Color</a><a href="/image/">Image</a></div></nav></header>
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/password/">Password</a><a href="/calculator/">Calculator</a><a href="/json/">JSON</a><a href="/text/">Text</a><a href="/encode/">Encode</a><a href="/timestamp/">Timestamp</a><a href="/uuid/" aria-current="page">UUID</a><a href="/hash/">Hash</a><a href="/qr/">QR</a><a href="/unit/">Unit</a><a href="/color/">Color</a><a href="/image/">Image</a><a class="language-link" href="/zh/uuid/">Chinese</a></div></nav></header>
 <main class="page-shell">
   <section class="hero"><h1>Secure UUID v4 Generator</h1><p>Generate one or many cryptographically secure RFC 4122 UUID version 4 values.</p></section>
   <section class="tool-card"><div class="grid-2"><div class="field"><label for="uuidCount">Number of UUIDs (1–100)</label><input id="uuidCount" type="number" min="1" max="100" value="5"><div class="checkbox-row"><label><input id="uuidUppercase" type="checkbox"> Uppercase</label><label><input id="uuidHyphens" type="checkbox" checked> Hyphens</label></div><div class="actions"><button id="generateUuid">Generate UUIDs</button><button id="copyUuid" class="secondary">Copy all</button><button id="clearUuid" class="danger">Clear</button></div><div id="uuidStatus" class="status" role="status">Ready</div></div><div class="field"><label for="uuidOutput">Generated UUID v4 values</label><textarea id="uuidOutput" class="output" readonly></textarea></div></div></section><aside class="info-card"><strong>Secure generation:</strong> Uses <code>crypto.getRandomValues()</code> and sets RFC 4122 version and variant bits.</aside>
 </main>
 <footer>UtilCover · Private, fast, client-side utilities</footer>
-<script src="uuid-tool.js"></script>
+<script src="/uuid/uuid-tool.js"></script>
 </body>
 </html>

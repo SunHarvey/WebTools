@@ -15,6 +15,22 @@ const OUTPUT_MIME_TYPES = new Map([
   ['image/webp', 'image/webp'],
 ]);
 
+const IMAGE_MESSAGES = {
+  noResult: { en: 'No result yet', zh: '尚无结果' },
+  processing: { en: 'Processing locally…', zh: '正在本地处理…' },
+  done: { en: 'Done — ready to download', zh: '处理完成，可以下载' },
+  failed: { en: 'Processing failed.', zh: '处理失败。' },
+  loading: { en: 'Loading locally…', zh: '正在本地加载…' },
+  loaded: { en: 'Image loaded locally', zh: '图片已在本地加载' },
+  noImage: { en: 'No image selected', zh: '尚未选择图片' },
+  invalidImage: { en: 'Choose a valid image.', zh: '请选择有效图片。' },
+};
+
+function imageMessage(key, language) {
+  const locale = String(language).toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  return IMAGE_MESSAGES[key][locale];
+}
+
 function normalizeOutputMime(value) {
   const mime = OUTPUT_MIME_TYPES.get(String(value).trim().toLowerCase());
   if (!mime) throw new RangeError('Unsupported output format.');
@@ -220,6 +236,7 @@ function loadImage(url) {
 }
 
 function attachImageTool() {
+  const language = document.documentElement.lang;
   const fileInput = document.getElementById('imageFile');
   const originalPreview = document.getElementById('originalPreview');
   const resultPreview = document.getElementById('resultPreview');
@@ -251,14 +268,14 @@ function attachImageTool() {
     resultUrl = '';
     resultPreview.removeAttribute('src');
     resultPreview.hidden = true;
-    resultInfo.textContent = 'No result yet · 尚无结果';
+    resultInfo.textContent = imageMessage('noResult', language);
     downloadLink.hidden = true;
     downloadLink.removeAttribute('href');
   };
   const extensionFor = mime => ({ 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' })[mime];
 
   const runCompression = createLatestTaskRunner({
-    onStart: () => { compressButton.disabled = true; showStatus('Processing locally… · 正在本地处理…'); },
+    onStart: () => { compressButton.disabled = true; showStatus(imageMessage('processing', language)); },
     onSuccess: ({ blob, dimensions, mime }) => {
       revoke(resultUrl);
       resultUrl = URL.createObjectURL(blob);
@@ -270,11 +287,14 @@ function attachImageTool() {
       downloadLink.download = `${baseName}-optimized.${extensionFor(mime)}`;
       downloadLink.hidden = false;
       compressButton.disabled = false;
-      showStatus('Done — ready to download · 完成，可下载', 'success');
+      showStatus(imageMessage('done', language), 'success');
     },
     onError: error => {
       compressButton.disabled = false;
-      showStatus(`${error instanceof Error ? error.message : 'Processing failed.'} · 处理失败`, 'error');
+      const message = String(language).toLowerCase().startsWith('zh')
+        ? imageMessage('failed', language)
+        : (error instanceof Error ? error.message : imageMessage('failed', language));
+      showStatus(message, 'error');
     },
   });
 
@@ -287,7 +307,7 @@ function attachImageTool() {
     originalUrl = '';
     originalPreview.removeAttribute('src');
     originalPreview.hidden = true;
-    originalInfo.textContent = 'Loading locally… · 正在本地加载…';
+    originalInfo.textContent = imageMessage('loading', language);
     sourceImage = null;
     sourceFile = null;
     try {
@@ -308,7 +328,7 @@ function attachImageTool() {
         heightInput.value = decoded.naturalHeight;
         originalInfo.textContent = `${decoded.naturalWidth} × ${decoded.naturalHeight} · ${formatFileSize(selected.size)}`;
         compressButton.disabled = false;
-        showStatus('Image loaded locally · 图片已在本地加载', 'success');
+        showStatus(imageMessage('loaded', language), 'success');
       } catch (error) {
         revoke(candidateUrl);
         throw error;
@@ -317,9 +337,12 @@ function attachImageTool() {
       if (currentSelection !== selectionId) return;
       originalPreview.removeAttribute('src');
       originalPreview.hidden = true;
-      originalInfo.textContent = 'No image selected · 尚未选择图片';
+      originalInfo.textContent = imageMessage('noImage', language);
       compressButton.disabled = true;
-      showStatus(`${error instanceof Error ? error.message : 'Invalid image.'} · 请选择有效图片`, 'error');
+      const message = String(language).toLowerCase().startsWith('zh')
+        ? imageMessage('invalidImage', language)
+        : (error instanceof Error ? error.message : imageMessage('invalidImage', language));
+      showStatus(message, 'error');
     }
   });
 
@@ -370,5 +393,6 @@ if (typeof module !== 'undefined' && module.exports) {
     inspectImageFileHeader,
     validatePixelCount,
     createLatestTaskRunner,
+    imageMessage,
   };
 }

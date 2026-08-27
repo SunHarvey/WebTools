@@ -94,7 +94,8 @@ test('shows direct links to all twelve tools in every shared top navigation', ()
   for (const file of pages) {
     const html = read(file);
     const nav = html.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1] || '';
-    for (const route of routes) assert.match(nav, new RegExp(`href="${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`), `${file} navigation is missing ${route}`);
+    const expectedRoutes = /<html lang="zh-CN">/.test(html) ? routes.map(route => `/zh${route}`) : routes;
+    for (const route of expectedRoutes) assert.match(nav, new RegExp(`href="${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`), `${file} navigation is missing ${route}`);
   }
 });
 
@@ -154,7 +155,7 @@ test('defines hardened static response headers without inline script execution',
   assert.match(headers, /X-Content-Type-Options: nosniff/);
   assert.match(headers, /Permissions-Policy:/);
 
-  for (const file of ['password/index.html', 'password/index-zh.html']) {
+  for (const file of ['password/index.html', 'password/index-zh.html', 'zh/password/index.html']) {
     const match = read(file).match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
     assert.ok(match, `${file} must contain JSON-LD`);
     const hash = crypto.createHash('sha256').update(match[1]).digest('base64');
@@ -173,7 +174,7 @@ test('publishes robots and sitemap entries for every public tool route', () => {
   const robots = read('robots.txt');
   const sitemap = read('sitemap.xml');
   assert.match(robots, /Sitemap: https:\/\/www\.utilcover\.com\/sitemap\.xml/);
-  const routes = ['/', '/password/', '/password/index-zh', '/calculator/', '/json/', '/text/', '/encode/', '/timestamp/', '/uuid/', '/hash/', '/qr/', '/unit/', '/color/', '/image/'];
+  const routes = ['/', '/password/', '/calculator/', '/json/', '/text/', '/encode/', '/timestamp/', '/uuid/', '/hash/', '/qr/', '/unit/', '/color/', '/image/', '/zh/', '/zh/password/', '/zh/calculator/', '/zh/json/', '/zh/text/', '/zh/encode/', '/zh/timestamp/', '/zh/uuid/', '/zh/hash/', '/zh/qr/', '/zh/unit/', '/zh/color/', '/zh/image/'];
   for (const route of routes) assert.match(sitemap, new RegExp(`<loc>https://www\\.utilcover\\.com${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}</loc>`));
   assert.doesNotMatch(sitemap, /<loc>https:\/\/www\.utilcover\.com\/tools\/<\/loc>/);
 });

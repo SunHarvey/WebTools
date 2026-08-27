@@ -1,5 +1,11 @@
 'use strict';
 
+function calculatorMessage(key, language) {
+    const messages = { error: { en: 'Error', zh: '错误' } };
+    const locale = String(language).toLowerCase().startsWith('zh') ? 'zh' : 'en';
+    return messages[key][locale];
+}
+
 class CalculatorEngine {
     constructor({ maxDigits = 12, onChange = null } = {}) {
         this.maxDigits = maxDigits;
@@ -193,12 +199,13 @@ class CalculatorEngine {
 }
 
 function attachCalculator() {
+    const language = document.documentElement.lang;
     const display = document.getElementById('calculatorDisplay');
     const keys = document.querySelector('.calculator-keys');
     const operatorButtons = [...document.querySelectorAll('[data-operator]')];
 
     const render = engine => {
-        display.textContent = engine.displayValue;
+        display.textContent = engine.hasError ? calculatorMessage('error', language) : engine.displayValue;
         display.classList.toggle('error', engine.hasError);
         operatorButtons.forEach(button => {
             button.classList.toggle(
@@ -236,5 +243,5 @@ if (typeof document !== 'undefined') {
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { CalculatorEngine };
+    module.exports = { CalculatorEngine, calculatorMessage };
 }

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>颜色转换与对比度检查 | UtilCover</title>
+  <meta name="description" content="在浏览器本地转换 HEX、RGB 和 HSL 颜色，并检查 WCAG 对比度。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/color/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/color/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/color/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/color/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/color/color.css">
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/zh/password/">密码</a><a href="/zh/calculator/">计算器</a><a href="/zh/json/">JSON</a><a href="/zh/text/">文本</a><a href="/zh/encode/">编解码</a><a href="/zh/timestamp/">时间戳</a><a href="/zh/uuid/">UUID</a><a href="/zh/hash/">哈希</a><a href="/zh/qr/">二维码</a><a href="/zh/unit/">单位</a><a href="/zh/color/" aria-current="page">颜色</a><a href="/zh/image/">图片</a><a class="language-link" href="/color/?lang=en">英文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero">
+    <h1>颜色转换器</h1>
+    <p>转换 HEX、RGB 和 HSL，预览颜色并检查 WCAG 无障碍对比度。</p>
+  </section>
+  <section class="tool-card" aria-labelledby="converterTitle">
+    <h2 id="converterTitle">转换颜色</h2>
+    <div class="converter-layout">
+      <div class="format-fields">
+        <div class="field">
+          <label for="hexInput">HEX（3 位或 6 位）</label>
+          <div class="inline-action"><input id="hexInput" type="text" value="#336699" maxlength="7" spellcheck="false"><button id="fromHex" type="button">转换</button></div>
+        </div>
+        <fieldset><legend>RGB（0–255）</legend><div class="channel-grid">
+          <label>R<input id="rgbR" type="number" value="51" inputmode="decimal"></label>
+          <label>G<input id="rgbG" type="number" value="102" inputmode="decimal"></label>
+          <label>B<input id="rgbB" type="number" value="153" inputmode="decimal"></label>
+        </div><button id="fromRgb" class="secondary convert-button" type="button">从 RGB 转换</button></fieldset>
+        <fieldset><legend>HSL（H：任意值，S/L：0–100）</legend><div class="channel-grid">
+          <label>H<input id="hslH" type="number" value="210" inputmode="decimal"></label>
+          <label>S %<input id="hslS" type="number" value="50" inputmode="decimal"></label>
+          <label>L %<input id="hslL" type="number" value="40" inputmode="decimal"></label>
+        </div><button id="fromHsl" class="secondary convert-button" type="button">从 HSL 转换</button></fieldset>
+      </div>
+      <div class="preview-panel">
+        <div id="colorPreview" class="color-preview" aria-label="颜色预览"></div>
+        <div class="result-lines"><code id="hexResult">#336699</code><code id="rgbResult">rgb(51, 102, 153)</code><code id="hslResult">hsl(210, 50%, 40%)</code></div>
+        <button id="copyResults" class="secondary" type="button">复制结果</button>
+      </div>
+    </div>
+    <div id="convertStatus" class="status" role="status">就绪</div>
+  </section>
+  <section class="tool-card contrast-card" aria-labelledby="contrastTitle">
+    <h2 id="contrastTitle">WCAG 对比度</h2>
+    <p class="section-help">输入两种 HEX 颜色。大字指至少 18pt，或 14pt 粗体。</p>
+    <div class="contrast-inputs">
+      <div class="field"><label for="contrastA">文字色 / 颜色 A</label><div class="color-input-row"><input id="contrastA" type="text" value="#000000" maxlength="7"><input id="pickerA" type="color" value="#000000" aria-label="选择颜色 A"></div></div>
+      <div class="field"><label for="contrastB">背景色 / 颜色 B</label><div class="color-input-row"><input id="contrastB" type="text" value="#FFFFFF" maxlength="7"><input id="pickerB" type="color" value="#ffffff" aria-label="选择颜色 B"></div></div>
+    </div>
+    <div class="actions"><button id="checkContrast" type="button">检查对比度</button><button id="copyContrast" class="secondary" type="button">复制结果</button></div>
+    <div id="contrastSample" class="contrast-sample">可读性文字预览</div>
+    <div class="ratio-line"><strong id="contrastRatio">21.00:1</strong><span>对比度</span></div>
+    <div class="wcag-grid" aria-label="WCAG 检查结果">
+      <div><span>AA 普通文字</span><strong id="aaNormal">通过</strong></div>
+      <div><span>AA 大字</span><strong id="aaLarge">通过</strong></div>
+      <div><span>AAA 普通文字</span><strong id="aaaNormal">通过</strong></div>
+      <div><span>AAA 大字</span><strong id="aaaLarge">通过</strong></div>
+    </div>
+    <div id="contrastStatus" class="status" role="status">就绪</div>
+  </section>
+</main>
+<footer>UtilCover · 私密、快速的浏览器本地工具</footer>
+<script src="/color/color-tool.js"></script>
+</body>
+</html>

@@ -12,14 +12,18 @@
   <title>Private QR Code Generator | UtilCover</title>
   <meta name="description" content="Create text, URL and Wi-Fi QR codes locally in your browser. No data is uploaded.">
   <link rel="canonical" href="https://www.utilcover.com/qr/">
-  <link rel="stylesheet" href="../shared/tools.css">
-  <link rel="stylesheet" href="qr.css">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/qr/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/qr/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/qr/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/qr/qr.css">
+  <script src="/shared/locale-redirect.js"></script>
 </head>
 <body class="tool-directory-page">
-<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/password/">Password</a><a href="/calculator/">Calculator</a><a href="/json/">JSON</a><a href="/text/">Text</a><a href="/encode/">Encode</a><a href="/timestamp/">Timestamp</a><a href="/uuid/">UUID</a><a href="/hash/">Hash</a><a href="/qr/" aria-current="page">QR</a><a href="/unit/">Unit</a><a href="/color/">Color</a><a href="/image/">Image</a></div></nav></header>
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/password/">Password</a><a href="/calculator/">Calculator</a><a href="/json/">JSON</a><a href="/text/">Text</a><a href="/encode/">Encode</a><a href="/timestamp/">Timestamp</a><a href="/uuid/">UUID</a><a href="/hash/">Hash</a><a href="/qr/" aria-current="page">QR</a><a href="/unit/">Unit</a><a href="/color/">Color</a><a href="/image/">Image</a><a class="language-link" href="/zh/qr/">Chinese</a></div></nav></header>
 <main class="page-shell">
   <section class="hero"><h1>QR Code Generator</h1><p>Create text, URL and Wi-Fi QR codes without sending content to a server.</p></section>
-  <section class="tool-card qr-layout"><p class="local-processing-note">QR content, including Wi-Fi details, never leaves this browser. · 二维码内容不会上传</p>
+  <section class="tool-card qr-layout"><p class="local-processing-note">QR content, including Wi-Fi details, never leaves this browser.</p>
     <div class="qr-controls">
       <div class="field"><label for="qrMode">Content type</label><select id="qrMode"><option value="text">Text or URL</option><option value="wifi">Wi-Fi network</option></select></div>
       <div class="field"><label for="qrContent">Text or URL</label><textarea id="qrContent" placeholder="https://www.utilcover.com/" maxlength="2950"></textarea></div>
@@ -37,7 +41,7 @@
   <aside class="info-card"><strong>Local dependency:</strong> QR encoding uses vendored <code>qrcode-generator 1.4.4</code> under the MIT license. No CDN or remote API is used.</aside>
 </main>
 <footer>UtilCover · Private, fast, client-side utilities</footer>
-<script src="vendor/qrcode-generator-1.4.4.js"></script>
-<script src="qr-tool.js"></script>
+<script src="/qr/vendor/qrcode-generator-1.4.4.js"></script>
+<script src="/qr/qr-tool.js"></script>
 </body>
 </html>

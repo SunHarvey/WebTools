@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>单位换算器 | UtilCover</title>
+  <meta name="description" content="在浏览器本地换算长度、质量、温度、面积、体积和数据大小。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/unit/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/unit/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/unit/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/unit/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/unit/unit.css">
+  <meta property="og:title" content="单位换算器 | UtilCover">
+  <meta property="og:description" content="快速、私密地换算常用计量单位。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/zh/unit/">
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><div class="nav-links"><a href="/zh/password/">密码</a><a href="/zh/calculator/">计算器</a><a href="/zh/json/">JSON</a><a href="/zh/text/">文本</a><a href="/zh/encode/">编解码</a><a href="/zh/timestamp/">时间戳</a><a href="/zh/uuid/">UUID</a><a href="/zh/hash/">哈希</a><a href="/zh/qr/">二维码</a><a href="/zh/unit/" aria-current="page">单位</a><a href="/zh/color/">颜色</a><a href="/zh/image/">图片</a><a class="language-link" href="/unit/?lang=en">英文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero">
+    <h1>单位换算器</h1>
+    <p>即时换算长度、质量、温度、面积、体积和数据大小等常用计量单位。</p>
+  </section>
+  <section class="tool-card converter-card" aria-labelledby="converterTitle">
+    <h2 id="converterTitle" class="sr-only">换算控件</h2>
+    <div class="field category-field">
+      <label for="unitCategory">换算类别</label>
+      <select id="unitCategory"></select>
+    </div>
+    <div class="conversion-grid">
+      <div class="field value-panel">
+        <label for="unitValue">从</label>
+        <input id="unitValue" type="text" inputmode="decimal" value="1" autocomplete="off" aria-describedby="unitStatus">
+        <select id="fromUnit" aria-label="原单位"></select>
+      </div>
+      <button id="swapUnits" class="secondary swap-button" type="button" aria-label="交换单位"><span aria-hidden="true">⇄</span><small>交换</small></button>
+      <div class="field value-panel result-panel">
+        <label for="unitResult">到</label>
+        <div class="result-wrap"><input id="unitResult" class="output" type="text" readonly aria-live="polite"><span id="resultUnit" aria-hidden="true"></span></div>
+        <select id="toUnit" aria-label="目标单位"></select>
+      </div>
+    </div>
+    <div class="actions"><button id="convertUnit" type="button">换算</button></div>
+    <div id="unitStatus" class="status" role="status">就绪</div>
+  </section>
+  <aside class="info-card"><strong>精确且简洁</strong><br>结果保留合理的有效数字，同时消除无意义的浮点噪声。十进制与二进制数据单位分别清晰标注。</aside>
+</main>
+<footer>UtilCover · 私密、快速的浏览器本地工具</footer>
+<script src="/unit/unit-tool.js"></script>
+</body>
+</html>
