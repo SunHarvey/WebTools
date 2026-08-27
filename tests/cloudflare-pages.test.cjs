@@ -75,7 +75,7 @@ test('keeps the homepage introduction compact so tools remain above the fold', (
   assert.match(css, /\.home-directory \.page-shell\s*\{[^}]*padding:\s*28px 0 72px/s);
   assert.match(css, /\.home-directory \.hero\s*\{[^}]*margin:\s*0 auto 20px/s);
   assert.match(css, /\.home-directory h1\s*\{[^}]*font-size:\s*clamp\(1\.75rem, 4vw, 2\.65rem\)/s);
-  assert.match(css, /\.home-directory \.privacy-note\s*\{[^}]*margin-top:\s*10px/s);
+  assert.match(css, /\.nav-trust\s*\{/);
 });
 
 test('keeps every tool-page introduction and title compact', () => {
@@ -83,7 +83,6 @@ test('keeps every tool-page introduction and title compact', () => {
   assert.match(css, /\.tool-directory-page \.page-shell\s*\{[^}]*padding:\s*32px 0 72px/s);
   assert.match(css, /\.tool-directory-page \.hero\s*\{[^}]*margin:\s*0 auto 20px/s);
   assert.match(css, /\.tool-directory-page h1\s*\{[^}]*font-size:\s*clamp\(1\.7rem, 4vw, 2\.5rem\)/s);
-  assert.match(css, /\.tool-directory-page \.privacy-note\s*\{[^}]*margin-top:\s*10px/s);
   assert.match(read('json/index.html'), /<body class="tool-directory-page">/);
 });
 
@@ -99,9 +98,12 @@ test('shows direct links to all twelve tools in every shared top navigation', ()
   }
 });
 
-test('removes nonessential utility-category labels from individual tool pages', () => {
+test('removes nonessential utility-category labels from all visible page heroes', () => {
   const toolPages = ['json', 'text', 'encode', 'timestamp', 'uuid', 'hash', 'qr', 'unit', 'color', 'image'];
   for (const tool of toolPages) assert.doesNotMatch(read(`${tool}/index.html`), /class="eyebrow"/, `${tool} still has a category label`);
+  for (const file of ['index.html', 'tools/index.html', 'zh/index.html', 'zh/tools/index.html']) {
+    assert.doesNotMatch(read(file), /class="eyebrow"/, `${file} still has a category label`);
+  }
 });
 
 test('uses the shared UtilCover layout for password and calculator pages', () => {
@@ -126,7 +128,13 @@ test('keeps generic local-processing claims off individual tool heroes', () => {
     const hero = html.match(/<section class="hero">([\s\S]*?)<\/section>/)?.[1] || '';
     assert.doesNotMatch(hero, /class="privacy-note"/, `${file} still repeats the privacy claim in its hero`);
   }
-  assert.match(read('index.html'), /class="privacy-note"/);
+  for (const file of ['index.html', 'tools/index.html', 'zh/index.html', 'zh/tools/index.html']) {
+    const html = read(file);
+    const hero = html.match(/<section class="hero">([\s\S]*?)<\/section>/)?.[1] || '';
+    const nav = html.match(/<nav class="nav-shell"[\s\S]*?<\/nav>/)?.[0] || '';
+    assert.doesNotMatch(hero, /class="privacy-note"/, `${file} still has the privacy claim in its hero`);
+    assert.match(nav, /class="nav-trust"/, `${file} lacks the navigation privacy claim`);
+  }
 });
 
 test('places concise privacy notes beside sensitive inputs only', () => {
