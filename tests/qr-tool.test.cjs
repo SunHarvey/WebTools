@@ -60,7 +60,7 @@ test('preserves meaningful leading and trailing spaces in a Wi-Fi SSID', () => {
 });
 
 test('creates a square QR matrix using the vendored generator', () => {
-  const result = createQrMatrix('https://genpass.top', 'M');
+  const result = createQrMatrix('https://utilcover.com', 'M');
   assert.ok(result.size >= 21);
   assert.equal(result.modules.length, result.size);
   assert.ok(result.modules.every(row => row.length === result.size));

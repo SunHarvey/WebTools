@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.genpass.top/sitemap.xml
+Sitemap: https://www.utilcover.com/sitemap.xml

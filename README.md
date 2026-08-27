@@ -93,13 +93,13 @@ http://127.0.0.1:8000/tools/
 部署后的检查与切流顺序：
 
 1. 先使用Worker提供的`*.workers.dev`地址验证全部工具、未知路径404、响应头及移动端布局。
-2. 在Worker的 **Settings > Domains & Routes** 中添加`www.genpass.top`，不要只手工创建DNS记录。
-3. 确认证书Active后，再将`genpass.top`通过Cloudflare **Single Redirect**永久重定向到`https://www.genpass.top`；静态资产的`_redirects`不支持域名级重定向。
+2. 在Worker的 **Settings > Domains & Routes** 中添加`www.utilcover.com`，不要只手工创建DNS记录。
+3. 确认证书Active后，再将`utilcover.com`通过Cloudflare **Single Redirect**永久重定向到`https://www.utilcover.com`；静态资产的`_redirects`不支持域名级重定向。
 4. 如域名存在CAA限制，先确保允许Cloudflare文档列出的签发机构。
 5. 不为当前未指纹化的JS/CSS添加长期自定义缓存规则；Workers Static Assets已有ETag和部署缓存失效机制。
 6. 验证未知路径返回自定义404，而不是以200状态回退到首页。
 
-`wrangler.json`配置`404-page`行为；`.assetsignore`阻止测试、Git元数据和部署配置成为公开资源；`_headers`提供CSP、点击劫持防护和权限策略；`robots.txt`与`sitemap.xml`使用规范主机`www.genpass.top`。
+`wrangler.json`配置`404-page`行为；`.assetsignore`阻止测试、Git元数据和部署配置成为公开资源；`_headers`提供CSP、点击劫持防护和权限策略；`robots.txt`与`sitemap.xml`使用规范主机`www.utilcover.com`。
 
 如果另行创建传统Cloudflare Pages Git Integration项目，则不需要`wrangler.json`：Framework preset选`None`，Build command留空，Build output directory设为`.`。不要混用Pages的`wrangler pages deploy`与Workers Builds的`wrangler deploy`。
 

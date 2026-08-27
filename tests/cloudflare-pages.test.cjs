@@ -60,9 +60,9 @@ test('production HTML avoids inline event handlers required by strict CSP', () =
 test('publishes robots and sitemap entries for every public tool route', () => {
   const robots = read('robots.txt');
   const sitemap = read('sitemap.xml');
-  assert.match(robots, /Sitemap: https:\/\/www\.genpass\.top\/sitemap\.xml/);
+  assert.match(robots, /Sitemap: https:\/\/www\.utilcover\.com\/sitemap\.xml/);
   const routes = ['/', '/index-zh', '/tools/', '/calculator/', '/json/', '/text/', '/encode/', '/timestamp/', '/uuid/', '/hash/', '/qr/', '/unit/', '/color/', '/image/'];
-  for (const route of routes) assert.match(sitemap, new RegExp(`<loc>https://www\\.genpass\\.top${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}</loc>`));
+  for (const route of routes) assert.match(sitemap, new RegExp(`<loc>https://www\\.utilcover\\.com${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}</loc>`));
 });
 
 test('documents exact Workers Builds settings and custom-domain canonical host', () => {
@@ -71,5 +71,5 @@ test('documents exact Workers Builds settings and custom-domain canonical host',
   assert.match(readme, /Build command.*`exit 0`/i);
   assert.match(readme, /Deploy command.*`npx wrangler deploy`/i);
   assert.match(readme, /Production branch.*`main`/i);
-  assert.match(readme, /www\.genpass\.top/);
+  assert.match(readme, /www\.utilcover\.com/);
 });
