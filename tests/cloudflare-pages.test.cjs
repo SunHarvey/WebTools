@@ -173,6 +173,20 @@ test('styles the homepage trust message as a distinct logo-adjacent brand signal
   assert.match(css, /\.nav-trust\s*\{[^}]*border-left:\s*2px solid/s);
 });
 
+test('shows the localized privacy statement beside the logo on every shared-navigation page', () => {
+  const pages = fs.readdirSync(root, { recursive: true })
+    .filter(name => name.endsWith('.html') && read(name).includes('class="nav-shell"'));
+  assert.equal(pages.length, 32);
+  for (const file of pages) {
+    const html = read(file);
+    const nav = html.match(/<nav class="nav-shell"[\s\S]*?<\/nav>/)?.[0] || '';
+    const chinese = /<html lang="zh-CN">/.test(html);
+    assert.match(nav, /class="brand-cluster"/, `${file} does not group the privacy statement with the logo`);
+    assert.match(nav, chinese ? />仅在本地处理，不会上传<\/span>/ : />Processed locally — never uploaded<\/span>/, `${file} lacks the localized privacy statement`);
+    assert.equal((nav.match(/class="nav-trust"/g) || []).length, 1, `${file} has a duplicate privacy statement`);
+  }
+});
+
 test('places concise privacy notes beside sensitive inputs only', () => {
   const sensitivePages = ['password/index.html', 'json/index.html', 'text/index.html', 'encode/index.html', 'hash/index.html', 'qr/index.html', 'image/index.html'];
   for (const file of sensitivePages) assert.match(read(file), /class="local-processing-note"/, `${file} lacks a contextual local-processing note`);
