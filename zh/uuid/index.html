@@ -9,15 +9,15 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>安全 UUID v4 生成器 | UtilCover</title>
-  <meta name="description" content="生成一个或多个符合 RFC 4122 的加密安全 UUID v4 值。">
+  <title>安全批量 UUID v4 / GUID 生成器 | UtilCover</title>
+  <meta name="description" content="批量生成 1–100 个安全的 RFC 4122 UUID v4 / GUID 标识符，可选大写与连字符格式。">
   <link rel="canonical" href="https://www.utilcover.com/zh/uuid/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/uuid/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/uuid/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/uuid/">
   <link rel="stylesheet" href="/shared/tools.css">
-  <meta property="og:title" content="安全 UUID v4 生成器 | UtilCover">
-  <meta property="og:description" content="生成一个或多个符合 RFC 4122 的加密安全 UUID v4 值。">
+  <meta property="og:title" content="安全批量 UUID v4 / GUID 生成器 | UtilCover">
+  <meta property="og:description" content="批量生成 1–100 个安全的 RFC 4122 UUID v4 / GUID 标识符，可选大写与连字符格式。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/zh/uuid/">
   <script type="application/ld+json">
@@ -29,7 +29,7 @@
       "@id": "https://www.utilcover.com/zh/uuid/#application",
       "name": "安全 UUID v4 生成器",
       "url": "https://www.utilcover.com/zh/uuid/",
-      "description": "生成一个或多个符合 RFC 4122 的加密安全 UUID v4 值。",
+      "description": "批量生成 1–100 个安全的 RFC 4122 UUID v4 / GUID 标识符，可选大写与连字符格式。",
       "inLanguage": "zh-CN",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -67,6 +67,14 @@
 <main class="page-shell">
   <section class="hero"><h1>安全 UUID v4 生成器</h1><p>生成一个或多个符合 RFC 4122 的加密安全 UUID v4 值。</p></section>
   <section class="tool-card"><div class="grid-2"><div class="field"><label for="uuidCount">UUID 数量（1–100）</label><input id="uuidCount" type="number" min="1" max="100" value="5"><div class="checkbox-row"><label><input id="uuidUppercase" type="checkbox"> 大写</label><label><input id="uuidHyphens" type="checkbox" checked> 连字符</label></div><div class="actions"><button id="generateUuid">生成 UUID</button><button id="copyUuid" class="secondary">全部复制</button><button id="clearUuid" class="danger">清空</button></div><div id="uuidStatus" class="status" role="status">就绪</div></div><div class="field"><label for="uuidOutput">生成的 UUID v4 值</label><textarea id="uuidOutput" class="output" readonly></textarea></div></div></section><aside class="info-card"><strong>安全生成：</strong>使用 <code>crypto.getRandomValues()</code>，并设置 RFC 4122 版本位和变体位。</aside>
+  <section class="tool-guide" aria-labelledby="uuid-guide-title">
+    <div class="guide-intro"><p>UUID v4 使用说明</p><h2 id="uuid-guide-title">在浏览器中生成一组随机标识符</h2><p>需要给测试记录、原型数据或导入草稿分配编号时，可以一次得到少量、每行一个的 UUID。工具在当前浏览器取随机字节，设置版本与变体字段，再按选项改变十六进制字母大小写和连字符外观。</p></div>
+    <div class="guide-section how-to"><h3>三步生成 UUID v4</h3><ol class="steps"><li><strong>填写数量。</strong><span>输入 1–100 之间的整数。限制小批量有利于逐行检查，也避免输出框过长。</span></li><li><strong>选择显示格式。</strong><span>默认连字符会形成常见的 8-4-4-4-12 结构；只有接收方要求大写十六进制时才勾选大写。</span></li><li><strong>生成并复制。</strong><span>点击生成得到全新的一批值，检查行数与格式后，再把全部结果复制到目标字段或测试夹具。</span></li></ol></div>
+    <div class="guide-section examples"><h3>实际使用场景</h3><div class="example-grid"><article><h4>给本地测试记录编号</h4><p>为五条夹具生成五行默认格式，再逐行分配。类似 <code>f47ac10b-58cc-4372-a567-0e02b2c3d479</code> 的结果中，版本位置固定为 4，同时按规范设置变体位。</p></article><article><h4>匹配大写 GUID 字段</h4><p>某些旧系统把 GUID 显示为大写并保留连字符，此时勾选“大写”即可。大写和连字符只是显示形式，不会改变 128 位内容，也不会增加随机性。</p></article><article><h4>准备紧凑十六进制文本</h4><p>目标字段明确要求 32 位十六进制时，可以关闭连字符。它仍来自同一个 UUID v4 生成过程，但严格校验标准文本格式的系统可能只接受带连字符的写法。</p></article></div></div>
+    <div class="guide-section limitations"><h3>生成方式与限制</h3><p>每个值先创建 16 个字节，并由 <code>crypto.getRandomValues()</code> 填充。随后设置 RFC 4122 的版本 4 位和变体位，最后格式化为十六进制字符串。批量数量必须是 1–100 的整数；大写和连字符只调整显示形式，不代表另一种 UUID 类型。</p><p>页面不会持久保存任何结果，也不会对当前批次、历史批次、其他标签页或外部数据库进行去重检查。随机碰撞在一般标识场景中通常很难遇到，但本工具不会证明唯一性。业务确实要求排除重复时，仍应在数据库设置唯一约束，并在冲突后重新生成。</p><p>UUID 是标识符，不是秘密，也不是认证令牌。看起来随机并不等于具备授权能力，不能仅凭持有某个 UUID 就授予访问权限。刷新、清空或再次生成后，旧输出不会由本页保存；这里也没有下载、表格导出、其他版本、命名空间模式或内嵌时间功能。</p></div>
+    <div class="guide-section faq-list"><h3>常见问题</h3><details><summary>为什么这些值属于 UUID v4？</summary><p>主要内容来自浏览器的加密随机源，随后通过位掩码把版本字段设为 4，并把变体字段设为 RFC 4122 对应形式，其余随机位保留。</p></details><details><summary>大写或去掉连字符会变成另一个 UUID 吗？</summary><p>不会。十六进制字母大小写与连字符位置属于文本外观，位内容保持不变。不过接收系统的格式校验可能只允许其中一种写法。</p></details><details><summary>工具会确保每一个值都不重复吗？</summary><p>不会登记或跨批次比对，也不作绝对唯一承诺。需要硬性唯一时，应由保存数据的系统设置唯一索引或等价规则。</p></details><details><summary>能把 UUID 当密码或访问令牌吗？</summary><p>不能。UUID 用于识别对象；认证令牌还需要针对威胁模型设计熵、有效期、存储和验证机制，密码则应使用专门的密码生成与管理流程。</p></details></div>
+    <div class="related-tools"><h3>相关工具</h3><div class="related-links"><a href="/zh/hash/"><strong>哈希计算</strong><span>为已有内容计算摘要。</span></a><a href="/zh/password/"><strong>密码生成器</strong><span>需要凭据时生成密码，而不是复用标识符。</span></a><a href="/zh/timestamp/"><strong>Unix 时间戳转换</strong><span>为记录单独添加或检查时间字段。</span></a></div></div>
+  </section>
 </main>
 <footer>UtilCover · 私密、快速的浏览器端工具</footer>
 <script src="/uuid/uuid-tool.js"></script>

@@ -40,12 +40,23 @@ test('normalizes fractional milliseconds to the integer used by Date', () => {
   });
 });
 
-test('floors negative subsecond timestamps according to Unix semantics', () => {
+test('normalizes negative fractions before flooring Unix seconds', () => {
+  assert.deepEqual(parseUnixTimestamp('-0.999', 'milliseconds'), {
+    seconds: 0,
+    milliseconds: 0,
+    iso: '1970-01-01T00:00:00.000Z',
+  });
   assert.deepEqual(parseUnixTimestamp('-1', 'milliseconds'), {
     seconds: -1,
     milliseconds: -1,
     iso: '1969-12-31T23:59:59.999Z',
   });
+  assert.deepEqual(parseUnixTimestamp('-0.0009', 'seconds'), {
+    seconds: 0,
+    milliseconds: 0,
+    iso: '1970-01-01T00:00:00.000Z',
+  });
+  assert.equal(parseUnixTimestamp('-0.001', 'seconds').seconds, -1);
 });
 
 test('rejects empty, nonnumeric and out-of-range timestamps', () => {

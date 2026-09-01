@@ -9,15 +9,15 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>Secure UUID v4 Generator | UtilCover</title>
-  <meta name="description" content="Generate one or many cryptographically secure RFC 4122 UUID version 4 values.">
+  <title>Secure Bulk UUID v4 / GUID Generator | UtilCover</title>
+  <meta name="description" content="Generate 1–100 secure RFC 4122 UUID v4 / GUID identifiers in bulk, with optional uppercase and hyphen formatting.">
   <link rel="canonical" href="https://www.utilcover.com/uuid/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/uuid/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/uuid/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/uuid/">
   <link rel="stylesheet" href="/shared/tools.css">
-  <meta property="og:title" content="Secure UUID v4 Generator | UtilCover">
-  <meta property="og:description" content="Generate one or many cryptographically secure RFC 4122 UUID version 4 values.">
+  <meta property="og:title" content="Secure Bulk UUID v4 / GUID Generator | UtilCover">
+  <meta property="og:description" content="Generate 1–100 secure RFC 4122 UUID v4 / GUID identifiers in bulk, with optional uppercase and hyphen formatting.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/uuid/">
   <script src="/shared/locale-redirect.js"></script>
@@ -30,7 +30,7 @@
       "@id": "https://www.utilcover.com/uuid/#application",
       "name": "Secure UUID v4 Generator",
       "url": "https://www.utilcover.com/uuid/",
-      "description": "Generate one or many cryptographically secure RFC 4122 UUID version 4 values.",
+      "description": "Generate 1–100 secure RFC 4122 UUID v4 / GUID identifiers in bulk, with optional uppercase and hyphen formatting.",
       "inLanguage": "en",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -68,6 +68,14 @@
 <main class="page-shell">
   <section class="hero"><h1>Secure UUID v4 Generator</h1><p>Generate one or many cryptographically secure RFC 4122 UUID version 4 values.</p></section>
   <section class="tool-card"><div class="grid-2"><div class="field"><label for="uuidCount">Number of UUIDs (1–100)</label><input id="uuidCount" type="number" min="1" max="100" value="5"><div class="checkbox-row"><label><input id="uuidUppercase" type="checkbox"> Uppercase</label><label><input id="uuidHyphens" type="checkbox" checked> Hyphens</label></div><div class="actions"><button id="generateUuid">Generate UUIDs</button><button id="copyUuid" class="secondary">Copy all</button><button id="clearUuid" class="danger">Clear</button></div><div id="uuidStatus" class="status" role="status">Ready</div></div><div class="field"><label for="uuidOutput">Generated UUID v4 values</label><textarea id="uuidOutput" class="output" readonly></textarea></div></div></section><aside class="info-card"><strong>Secure generation:</strong> Uses <code>crypto.getRandomValues()</code> and sets RFC 4122 version and variant bits.</aside>
+  <section class="tool-guide" aria-labelledby="uuid-guide-title">
+    <div class="guide-intro"><p>UUID v4 guide</p><h2 id="uuid-guide-title">Generate random identifiers in a small batch</h2><p>Create one identifier for a record or a newline-separated batch for fixtures, prototypes, and import preparation. The generator draws random bytes in this browser, applies the UUID version and variant fields, and lets you change only the printed capitalization and hyphens.</p></div>
+    <div class="guide-section how-to"><h3>How to generate UUID v4 values</h3><ol class="steps"><li><strong>Choose a batch size.</strong><span>Enter an integer from 1–100. Small batches keep the output easy to review and copy.</span></li><li><strong>Select the presentation.</strong><span>Leave hyphens enabled for the familiar 8-4-4-4-12 form, and choose uppercase only when the destination expects capital hexadecimal.</span></li><li><strong>Generate and copy.</strong><span>Create a fresh batch, inspect the newline-separated output, and copy all values into the intended field or fixture.</span></li></ol></div>
+    <div class="guide-section examples"><h3>Practical examples</h3><div class="example-grid"><article><h4>Create IDs for test records</h4><p>Generate five default values for five local fixtures, then assign one line to each record. A typical value looks like <code>f47ac10b-58cc-4372-a567-0e02b2c3d479</code>, with the version nibble set to 4 and the RFC variant bits set.</p></article><article><h4>Match an uppercase GUID field</h4><p>Enable Uppercase while leaving Hyphens on when a legacy form displays GUID text in capitals. The underlying 128 bits do not change because uppercase and hyphens are presentation choices only.</p></article><article><h4>Prepare compact identifiers</h4><p>Disable Hyphens to copy 32 hexadecimal characters per line when a schema explicitly wants that form. It remains derived from a UUID v4 value, but consumers that validate canonical UUID spelling may require the hyphenated version.</p></article></div></div>
+    <div class="guide-section limitations"><h3>Generation details and limitations</h3><p>Each value starts with 16 bytes filled by <code>crypto.getRandomValues()</code>. The generator then sets the RFC 4122 version 4 bits and variant bits before formatting the hexadecimal string. Batch size must be a whole number from 1–100. Uppercase and hyphens affect presentation only; they do not create a different UUID type or add entropy.</p><p>The page performs no persistence and no deduplication check across the current batch, earlier batches, other tabs, or external systems. Random UUID collisions are expected to be unlikely for ordinary identification work, but the interface does not prove uniqueness. Applications that require a database uniqueness constraint must still enforce it and retry on conflict.</p><p>UUIDs are identifiers, not secrets or authentication tokens. Do not treat an unguessable-looking UUID as authorization, and do not place confidential information in assumptions about the value. Output disappears when replaced, cleared, or the page closes. There is no download, CSV export, alternate UUID version, namespace mode, or embedded timestamp.</p></div>
+    <div class="guide-section faq-list"><h3>UUID v4 FAQ</h3><details><summary>What makes these values version 4 UUIDs?</summary><p>Random bytes provide the payload, then fixed bit masks place 4 in the version field and the RFC 4122 variant in its field. The remaining bits come from the browser cryptographic random source.</p></details><details><summary>Is an uppercase or unhyphenated value a different UUID?</summary><p>No. Hexadecimal letter case and hyphen placement are textual presentation. They preserve the same bits, although a receiving validator may insist on one spelling.</p></details><details><summary>Does the generator guarantee every value is unique?</summary><p>No absolute guarantee or registry check is made. Use a unique index or equivalent rule in the system of record when duplicate rejection is a requirement.</p></details><details><summary>Can a UUID be used as a password or access token?</summary><p>No. UUIDs identify objects; they do not establish permission. Authentication tokens need a threat model, suitable entropy, lifecycle controls, secure storage, and validation designed for authentication.</p></details></div>
+    <div class="related-tools"><h3>Related browser tools</h3><div class="related-links"><a href="/hash/"><strong>Hash generator</strong><span>Calculate a digest for existing content.</span></a><a href="/password/"><strong>Password generator</strong><span>Create credentials instead of identifiers.</span></a><a href="/timestamp/"><strong>Unix timestamp converter</strong><span>Add or inspect a separate time field for a record.</span></a></div></div>
+  </section>
 </main>
 <footer>UtilCover · Private, fast, client-side utilities</footer>
 <script src="/uuid/uuid-tool.js"></script>

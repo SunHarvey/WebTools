@@ -9,15 +9,15 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>Unix 时间戳转换器 | UtilCover</title>
-  <meta name="description" content="转换 Unix 秒、毫秒、本地日期时间和 ISO 8601 UTC 时间。">
+  <title>Unix 时间戳与日期转换器（秒、毫秒）| UtilCover</title>
+  <meta name="description" content="将 Unix 秒或毫秒转换为日期、ISO 8601 UTC 和浏览器本地时间，也可把本地日期转回时间戳。">
   <link rel="canonical" href="https://www.utilcover.com/zh/timestamp/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/timestamp/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/timestamp/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/timestamp/">
   <link rel="stylesheet" href="/shared/tools.css">
-  <meta property="og:title" content="Unix 时间戳转换器 | UtilCover">
-  <meta property="og:description" content="转换 Unix 秒、毫秒、本地日期时间和 ISO 8601 UTC 时间。">
+  <meta property="og:title" content="Unix 时间戳与日期转换器（秒、毫秒）| UtilCover">
+  <meta property="og:description" content="将 Unix 秒或毫秒转换为日期、ISO 8601 UTC 和浏览器本地时间，也可把本地日期转回时间戳。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/zh/timestamp/">
   <script type="application/ld+json">
@@ -29,7 +29,7 @@
       "@id": "https://www.utilcover.com/zh/timestamp/#application",
       "name": "Unix 时间戳转换器",
       "url": "https://www.utilcover.com/zh/timestamp/",
-      "description": "转换 Unix 秒、毫秒、本地日期时间和 ISO 8601 UTC 时间。",
+      "description": "将 Unix 秒或毫秒转换为日期、ISO 8601 UTC 和浏览器本地时间，也可把本地日期转回时间戳。",
       "inLanguage": "zh-CN",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -67,6 +67,14 @@
 <main class="page-shell">
   <section class="hero"><h1>Unix 时间戳转换器</h1><p>转换 Unix 秒、毫秒、本地日期时间和 ISO 8601 UTC 时间。</p></section>
   <section class="tool-card"><div class="grid-2"><div class="field"><label for="unixInput">Unix 时间戳</label><input id="unixInput" type="text" inputmode="decimal"><select id="unixUnit" aria-label="时间戳单位"><option value="auto">自动检测（现代日期）</option><option value="seconds">秒</option><option value="milliseconds">毫秒</option></select><button id="convertUnix">转换时间戳</button></div><div class="field"><label for="dateInput">本地日期和时间</label><input id="dateInput" type="datetime-local"><button id="convertDate">转换日期</button></div></div><div class="actions"><button id="useCurrentTime" class="secondary">使用当前时间</button><span class="status">时区：<strong id="currentTimezone"></strong></span></div><div class="result-grid"><div class="result-item"><span>Unix 秒</span><code id="resultSeconds">—</code><button class="secondary" data-copy-target="resultSeconds">复制</button></div><div class="result-item"><span>Unix 毫秒</span><code id="resultMilliseconds">—</code><button class="secondary" data-copy-target="resultMilliseconds">复制</button></div><div class="result-item"><span>ISO 8601 / UTC</span><code id="resultIso">—</code><button class="secondary" data-copy-target="resultIso">复制</button></div><div class="result-item"><span>本地时间</span><code id="resultLocal">—</code><button class="secondary" data-copy-target="resultLocal">复制</button></div></div><div id="timestampStatus" class="status" role="status">就绪</div></section>
+  <section class="tool-guide" aria-labelledby="timestamp-guide-title">
+    <div class="guide-intro"><p>时间戳说明</p><h2 id="timestamp-guide-title">在纪元数值与本地日期之间转换</h2><p>Unix 时间戳以纪元为基准记录经过的时间。本页把同一时刻同时显示为整数秒、归一化后的毫秒、ISO 8601 UTC 和浏览器本地时间；也能把日期控件中选择的本地年月日时分转回纪元数值，适合排查接口、日志和测试数据。</p></div>
+    <div class="guide-section how-to"><h3>三步完成时间转换</h3><ol class="steps"><li><strong>选择输入方向。</strong><span>可以粘贴数字时间戳并选择自动、秒或毫秒，也可以在本地日期时间控件里选择一个钟表时间。</span></li><li><strong>执行并对照结果。</strong><span>转换后同时检查秒、毫秒、UTC 与本地显示。页面标出的时区就是本地格式所依据的浏览器设置。</span></li><li><strong>复制正确单位。</strong><span>根据接口、数据库或日志字段的约定，复制对应结果。秒和毫秒相差一千倍，不能只凭数字长度随意替换。</span></li></ol></div>
+    <div class="guide-section examples"><h3>具体例子</h3><div class="example-grid"><article><h4>把接口秒数读成日期</h4><p><code>1704067200</code> 在自动模式下按秒解释，UTC 结果为 <code>2024-01-01T00:00:00.000Z</code>。本地钟表可能显示另一个小时，但两者仍指向同一瞬间。</p></article><article><h4>查看日志中的毫秒精度</h4><p><code>1704067200123</code> 会按毫秒识别，对应 <code>2024-01-01T00:00:00.123Z</code>。秒结果是 <code>1704067200</code>，因为秒数采用向下取整，不会四舍五入。</p></article><article><h4>明确解释小型测试数据</h4><p><code>1000</code> 在自动模式中会被当作秒；显式选择毫秒则覆盖自动判断，结果变成纪元后一秒。旧日期和人工构造的夹具尤其应该指定单位。</p></article></div></div>
+    <div class="guide-section limitations"><h3>自动判断、精度与时区限制</h3><p>自动检测只有一条规则：数字绝对值小于 <code>100,000,000,000</code> 时按秒处理，否则按毫秒处理。显式选择秒或毫秒单位会覆盖该规则。这个阈值适合常见的现代日期，却无法从上下文判断很早的毫秒值或很远的秒值，因此有歧义时不要依赖自动模式。</p><p>小数毫秒会通过 JavaScript <code>Date</code> 归一化为它实际保存的整数毫秒。之后用归一化毫秒除以一千，并向下取整得到秒数；规则同样用于负数，所以纪元前一毫秒对应秒值 <code>-1</code>，而不是零。超过浏览器 Date 支持范围的巨大数值会报错，不会生成看似正常的日期。工具只处理秒与毫秒，不提供微秒、纳秒，也不会保存毫秒以下精度。</p><p><code>datetime-local</code> 不含时区偏移，输入会按浏览器本地时区解释。ISO 输出始终采用 UTC 并以 <code>Z</code> 结尾，本地结果则使用浏览器的地区与时区格式。页面没有时区选择器，也没有针对夏令时重叠或跳过时刻的消歧选项；这些边界情况由浏览器 Date 处理。若业务必须区分夏令时两次出现的同一钟点，应使用带明确偏移量的来源另行核验。</p></div>
+    <div class="guide-section faq-list"><h3>常见问题</h3><details><summary>自动模式怎样判断秒和毫秒？</summary><p>它比较绝对值与 100,000,000,000。低于阈值就乘以一千作为秒，高于或等于阈值则直接作为毫秒交给 Date。</p></details><details><summary>为什么 ISO 与本地时间的钟点不同？</summary><p>ISO 用 UTC 表示，本地结果使用浏览器时区。时区偏移只改变显示的年月日和钟点，不会改变背后的 Unix 数值与实际瞬间。</p></details><details><summary>负数或小数会怎样处理？</summary><p>Date 会先把小数毫秒朝零截断，再向下取整计算整数秒。归一化后的毫秒值仍为负数时，例如 -1 到 -999 毫秒，秒值是 -1；-0.999 毫秒会先归一化为 0，因此秒值也是 0。</p></details><details><summary>能选择其他时区或指定夏令时分支吗？</summary><p>不能。本页没有时区选择器与夏令时消歧设置。本地输入以当前浏览器规则解释；需要固定地区语义时，应提供含偏移的时间来源并用专门系统验证。</p></details></div>
+    <div class="related-tools"><h3>相关工具</h3><div class="related-links"><a href="/zh/encode/"><strong>Base64 与 URL 编解码</strong><span>构造 URL 参数时编码时间戳值。</span></a><a href="/zh/uuid/"><strong>UUID v4 生成器</strong><span>为带时间字段的测试记录生成标识符。</span></a><a href="/zh/calculator/"><strong>计算器</strong><span>核对两个纪元数值之间的差值。</span></a></div></div>
+  </section>
 </main>
 <footer>UtilCover · 私密、快速的浏览器端工具</footer>
 <script src="/timestamp/timestamp-tool.js"></script>

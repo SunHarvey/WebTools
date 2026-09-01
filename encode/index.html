@@ -9,15 +9,15 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>Base64 &amp; URL Encoder | UtilCover</title>
-  <meta name="description" content="Encode and decode UTF-8 Base64 text and URL components without sending data anywhere.">
+  <title>Base64 Encode &amp; Decode and URL Component Encoder | UtilCover</title>
+  <meta name="description" content="Base64 encode or decode UTF-8 text, and percent-encode or decode a URL component locally in your browser.">
   <link rel="canonical" href="https://www.utilcover.com/encode/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/encode/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/encode/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/encode/">
   <link rel="stylesheet" href="../shared/tools.css">
-  <meta property="og:title" content="Base64 &amp; URL Encoder | UtilCover">
-  <meta property="og:description" content="Encode and decode UTF-8 Base64 text and URL components without sending data anywhere.">
+  <meta property="og:title" content="Base64 Encode &amp; Decode and URL Component Encoder | UtilCover">
+  <meta property="og:description" content="Base64 encode or decode UTF-8 text, and percent-encode or decode a URL component locally in your browser.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/encode/">
   <script type="application/ld+json">
@@ -29,7 +29,7 @@
       "@id": "https://www.utilcover.com/encode/#application",
       "name": "Base64 & URL Encoder",
       "url": "https://www.utilcover.com/encode/",
-      "description": "Encode and decode UTF-8 Base64 text and URL components without sending data anywhere.",
+      "description": "Base64 encode or decode UTF-8 text, and percent-encode or decode a URL component locally in your browser.",
       "inLanguage": "en",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -67,6 +67,14 @@
 <main class="page-shell">
   <section class="hero"><h1>Base64 &amp; URL Encoder</h1><p>Encode and decode UTF-8 Base64 text and URL components without sending data anywhere.</p></section>
   <section class="tool-card"><p class="local-processing-note">Input and results remain on this device and are never uploaded.</p><div class="grid-2"><div class="field"><label for="encodeInput">Input</label><textarea id="encodeInput" placeholder="Text, Base64 or URL-encoded value"></textarea></div><div class="field"><label for="encodeOutput">Result</label><textarea id="encodeOutput" class="output" readonly></textarea></div></div><div class="actions"><button id="base64Encode">Base64 encode</button><button id="base64Decode" class="secondary">Base64 decode</button><button id="urlEncode" class="secondary">URL encode</button><button id="urlDecode" class="secondary">URL decode</button><button id="swapEncode" class="secondary">Swap</button><button id="copyEncode" class="secondary">Copy result</button><button id="clearEncode" class="danger">Clear</button></div><div id="encodeStatus" class="status" role="status">Ready</div></section><aside class="info-card"><strong>Unicode-safe:</strong> Chinese, emoji and other UTF-8 text are handled correctly when encoding Base64.</aside>
+  <section class="tool-guide" aria-labelledby="encode-guide-title">
+    <div class="guide-intro"><p>Encoding guide</p><h2 id="encode-guide-title">Convert UTF-8 text or a URL component</h2><p>Use the Base64 controls when a text-only field expects Base64, and use the URL controls when one query value or path component contains spaces, Unicode, or reserved punctuation. The input and result remain visible side by side, and Swap moves the result back into the input for a second operation.</p></div>
+    <div class="guide-section how-to"><h3>How to encode or decode</h3><ol class="steps"><li><strong>Identify the format.</strong><span>Enter ordinary UTF-8 text for encoding, standard Base64 text for Base64 decoding, or one URL component for percent encoding or decoding.</span></li><li><strong>Run one conversion.</strong><span>Choose Base64 encode, Base64 decode, URL encode, or URL decode. A malformed value produces an error instead of a partial result.</span></li><li><strong>Verify and copy.</strong><span>Inspect the result, optionally Swap it into the input to test a round trip, then copy only after confirming it matches the receiving system’s format.</span></li></ol></div>
+    <div class="guide-section examples"><h3>Concrete examples</h3><div class="example-grid"><article><h4>Base64 for multilingual text</h4><p>Encoding <code>Web tools 👋</code> produces <code>V2ViIHRvb2xzIPCfkYs=</code>. The source is converted to UTF-8 bytes and then represented with the standard Base64 alphabet; decoding reverses that process only when the bytes form valid UTF-8 text.</p></article><article><h4>Encode one query value</h4><p>Encoding the component <code>a=b &amp; hello</code> produces <code>a%3Db%20%26%20hello</code>. Reserved equals and ampersand characters are escaped because this operation is for a component, not a full URL with structural separators.</p></article><article><h4>Inspect copied payloads</h4><p>Paste a Base64 text field from an API response, decode it, and review the readable text. Whitespace in the encoded input is ignored, and optional omitted padding is restored when the remaining length permits it.</p></article></div></div>
+    <div class="guide-section limitations"><h3>Accepted formats and limitations</h3><p>Base64 encoding accepts text, converts it to UTF-8 bytes, and emits the standard <code>A–Z a–z 0–9 + /</code> alphabet with padding. This is UTF-8 text Base64 only; it is not a file or arbitrary-binary decoder. Decoding removes whitespace and accepts optional omitted padding, but validates the alphabet and padding bits. It rejects Base64URL input containing <code>-</code> or <code>_</code>, malformed lengths, invalid Base64, and decoded non-UTF-8 bytes. Base64 is encoding, not encryption: anyone with a decoder can recover the text, so it provides no confidentiality.</p><p>URL operations directly use <code>encodeURIComponent</code> and <code>decodeURIComponent</code>. They percent-encode or decode a component such as one parameter value, not a full URL. Encoding an entire address would also escape its <code>:</code>, <code>/</code>, <code>?</code>, <code>=</code>, and <code>&amp;</code> structure. Decoding requires valid percent escapes and valid UTF-8 sequences; malformed input is rejected rather than guessed. No form-style conversion changes spaces into plus signs, and no Base64URL mode is available.</p></div>
+    <div class="guide-section faq-list"><h3>Encoding FAQ</h3><details><summary>Does Base64 hide or secure a secret?</summary><p>No. Base64 changes how bytes are written so they can travel through text-oriented systems. It has no key and is immediately reversible. Use an appropriate encryption system, not Base64, when confidentiality is required.</p></details><details><summary>Can I decode Base64 without the final equals signs?</summary><p>Yes, optional omitted padding is accepted when the standard Base64 length can be completed unambiguously. Embedded whitespace is also ignored. The standard alphabet and canonical padding bits are still validated.</p></details><details><summary>Why does a Base64 value fail after decoding bytes?</summary><p>A syntactically valid Base64 sequence can represent arbitrary bytes. This page deliberately returns UTF-8 text only and rejects bytes that are not valid UTF-8, rather than silently inserting replacement characters.</p></details><details><summary>Should I paste a complete web address into URL encode?</summary><p>Usually not. The control applies component encoding, so paste only the individual value that will occupy a query parameter or path segment. Assemble the complete URL around that encoded value.</p></details></div>
+    <div class="related-tools"><h3>Related browser tools</h3><div class="related-links"><a href="/text/"><strong>Text counter &amp; cleaner</strong><span>Prepare and inspect text before encoding it.</span></a><a href="/json/"><strong>JSON formatter</strong><span>Validate a decoded JSON payload.</span></a><a href="/hash/"><strong>Hash generator</strong><span>Calculate a digest instead of a reversible representation.</span></a></div></div>
+  </section>
 </main>
 <footer>UtilCover · Private, fast, client-side utilities</footer>
 <script src="/shared/locale-redirect.js"></script>

@@ -9,15 +9,15 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>Base64 与 URL 编解码工具 | UtilCover</title>
-  <meta name="description" content="在本地编码和解码 UTF-8 Base64 文本及 URL 组件，数据不会上传。">
+  <title>Base64 编码解码与 URL 组件编解码 | UtilCover</title>
+  <meta name="description" content="在浏览器中对 UTF-8 文本进行 Base64 编解码，或对 URL 组件进行百分号编码和解码。">
   <link rel="canonical" href="https://www.utilcover.com/zh/encode/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/encode/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/encode/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/encode/">
   <link rel="stylesheet" href="/shared/tools.css">
-  <meta property="og:title" content="Base64 与 URL 编解码工具 | UtilCover">
-  <meta property="og:description" content="在本地编码和解码 UTF-8 Base64 文本及 URL 组件，数据不会上传。">
+  <meta property="og:title" content="Base64 编码解码与 URL 组件编解码 | UtilCover">
+  <meta property="og:description" content="在浏览器中对 UTF-8 文本进行 Base64 编解码，或对 URL 组件进行百分号编码和解码。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/zh/encode/">
   <script type="application/ld+json">
@@ -29,7 +29,7 @@
       "@id": "https://www.utilcover.com/zh/encode/#application",
       "name": "Base64 与 URL 编解码工具",
       "url": "https://www.utilcover.com/zh/encode/",
-      "description": "在本地编码和解码 UTF-8 Base64 文本及 URL 组件，数据不会上传。",
+      "description": "在浏览器中对 UTF-8 文本进行 Base64 编解码，或对 URL 组件进行百分号编码和解码。",
       "inLanguage": "zh-CN",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -67,6 +67,14 @@
 <main class="page-shell">
   <section class="hero"><h1>Base64 与 URL 编解码工具</h1><p>在本地编码和解码 UTF-8 Base64 文本及 URL 组件，数据不会发送到任何地方。</p></section>
   <section class="tool-card"><p class="local-processing-note">输入和结果仅保留在当前设备上，绝不会上传。</p><div class="grid-2"><div class="field"><label for="encodeInput">输入</label><textarea id="encodeInput" placeholder="文本、Base64 或 URL 编码值"></textarea></div><div class="field"><label for="encodeOutput">结果</label><textarea id="encodeOutput" class="output" readonly></textarea></div></div><div class="actions"><button id="base64Encode">Base64 编码</button><button id="base64Decode" class="secondary">Base64 解码</button><button id="urlEncode" class="secondary">URL 编码</button><button id="urlDecode" class="secondary">URL 解码</button><button id="swapEncode" class="secondary">交换</button><button id="copyEncode" class="secondary">复制结果</button><button id="clearEncode" class="danger">清空</button></div><div id="encodeStatus" class="status" role="status">就绪</div></section><aside class="info-card"><strong>安全支持 Unicode：</strong>Base64 编码时可正确处理中文、表情符号及其他 UTF-8 文本。</aside>
+  <section class="tool-guide" aria-labelledby="encode-guide-title">
+    <div class="guide-intro"><p>编解码说明</p><h2 id="encode-guide-title">处理 UTF-8 文本与单个 URL 组件</h2><p>接口字段要求 Base64 文本时，可使用左侧的 Base64 按钮；查询参数值或路径片段含有空格、中文、表情和保留符号时，则使用 URL 组件按钮。输入与结果并排显示，“交换”可以把结果送回输入框，方便检查往返转换。</p></div>
+    <div class="guide-section how-to"><h3>三步完成转换</h3><ol class="steps"><li><strong>先判断输入类型。</strong><span>编码时输入普通 UTF-8 文本；Base64 解码时输入标准 Base64；URL 操作只放一个参数值或路径片段。</span></li><li><strong>选择对应按钮。</strong><span>执行 Base64 编码、Base64 解码、URL 编码或 URL 解码。格式错误时会停止并提示，不会输出半截内容。</span></li><li><strong>核对再复制。</strong><span>查看结果，也可以交换后反向转换，确认与原文一致。最后根据接收方要求复制正确的表示形式。</span></li></ol></div>
+    <div class="guide-section examples"><h3>常见使用场景</h3><div class="example-grid"><article><h4>把中英文本转成 Base64</h4><p><code>Web工具 👋</code> 编码后是 <code>V2Vi5bel5YW3IPCfkYs=</code>。工具先把 UTF-8 文本转成字节，再使用 Base64 标准字母表表示；解码时只有字节能够组成有效 UTF-8 才会返回文字。</p></article><article><h4>编码一个查询参数值</h4><p>组件 <code>a=b &amp; 你好</code> 会得到 <code>a%3Db%20%26%20%E4%BD%A0%E5%A5%BD</code>。其中等号和 &amp; 被转义，是因为这里处理的是组件，而不是保留协议、路径与查询结构的完整 URL。</p></article><article><h4>查看接口里的文本字段</h4><p>从响应中复制 Base64 字段并解码，可以快速检查可读内容。输入里的换行、空格等空白会被忽略；允许省略末尾填充，但剩余长度和填充位仍必须合法。</p></article></div></div>
+    <div class="guide-section limitations"><h3>接受范围与限制</h3><p>Base64 编码只针对 UTF-8 文本：先得到 UTF-8 字节，再输出含 <code>A–Z a–z 0–9 + /</code> 的标准字母表和填充符。它不是文件转换器，也不提供任意二进制预览。解码会移除空白，允许省略可补齐的末尾填充，同时检查字母表、长度与填充位；不接受 Base64URL 使用的 <code>-</code>、<code>_</code>，也会拒绝损坏的 Base64、无效字节以及解码后非 UTF-8 的内容。</p><p>Base64 只是编码，不是加密。它没有密钥，任何人都能还原原文，不能拿来保护密码、令牌或隐私数据。URL 操作直接调用 <code>encodeURIComponent</code> 和 <code>decodeURIComponent</code>，目标是一个组件而非完整 URL。如果把整条地址送去编码，冒号、斜杠、问号、等号和 &amp; 等结构符号也会被转义，结果通常不能直接作为网址使用。</p><p>URL 解码要求百分号转义完整且对应有效 UTF-8；遇到残缺序列会报错，不会猜测。这里也不会采用表单规则把空格与加号互换，没有 Base64URL 模式或文件上传功能。</p></div>
+    <div class="guide-section faq-list"><h3>常见问题</h3><details><summary>Base64 能保护敏感信息吗？</summary><p>不能。编码只是改变字节的书写方式，恢复原文不需要密钥。需要保密时应选择经过评审的加密方案，并妥善管理密钥。</p></details><details><summary>末尾没有等号还能解码吗？</summary><p>可以接受省略末尾填充的标准 Base64，也会忽略输入中的空白。但字符必须来自标准字母表，长度能够合法补齐，未使用的填充位也必须为零。</p></details><details><summary>为什么看起来合法的 Base64 仍然失败？</summary><p>Base64 本身可以装任意字节，而本工具只输出文本。如果解出的字节不是有效 UTF-8，就会明确拒绝，避免用替代字符悄悄改变数据。</p></details><details><summary>URL 编码时应该放整条网址吗？</summary><p>通常不应该。请只放查询参数值或单个路径片段，再把编码结果嵌回完整地址。这样协议和分隔符仍能保持原有作用。</p></details></div>
+    <div class="related-tools"><h3>相关工具</h3><div class="related-links"><a href="/zh/text/"><strong>文本计数与清理</strong><span>编码前整理并检查原文。</span></a><a href="/zh/json/"><strong>JSON 格式化</strong><span>校验解码后得到的 JSON 内容。</span></a><a href="/zh/hash/"><strong>哈希计算</strong><span>需要不可逆摘要时计算哈希，而不是使用 Base64。</span></a></div></div>
+  </section>
 </main>
 <footer>UtilCover · 私密、快速的浏览器端工具</footer>
 <script src="/encode/encode-tool.js"></script>

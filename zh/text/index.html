@@ -9,15 +9,15 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>文本计数与清理工具 | UtilCover</title>
-  <meta name="description" content="统计字符、单词、中文字符、行数和段落，并快速清理或转换文本。">
+  <title>字数与字符计数、文本清理工具 | UtilCover</title>
+  <meta name="description" content="统计字数和字符，删除重复行或空白行，并完成排序、首尾空白清理和大小写转换。">
   <link rel="canonical" href="https://www.utilcover.com/zh/text/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/text/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/text/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/text/">
   <link rel="stylesheet" href="/shared/tools.css">
-  <meta property="og:title" content="文本计数与清理工具 | UtilCover">
-  <meta property="og:description" content="统计字符、单词、中文字符、行数和段落，并快速清理或转换文本。">
+  <meta property="og:title" content="字数与字符计数、文本清理工具 | UtilCover">
+  <meta property="og:description" content="统计字数和字符，删除重复行或空白行，并完成排序、首尾空白清理和大小写转换。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/zh/text/">
   <script type="application/ld+json">
@@ -29,7 +29,7 @@
       "@id": "https://www.utilcover.com/zh/text/#application",
       "name": "文本计数与清理工具",
       "url": "https://www.utilcover.com/zh/text/",
-      "description": "统计字符、单词、中文字符、行数和段落，并快速清理或转换文本。",
+      "description": "统计字数和字符，删除重复行或空白行，并完成排序、首尾空白清理和大小写转换。",
       "inLanguage": "zh-CN",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -67,6 +67,14 @@
 <main class="page-shell">
   <section class="hero"><h1>文本计数与清理工具</h1><p>统计字符、单词、中文字符、行数和段落，并快速清理或转换文本。</p></section>
   <section class="tool-card"><p class="local-processing-note">您的文本仅保留在当前浏览器中，绝不会上传。</p><div class="field"><label for="textInput">文本</label><textarea id="textInput" placeholder="在此粘贴或输入文本"></textarea></div><div class="stat-grid"><div class="stat"><strong data-stat="characters">0</strong><span>字符</span></div><div class="stat"><strong data-stat="charactersNoSpaces">0</strong><span>不含空格</span></div><div class="stat"><strong data-stat="words">0</strong><span>单词</span></div><div class="stat"><strong data-stat="chineseCharacters">0</strong><span>中文字符</span></div><div class="stat"><strong data-stat="lines">0</strong><span>行</span></div><div class="stat"><strong data-stat="paragraphs">0</strong><span>段落</span></div></div><div class="actions"><button data-text-action="trim">清理行首尾空格</button><button data-text-action="blanks" class="secondary">删除空白行</button><button data-text-action="dedupe" class="secondary">删除重复行</button><button data-text-action="sort" class="secondary">行排序</button><button data-text-action="upper" class="secondary">转为大写</button><button data-text-action="lower" class="secondary">转为小写</button><button data-text-action="title" class="secondary">转为标题格式</button><button id="copyText" class="secondary">复制</button><button id="clearText" class="danger">清空</button></div><div id="textStatus" class="status" role="status">就绪</div></section>
+  <section class="tool-guide" aria-labelledby="text-guide-title">
+    <div class="guide-intro"><p>文本整理指南</p><h2 id="text-guide-title">边统计，边整理粘贴进来的文本</h2><p>遇到表单字数限制、批量名单、商品编号或中英混排稿件时，可以先在这里核对字符、单词、汉字、行数与段落。所有统计会随输入更新；整理按钮直接处理当前文本，不会另开结果框，也不会把内容上传到服务器。</p></div>
+    <div class="guide-section how-to"><h3>三步完成统计与清理</h3><ol class="steps"><li><strong>输入原文。</strong><span>粘贴或键入内容，先观察字符、不含空白字符、单词、汉字、行和段落六项数字。</span></li><li><strong>按需要整理。</strong><span>可以清理每行首尾空白、删除空白行或重复行、重新排序，也可以转换英文大小写。多个操作会按点击顺序执行。</span></li><li><strong>复核后复制。</strong><span>检查文本框里的改写结果及更新后的统计，再复制到目标位置。工具没有撤销记录，重要原文应另行保留。</span></li></ol></div>
+    <div class="guide-section examples"><h3>适合哪些实际任务</h3><div class="example-grid"><article><h4>整理编号或关键词清单</h4><p>把每个编号放在单独一行，先删空白行，再去重和排序。例如 <code>item2</code> 会按数字顺序排在 <code>item10</code> 前。去重只认完全相同的整行，区分大小写，并保留首次出现的那一行。</p></article><article><h4>核对中英混排字段</h4><p>例如“版本 2 🚀 发布”同时包含汉字、数字、空格和表情。字符项按 Unicode 码点统计；“不含空格”实际上会把空格、制表符和换行等空白字符全部排除，而不只是普通空格。</p></article><article><h4>清理从表格复制的文本</h4><p>逐行去掉两端缩进，删除空行，再转换英文大小写，适合粘贴到后台录入框。每次转换都会直接改写当前文本框，并立即用新内容重新统计，请先确认操作顺序。</p></article></div></div>
+    <div class="guide-section limitations"><h3>统计口径与使用限制</h3><p>字符数采用 Unicode 码点，而不是肉眼看到的“字形簇”。由多个码点组合出的表情、带组合音标的字母，可能显示为一个符号却计为多个字符。单词项先匹配 Unicode 字母与数字组成的词元：完全由汉字组成的词元不计入单词，其他包含 Unicode 字母或数字的词元会计入。Han 脚本字符会逐字另计，标点和符号本身不算单词。</p><p>换行按 CRLF 或 LF 拆分；非空且没有换行的内容算一行，空文本为零行。文本首尾会先用于判断是否为空，段落则按空白行分块，所以连续空白行仍是同一个分隔位置。删除空白行也会删除只含空格或制表符的行。去重比较整行原文，必须完全相同、区分大小写，并留下首次出现项。排序调用 <code>localeCompare</code>，参数为 <code>numeric: true</code>、<code>sensitivity: base</code>，因此数字会按数值感知排序，不同浏览器语言环境仍可能影响先后。</p><p>大写、小写和标题格式都直接改写文本框。标题格式只是简化且依赖语言环境的规则：先将全文转成小写，再把开头或非字母数字之后的字母转成大写。它不理解人名、缩写词和中文排版规范，也不能替代编辑审校。</p></div>
+    <div class="guide-section faq-list"><h3>常见问题</h3><details><summary>字符数能直接当作数据库字节数吗？</summary><p>不能一概而论。这里数的是 Unicode 码点；UTF-8 中一个码点可能占多个字节，有些系统还按 UTF-16 单元或可见字形计算。提交前应查看目标系统的字段规则。</p></details><details><summary>为什么中文没有被算成普通“单词”？</summary><p>工具没有中文分词词典。完全由汉字组成的连续词元不会增加单词项，而是把每个汉字计入“中文字符”，这样不会把整句中文误报成一个英文式单词。</p></details><details><summary>“删除重复行”会合并大小写不同的内容吗？</summary><p>不会。比较是区分大小写的精确匹配。如果确实想合并 <code>ABC</code> 与 <code>abc</code>，可以先统一大小写，再执行去重，但原来的大小写信息也会随之丢失。</p></details><details><summary>怎样避免误操作丢失原文？</summary><p>本页没有历史记录或撤销按钮，清理和大小写转换又会直接覆盖文本框。因此应先在原应用保留副本，分步操作并在每一步后检查结果。</p></details></div>
+    <div class="related-tools"><h3>继续处理文本</h3><div class="related-links"><a href="/zh/encode/"><strong>Base64 与 URL 编解码</strong><span>把整理后的 UTF-8 文本编码为 Base64 或 URL 组件。</span></a><a href="/zh/json/"><strong>JSON 格式化与校验</strong><span>检查结构化文本的语法并重新排版。</span></a><a href="/zh/hash/"><strong>哈希计算</strong><span>为最终文本计算摘要值，便于核对内容。</span></a></div></div>
+  </section>
 </main>
 <footer>UtilCover · 私密、快速的浏览器端工具</footer>
 <script src="/text/text-tool.js"></script>

@@ -137,6 +137,140 @@ test('password pages explain secure random generation and honest controls in eac
   }
 });
 
+test('text pages document counting and line transformations truthfully in each locale', () => {
+  assertGuide('text/index.html', 'en', ['/encode/', '/json/', '/hash/']);
+  assertGuide('zh/text/index.html', 'zh', ['/zh/encode/', '/zh/json/', '/zh/hash/']);
+  assertMetadata('text/index.html', /Word.*Character Counter.*Text Cleaner/i, /count.*(?:word|character).*(?:duplicate|blank|sort|trim|case)/i);
+  assertMetadata('zh/text/index.html', /字数.*字符.*(?:计数|统计).*(?:文本清理|整理)/, /统计.*(?:字数|字符).*(?:重复行|空白行|排序|清理|大小写)/);
+  for (const file of ['text/index.html', 'zh/text/index.html']) {
+    const { guide } = guideFor(file);
+    assert.equal(matches(guide, /<li\b/gi).filter(match => match.index > guide.indexOf('<ol class="steps">') && match.index < guide.indexOf('</ol>')).length, 3, `${file}: exactly three usage steps`);
+    assert.ok(matches(guide, /<article\b/gi).length >= 3, `${file}: three concrete examples`);
+  }
+
+  const english = guideFor('text/index.html').text;
+  assert.match(english, /Unicode code points/i);
+  assert.match(english, /(?:whitespace.*excluded|excludes whitespace)/i);
+  assert.match(english, /non-all-Han alphanumeric tokens/i);
+  assert.match(english, /Han script characters/i);
+  assert.match(english, /CRLF.*LF/i);
+  assert.match(english, /blank lines.*paragraph/i);
+  assert.match(english, /exact.*case-sensitive.*first/i);
+  assert.match(english, /localeCompare.*numeric.*sensitivity.*base/i);
+  assert.match(english, /mutate.*textarea/i);
+  assert.match(english, /title case.*simplistic.*locale-dependent/i);
+
+  const chinese = guideFor('zh/text/index.html').text;
+  assert.match(chinese, /Unicode 码点/);
+  assert.match(chinese, /空白字符.*不计入/);
+  assert.match(chinese, /完全由汉字组成.*不计入.*其他.*Unicode.*字母.*数字.*计入/);
+  assert.doesNotMatch(chinese, /排除非纯汉字之外的误解/);
+  assert.match(chinese, /Han 脚本|汉字脚本/);
+  assert.match(chinese, /CRLF.*LF/);
+  assert.match(chinese, /空白行.*段落/);
+  assert.match(chinese, /完全相同.*区分大小写.*首次/);
+  assert.match(chinese, /localeCompare.*numeric.*sensitivity.*base/);
+  assert.match(chinese, /直接改写.*文本框/);
+  assert.match(chinese, /标题格式.*简化.*语言环境/);
+});
+
+test('encode pages explain UTF-8 Base64 and URL component conversion honestly in each locale', () => {
+  assertGuide('encode/index.html', 'en', ['/text/', '/json/', '/hash/']);
+  assertGuide('zh/encode/index.html', 'zh', ['/zh/text/', '/zh/json/', '/zh/hash/']);
+  assertMetadata('encode/index.html', /Base64 Encode.*Decode.*URL Component/i, /Base64.*UTF-8.*(?:percent|URL component)/i);
+  assertMetadata('zh/encode/index.html', /Base64.*(?:编码|解码).*URL 组件/, /UTF-8.*Base64.*URL 组件/);
+  for (const file of ['encode/index.html', 'zh/encode/index.html']) {
+    const { guide } = guideFor(file);
+    assert.equal(matches(guide, /<li\b/gi).filter(match => match.index > guide.indexOf('<ol class="steps">') && match.index < guide.indexOf('</ol>')).length, 3, `${file}: exactly three usage steps`);
+    assert.ok(matches(guide, /<article\b/gi).length >= 3, `${file}: three concrete examples`);
+  }
+  const english = guideFor('encode/index.html').text;
+  assert.match(english, /UTF-8 text.*Base64/i);
+  assert.match(english, /standard alphabet/i);
+  assert.match(english, /omitted padding.*whitespace/i);
+  assert.match(english, /rejects Base64URL/i);
+  assert.match(english, /invalid.*non-UTF-8 bytes/i);
+  assert.match(english, /encodeURIComponent.*decodeURIComponent/i);
+  assert.match(english, /component.*not a full URL/i);
+  assert.match(english, /encoding.*not encryption/i);
+  assert.doesNotMatch(english, /Base64URL (?:is )?supported/i);
+
+  const chinese = guideFor('zh/encode/index.html').text;
+  assert.match(chinese, /UTF-8 文本.*Base64/);
+  assert.match(chinese, /标准字母表/);
+  assert.match(chinese, /省略.*填充.*空白/);
+  assert.match(chinese, /不接受 Base64URL/);
+  assert.match(chinese, /无效字节.*非 UTF-8/);
+  assert.match(chinese, /encodeURIComponent.*decodeURIComponent/);
+  assert.match(chinese, /组件.*完整 URL/);
+  assert.match(chinese, /编码.*不是加密/);
+});
+
+test('timestamp pages document epoch conversion, units and timezone limits in each locale', () => {
+  assertGuide('timestamp/index.html', 'en', ['/encode/', '/uuid/', '/calculator/']);
+  assertGuide('zh/timestamp/index.html', 'zh', ['/zh/encode/', '/zh/uuid/', '/zh/calculator/']);
+  assertMetadata('timestamp/index.html', /Unix Timestamp.*Date Converter.*Seconds.*Milliseconds/i, /epoch.*seconds.*milliseconds.*ISO 8601.*local/i);
+  assertMetadata('zh/timestamp/index.html', /Unix 时间戳.*日期转换.*秒.*毫秒/, /Unix.*秒.*毫秒.*ISO 8601.*本地/);
+  for (const file of ['timestamp/index.html', 'zh/timestamp/index.html']) {
+    const { guide } = guideFor(file);
+    assert.equal(matches(guide, /<li\b/gi).filter(match => match.index > guide.indexOf('<ol class="steps">') && match.index < guide.indexOf('</ol>')).length, 3, `${file}: exactly three usage steps`);
+    assert.ok(matches(guide, /<article\b/gi).length >= 3, `${file}: three concrete examples`);
+    assert.match(guide, /100[,_]?000[,_]?000[,_]?000/);
+  }
+  const english = guideFor('timestamp/index.html').text;
+  assert.match(english, /absolute value.*below.*seconds.*otherwise milliseconds/i);
+  assert.match(english, /explicit unit.*override/i);
+  assert.match(english, /fractional milliseconds.*Date.*normaliz/i);
+  assert.match(english, /seconds.*floor.*negative/i);
+  assert.match(english, /normalized millisecond value remains negative.*-1.*-999/i);
+  assert.doesNotMatch(english, /negative subsecond instants move to the preceding integer second/i);
+  assert.match(english, /datetime-local.*browser.*local timezone/i);
+  assert.match(english, /ISO.*UTC/i);
+  assert.match(english, /browser Date range/i);
+  assert.match(english, /no timezone selector.*DST disambiguation/i);
+
+  const chinese = guideFor('zh/timestamp/index.html').text;
+  assert.match(chinese, /绝对值.*小于.*秒.*否则.*毫秒/);
+  assert.match(chinese, /显式.*单位.*覆盖/);
+  assert.match(chinese, /小数毫秒.*Date.*归一化/);
+  assert.match(chinese, /秒数.*向下取整.*负数/);
+  assert.match(chinese, /归一化后的毫秒值仍为负数.*-1.*-999/);
+  assert.doesNotMatch(chinese, /负的亚秒值.*前一个整数秒/);
+  assert.match(chinese, /datetime-local.*浏览器本地时区/);
+  assert.match(chinese, /ISO.*UTC/);
+  assert.match(chinese, /浏览器 Date.*范围/);
+  assert.match(chinese, /没有时区选择器.*夏令时.*消歧/);
+});
+
+test('UUID pages explain secure RFC 4122 v4 batch generation without overclaims', () => {
+  assertGuide('uuid/index.html', 'en', ['/hash/', '/password/', '/timestamp/']);
+  assertGuide('zh/uuid/index.html', 'zh', ['/zh/hash/', '/zh/password/', '/zh/timestamp/']);
+  assertMetadata('uuid/index.html', /Secure Bulk UUID v4.*GUID Generator/i, /generate.*1.*100.*UUID v4.*GUID/i);
+  assertMetadata('zh/uuid/index.html', /安全批量 UUID v4.*GUID 生成器/, /生成.*1.*100.*UUID v4.*GUID/);
+  for (const file of ['uuid/index.html', 'zh/uuid/index.html']) {
+    const { html, guide } = guideFor(file);
+    assert.equal(matches(guide, /<li\b/gi).filter(match => match.index > guide.indexOf('<ol class="steps">') && match.index < guide.indexOf('</ol>')).length, 3, `${file}: exactly three usage steps`);
+    assert.ok(matches(guide, /<article\b/gi).length >= 3, `${file}: three concrete examples`);
+    assert.match(guide, /crypto\.getRandomValues/);
+    assert.match(guide, /RFC 4122/);
+    assert.match(guide, /1.?–.?100|1-100/);
+    assert.doesNotMatch(html, /RFC 9562/);
+  }
+  const english = guideFor('uuid/index.html').text;
+  assert.match(english, /version 4.*variant bits/i);
+  assert.match(english, /uppercase.*hyphens.*presentation/i);
+  assert.match(english, /no persistence.*deduplication check/i);
+  assert.match(english, /identifiers.*not secrets.*tokens/i);
+  assert.doesNotMatch(english, /guaranteed unique|collision[- ]free/i);
+
+  const chinese = guideFor('zh/uuid/index.html').text;
+  assert.match(chinese, /版本 4.*变体位/);
+  assert.match(chinese, /大写.*连字符.*显示形式/);
+  assert.match(chinese, /不会持久保存.*去重检查/);
+  assert.match(chinese, /标识符.*不是秘密.*令牌/);
+  assert.doesNotMatch(chinese, /保证唯一|绝不碰撞/);
+});
+
 test('shared tool-guide styles are responsive and keyboard accessible', () => {
   const css = read('shared/tools.css');
   for (const selector of ['.tool-guide', '.guide-intro', '.guide-section', '.steps', '.example-grid', '.faq-list', '.related-links']) {
