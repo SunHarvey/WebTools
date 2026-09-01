@@ -9,15 +9,15 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>JSON 格式化与验证工具 | UtilCover</title>
-  <meta name="description" content="即时格式化、压缩和验证 JSON，所有数据仅在浏览器中处理。">
+  <title>JSON 格式化、验证与压缩工具 | UtilCover</title>
+  <meta name="description" content="在浏览器中格式化、验证和压缩严格 JSON，便于查看接口数据或生成紧凑内容，全程无需上传。">
   <link rel="canonical" href="https://www.utilcover.com/zh/json/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/json/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/json/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/json/">
   <link rel="stylesheet" href="/shared/tools.css">
-  <meta property="og:title" content="JSON 格式化与验证工具 | UtilCover">
-  <meta property="og:description" content="即时格式化、压缩和验证 JSON，所有数据仅在浏览器中处理。">
+  <meta property="og:title" content="JSON 格式化、验证与压缩工具 | UtilCover">
+  <meta property="og:description" content="在浏览器中格式化、验证和压缩严格 JSON，便于查看接口数据或生成紧凑内容，全程无需上传。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/zh/json/">
   <script type="application/ld+json">
@@ -29,7 +29,7 @@
       "@id": "https://www.utilcover.com/zh/json/#application",
       "name": "JSON 格式化与验证工具",
       "url": "https://www.utilcover.com/zh/json/",
-      "description": "即时格式化、压缩和验证 JSON，所有数据仅在浏览器中处理。",
+      "description": "在浏览器中格式化、验证和压缩严格 JSON，便于查看接口数据或生成紧凑内容，全程无需上传。",
       "inLanguage": "zh-CN",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -67,6 +67,14 @@
 <main class="page-shell">
   <section class="hero"><h1>JSON 格式化与验证工具</h1><p>即时格式化、压缩和验证 JSON，所有数据仅在浏览器中处理。</p></section>
   <section class="tool-card"><p class="local-processing-note">您的 JSON 仅保留在当前浏览器中，绝不会上传。</p><div class="grid-2"><div class="field"><label for="jsonInput">输入 JSON</label><textarea id="jsonInput" spellcheck="false" placeholder='{"你好":"世界"}'></textarea></div><div class="field"><label for="jsonOutput">结果</label><textarea id="jsonOutput" class="output" readonly spellcheck="false"></textarea></div></div><div class="actions"><select id="jsonIndent" aria-label="缩进"><option value="2">2 个空格</option><option value="4">4 个空格</option></select><button id="formatJson">格式化</button><button id="minifyJson" class="secondary">压缩</button><button id="validateJson" class="secondary">验证</button><button id="copyJson" class="secondary">复制结果</button><button id="clearJson" class="danger">清空</button></div><div id="jsonStatus" class="status" role="status">就绪</div></section><aside class="info-card"><strong>安全解析：</strong>使用 <code>JSON.parse</code> 和 <code>JSON.stringify</code>，绝不会将输入作为代码执行。</aside>
+  <section class="tool-guide" aria-labelledby="json-guide-title">
+    <header class="guide-intro"><h2 id="json-guide-title">整理、校验或压缩严格 JSON</h2><p>接口返回值、配置片段或复制来的数据挤在一行时，可以先在这里整理缩进；提交数据前，也可以检查它是否符合严格 JSON 语法。所有操作都在当前浏览器标签页完成。“格式化”和“压缩”都会先用 <code>JSON.parse</code> 解析，再用 <code>JSON.stringify</code> 重新序列化，因此输出与原文的差异可能不止空白。</p></header>
+    <section class="guide-section how-to" aria-labelledby="json-how-to"><h2 id="json-how-to">使用方法</h2><ol class="steps"><li><strong>把严格 JSON 粘贴到输入框。</strong>对象、数组、字符串、数字、布尔值和 <code>null</code> 都可以作为顶层内容。</li><li><strong>选择需要的操作。</strong>“格式化”可按 2 个或 4 个空格缩进；“压缩”会去掉无意义空白；“验证”只检查语法，不生成转换后的文本。</li><li><strong>确认状态后再复制。</strong>格式化或压缩成功时，结果会出现在右侧。解析失败时请回到原文修正；本工具不会猜测错误内容原本想表达什么。</li></ol></section>
+    <section class="guide-section examples" aria-labelledby="json-examples"><h2 id="json-examples">常见使用场景</h2><div class="example-grid"><article><h3>查看接口返回数据</h3><p>像 <code>{&quot;ok&quot;:true,&quot;items&quot;:[1,2]}</code> 这样的单行内容虽然有效，却不便阅读。格式化后可以快速看清对象与数组的嵌套关系，适合排查请求结果或核对字段。</p></article><article><h3>生成紧凑配置</h3><p>编辑完 JSON 配置后，先验证语法，再压缩成系统需要的单行文本。压缩结果是 JavaScript 重新序列化生成的文本，并不保证逐字保留原文；如果字段或数字表示必须完全一致，请先查看下方限制。</p></article><article><h3>区分 JSON 与对象字面量</h3><p>字段名和字符串必须使用双引号，末尾不能多写逗号。验证功能可以帮助判断复制来的片段是否属于严格 JSON；底层使用 <code>JSON.parse</code> 按数据解析，不会当作 JavaScript 执行。</p></article></div></section>
+    <section class="guide-section limitations" aria-labelledby="json-limits"><h2 id="json-limits">格式与功能限制</h2><ul><li>这里只做严格 JSON 的格式化、验证与压缩，不会自动补引号、补逗号或修复错误，也不提供语法高亮、结构规则校验和精确行列定位。</li><li>解析与序列化不是无损文本转换。重复键只会保留最后一个值；整数形式的键在 JavaScript 序列化对象时可能重新排序，从而改变属性顺序。</li><li>JSON 数字会转换为 JavaScript <code>Number</code>。超过安全整数范围时会受精度限制；数字写法也可能被规范化，例如 <code>-0</code> 会变成 <code>0</code>。如果必须保留超大数字或原始写法，请使用无损 JSON 解析器。</li><li>不支持 JSON5。注释、尾随逗号、单引号字符串、未加引号的字段名、<code>NaN</code> 与 <code>Infinity</code> 都无法通过严格解析。</li><li>内容需要以文本形式粘贴，没有文件选择功能。超大数据会受到当前设备内存和浏览器响应能力限制，处理大型数据集更适合使用本地命令行工具。</li><li>语法有效不等于业务数据正确。日期、编号或数值即使符合 JSON，也可能不满足目标接口自己的字段要求。</li></ul></section>
+    <section class="guide-section faq-section" aria-labelledby="json-faq"><h2 id="json-faq">常见问题</h2><div class="faq-list"><details><summary>格式化会改变原始数据吗？</summary><p>有可能。工具会先把文本解析成 JavaScript 值，再按所选缩进重新序列化。普通输入通常仍表达相同的业务数据，但重复键、属性顺序、大数精度和数字表示可能按上述规则改变。</p></details><details><summary>能自动修复无效 JSON 吗？</summary><p>不能。状态区会提示解析失败，但不会擅自插入引号、删除注释或修改逗号。这样可以避免自动修复掩盖真正的数据错误。</p></details><details><summary>支持 JSON5 或 JavaScript 对象吗？</summary><p>不支持。语法范围以 <code>JSON.parse</code> 接受的严格 JSON 为准。请先去掉注释、单引号、尾随逗号以及其他仅属于 JavaScript 的写法。</p></details><details><summary>粘贴的数据会发送到服务器吗？</summary><p>不会。格式化、压缩和验证都在浏览器本地执行。不过，敏感结果复制到系统剪贴板后仍可能被其他应用读取，使用完请按需清理。</p></details></div></section>
+    <nav class="related-tools" aria-labelledby="json-related"><h2 id="json-related">相关工具</h2><div class="related-links"><a href="/zh/text/"><strong>文本处理</strong><span>在整理成结构化数据前清理、排序或去除重复行。</span></a><a href="/zh/encode/"><strong>Base64 与 URL 编解码</strong><span>把 JSON 字符串编码为网址参数，或先解码传输文本再验证。</span></a><a href="/zh/hash/"><strong>哈希生成</strong><span>为最终 JSON 文本生成摘要，比较序列化内容是否完全一致。</span></a></div></nav>
+  </section>
 </main>
 <footer>UtilCover · 私密、快速的浏览器端工具</footer>
 <script src="/json/json-tool.js"></script>

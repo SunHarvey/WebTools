@@ -9,8 +9,8 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>图片压缩与尺寸调整 | UtilCover</title>
-  <meta name="description" content="在浏览器本地私密地压缩 PNG、JPEG 和 WebP 图片并调整尺寸。">
+  <title>图片压缩、尺寸调整与格式转换工具 | UtilCover</title>
+  <meta name="description" content="在浏览器本地压缩图片、调整尺寸并转换 PNG、JPEG 或 WebP 格式，文件无需上传。">
   <link rel="canonical" href="https://www.utilcover.com/zh/image/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/image/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/image/">
@@ -26,7 +26,7 @@
       "@id": "https://www.utilcover.com/zh/image/#application",
       "name": "图片压缩与尺寸调整",
       "url": "https://www.utilcover.com/zh/image/",
-      "description": "在浏览器本地私密地压缩 PNG、JPEG 和 WebP 图片并调整尺寸。",
+      "description": "在浏览器本地压缩图片、调整尺寸并转换 PNG、JPEG 或 WebP 格式，文件无需上传。",
       "inLanguage": "zh-CN",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -101,6 +101,14 @@
     <div id="imageStatus" class="status" role="status">就绪 — 请选择图片</div>
   </section>
   <aside class="info-card"><strong>隐私：</strong>所有 Canvas 处理都在本设备上完成，文件绝不会上传。工具会拒绝 SVG 和动态 GIF。</aside>
+  <section class="tool-guide" aria-labelledby="image-guide-title">
+    <header class="guide-intro"><h2 id="image-guide-title">在本地压缩、缩放和转换图片</h2><p>本页一次处理一张 PNG、JPEG 或 WebP 图片，可缩小像素尺寸、转换为另一种受支持的格式，也可以调整 JPEG 与 WebP 的输出质量。处理结果会作为新文件下载，不会覆盖原图；图片数据也不会发送到服务器。</p></header>
+    <section class="guide-section how-to" aria-labelledby="image-how-to"><h2 id="image-how-to">图片压缩与尺寸调整方法</h2><ol class="steps"><li><strong>选择一张受支持的图片。</strong>文件必须是 PNG、JPEG 或 WebP，大小不超过 16 MiB，像素总量不超过 12 MP。页面会先检查文件头和尺寸，再进行解码。</li><li><strong>设置输出参数。</strong>宽高可填写 1–8192 像素。需要保持画面比例时勾选“保持宽高比”；保留“不放大图片”可以避免无意上采样。输出格式可选 PNG、JPEG 或 WebP。</li><li><strong>处理并核对结果。</strong>输出 JPEG 或 WebP 时可调整质量，再对照预览、尺寸和文件大小。PNG 采用无损编码，质量滑块不会影响其输出。确认适合实际用途后再下载。</li></ol></section>
+    <section class="guide-section examples" aria-labelledby="image-examples"><h2 id="image-examples">适合处理的图片任务</h2><div class="example-grid"><article><h3>缩小网页照片</h3><p>相机照片往往远大于网页中的展示区域。填写合适宽度并保持比例，再导出为 JPEG 或 WebP。相比只降低质量，先减少多余像素通常更符合网页使用需求。</p></article><article><h3>转换截图格式</h3><p>PNG 截图可以转换为 WebP 或 JPEG，前提是接收图片的平台支持目标格式。带透明背景或细小界面文字时，PNG 往往更合适；以照片为主时可以比较 JPEG 与 WebP 的效果。</p></article><article><h3>制作固定范围的配图</h3><p>头像、文章缩略图或邮件附件通常有明确尺寸要求。保持比例后，图片会缩放到目标宽高范围内，不会被拉伸。这里不提供裁剪、补边或自动改变构图功能。</p></article></div></section>
+    <section class="guide-section limitations" aria-labelledby="image-limits"><h2 id="image-limits">格式、尺寸与处理限制</h2><ul><li>每次只能选择一张 PNG、JPEG 或 WebP 图片；文件上限为 16 MiB，解码后的像素总量上限为 12 MP，不支持批量处理。</li><li>输出依赖浏览器 Canvas 编码，只能生成 PNG、JPEG 或 WebP。不接受 SVG、动态 GIF、AVIF 或 HEIC，也无法保留动画。</li><li>宽度和高度范围为 1–8192 像素，输出画布同时不能超过 12 MP。不同浏览器的编码器可能让最终文件大小和画面细节略有差异。</li><li>格式转换无法找回已经丢失的细节。放大只会增加像素数量，不会恢复纹理；反复保存有损格式还可能累积压缩痕迹。</li><li>Canvas 导出的新文件不会复制 EXIF 等图片元数据。删除或归档原图前，请先检查方向以及工作流程中是否仍需要这些信息。</li></ul></section>
+    <section class="guide-section faq-section" aria-labelledby="image-faq"><h2 id="image-faq">常见问题</h2><div class="faq-list"><details><summary>PNG、JPEG 和 WebP 应该怎么选？</summary><p>没有透明背景的照片通常适合 JPEG；需要无损细节或透明背景的界面素材可选 PNG；目标平台支持 WebP 时，也可以导出后比较实际效果。最终应以图片将要使用的平台为准。</p></details><details><summary>为什么转换后文件反而更大？</summary><p>文件大小由像素尺寸、画面复杂度、格式和质量共同决定。把简单的 PNG 图形转成高质量 JPEG，或者再次处理已经优化过的图片，都不保证文件一定变小。</p></details><details><summary>能一次处理多张图片吗？</summary><p>不能。本页只处理单张图片并生成一个结果，没有队列、压缩包下载或批量命名功能。</p></details><details><summary>选择的图片会上传吗？</summary><p>不会。文件检查、解码、缩放和 Canvas 导出都在当前设备完成。建议保留原图，直到打开下载结果并确认尺寸、透明背景和清晰度都符合要求。</p></details></div></section>
+    <nav class="related-tools" aria-labelledby="image-related"><h2 id="image-related">相关工具</h2><div class="related-links"><a href="/zh/color/"><strong>颜色转换与对比度</strong><span>查看图片搭配颜色的 HEX、RGB、HSL 数值，并检查文字对比度。</span></a><a href="/zh/qr/"><strong>二维码生成器</strong><span>把网址、文本或 Wi-Fi 信息制作成可下载的 PNG 二维码。</span></a><a href="/zh/hash/"><strong>文件哈希</strong><span>计算原图或下载文件的摘要，用于核对文件内容是否完全一致。</span></a></div></nav>
+  </section>
 </main>
 <footer>UtilCover · 私密、快速的浏览器本地工具</footer>
 <script src="/image/image-tool.js"></script>

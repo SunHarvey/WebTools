@@ -9,24 +9,23 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-    <title>随机密码生成器 | 安全免费工具</title>
-    <meta name="description" content="一键生成强壮的随机密码。可自定义长度、字符类型，并可排除易混淆字符，兼顾安全与易用。">
+    <title>安全随机密码生成器 | UtilCover</title>
+    <meta name="description" content="使用浏览器 Web Crypto 生成安全随机密码，可设置长度、字符类型和是否排除易混淆字符。">
     <link rel="stylesheet" href="/shared/tools.css">
     <link rel="stylesheet" href="/style.css">
 
-    <meta name="keywords" content="密码生成器, 随机密码, 强密码, 安全密码, 免费密码生成器, 在线密码工具, 创建密码, 在线生成密码">
 
     <!-- Open Graph (Facebook / LinkedIn / WhatsApp) -->
-    <meta property="og:title" content="随机密码生成器 | 安全免费工具">
-    <meta property="og:description" content="即时生成强壮随机密码。可自定义长度、选择字符类型，并排除易混淆符号，最大化安全与便捷。">
+    <meta property="og:title" content="安全随机密码生成器 | UtilCover">
+    <meta property="og:description" content="使用浏览器 Web Crypto 生成安全随机密码，可设置长度、字符类型和是否排除易混淆字符。">
     <meta property="og:url" content="https://www.utilcover.com/zh/password/">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="随机密码生成器 | 安全免费工具">
-    <meta name="twitter:description" content="即时生成强壮随机密码。可自定义长度、选择字符类型，并排除易混淆符号，最大化安全与便捷。">
+    <meta name="twitter:title" content="安全随机密码生成器 | UtilCover">
+    <meta name="twitter:description" content="使用浏览器 Web Crypto 生成安全随机密码，可设置长度、字符类型和是否排除易混淆字符。">
     <meta name="twitter:image" content="https://www.utilcover.com/images/og-image.jpg">
 
     <!-- Canonical URL -->
@@ -41,9 +40,9 @@
     {
       "@type": "WebApplication",
       "@id": "https://www.utilcover.com/zh/password/#application",
-      "name": "随机密码生成器",
+      "name": "安全随机密码生成器",
       "url": "https://www.utilcover.com/zh/password/",
-      "description": "一键生成强壮的随机密码。可自定义长度、字符类型，并可排除易混淆字符，兼顾安全与易用。",
+      "description": "使用浏览器 Web Crypto 生成安全随机密码，可设置长度、字符类型和是否排除易混淆字符。",
       "inLanguage": "zh-CN",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -67,7 +66,7 @@
         {
           "@type": "ListItem",
           "position": 2,
-          "name": "随机密码生成器",
+          "name": "安全随机密码生成器",
           "item": "https://www.utilcover.com/zh/password/"
         }
       ]
@@ -79,7 +78,7 @@
 <body class="tool-directory-page password-page">
 <header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="nav-links"><a href="/zh/json/">JSON</a><a href="/zh/image/">图片</a><a href="/zh/qr/">二维码</a><a href="/zh/encode/">编解码</a><a href="/zh/password/" aria-current="page">密码</a><a href="/zh/text/">文本</a><a href="/zh/timestamp/">时间戳</a><a href="/zh/uuid/">UUID</a><a href="/zh/hash/">哈希</a><a href="/zh/color/">颜色</a><a href="/zh/unit/">单位</a><a href="/zh/calculator/">计算器</a><a class="language-link" href="/password/?lang=en">英文</a></div></nav></header>
 <main class="page-shell">
-  <section class="hero"><h1>随机密码生成器</h1><p>在浏览器本地生成安全随机密码，可自定义长度、字符类型并排除易混淆字符。</p></section>
+  <section class="hero"><h1>安全随机密码生成器</h1><p>在浏览器本地生成随机密码，可自定义长度、字符类型并排除易混淆字符。</p></section>
 <section class="tool-card settings-card password-tool">
             <h2 class="settings-title">⚙️ 生成设置</h2>
             <p class="local-processing-note">密码只在当前设备生成，不会上传。</p>
@@ -152,13 +151,21 @@
             • 同时包含大写字母、小写字母、数字与特殊字符能显著提升安全性<br>
             • 排除易混淆字符有助于减少输入错误<br>
             • 为不同账户使用不同的密码<br>
-            • 重要账户的密码应定期更换
+            • 发现密码可能泄露时立即更换，不必按固定周期使用可预测的新密码
         </aside>
 
         <aside class="info-card">
             <strong>🧰 更多浏览器工具：</strong><br>
             <a href="/zh/">打开 UtilCover 工具中心</a> — 计算器、JSON、文本、编解码、时间戳、UUID 与 SHA 哈希。
         </aside>
+  <section class="tool-guide" aria-labelledby="password-guide-title">
+    <header class="guide-intro"><h2 id="password-guide-title">使用浏览器安全接口生成随机密码</h2><p>本工具通过当前设备的 Web Crypto 接口生成密码，可自行设置长度、数量和允许出现的字符类型。结果不会发送给 UtilCover。不过，点击复制后密码会进入系统剪贴板，仍需像其他账户凭据一样谨慎保存。</p></header>
+    <section class="guide-section how-to" aria-labelledby="password-how-to"><h2 id="password-how-to">安全随机密码生成方法</h2><ol class="steps"><li><strong>设置长度和数量。</strong>每个密码可设为 1–128 位，一次可生成 1–100 个。重要账户应优先使用符合网站规则的较长独立密码。</li><li><strong>选择允许的字符类型。</strong>根据接收网站的要求启用大写字母、小写字母、数字和特殊字符。密码长度至少要等于已选类型数量，因为程序会确保每种已启用字符类型至少出现一次。</li><li><strong>生成后妥善保存。</strong>只复制需要的结果，并直接存入可信的密码管理器。不同账户使用不同密码；如果发现密码可能泄露，应立即替换。</li></ol></section>
+    <section class="guide-section examples" aria-labelledby="password-examples"><h2 id="password-examples">适合的使用场景</h2><div class="example-grid"><article><h3>注册新账户</h3><p>先确认网站允许哪些字符，再生成一条未在其他地方使用的长密码。不要在旧密码后面换数字，也不要围绕网站名称制作容易猜到的固定规律，生成后可交给密码管理器保存。</p></article><article><h3>设置 Wi-Fi 密码</h3><p>生成路由器和连接设备都能接受的随机内容。需要从纸张手动输入时，可以排除 <code>1</code>、<code>I</code>、<code>0</code>、<code>O</code> 等易混淆字符，减少看错和输错的情况。</p></article><article><h3>准备多条独立凭据</h3><p>配置测试账户或多台设备时，可以增加生成数量。每条结果都会独立生成，不应把整组密码理解为有顺序的编号，也不应让多个真实用户共用同一条。</p></article></div></section>
+    <section class="guide-section limitations" aria-labelledby="password-limits"><h2 id="password-limits">生成范围与安全边界</h2><ul><li>长度范围为 1–128，数量范围为 1–100。界面允许的短密码不代表适合保护账户，目标网站也可能有更严格的最短长度和字符规定。</li><li>随机索引来自 <code>crypto.getRandomValues</code>。程序使用拒绝采样，把 32 位随机值映射到字符集合时避免取模偏差，最后的字符顺序也使用同一安全随机源打乱。</li><li>每种已启用字符类型会先取一个字符，其余位置再从合并后的字符集合抽取。开启排除易混淆字符后，会在生成前去掉 <code>0oO1IiLl</code>。</li><li>页面显示的强度只是根据长度和字符种类计算的本地提示，不是破解时间预测，也不构成安全保证。密码复用、钓鱼、设备状态和保存方式同样重要。</li><li>这里不是密码库，不会同步账户、查询泄露数据库或检查网站规则。如果浏览器不支持 Web Crypto，程序会停止，不会降级使用 <code>Math.random</code>。</li></ul></section>
+    <section class="guide-section faq-section" aria-labelledby="password-faq"><h2 id="password-faq">常见问题</h2><div class="faq-list"><details><summary>随机密码是怎样生成的？</summary><p>浏览器通过 Web Crypto 提供 32 位随机值。程序使用拒绝采样选择字符，确保每种已启用字符类型都出现，再用安全随机源打乱最终顺序。</p></details><details><summary>排除易混淆字符会影响安全吗？</summary><p>可选字符会略微减少，换来更方便的人工辨认。长度和独立使用仍然重要。如果始终通过复制粘贴，而且目标系统接受全部字符，可以关闭此选项。</p></details><details><summary>显示“强”就一定安全吗？</summary><p>不一定。强度标签只是针对当前文本的简单提示，无法判断密码是否被复用、设备是否受控、账户找回流程是否薄弱，也不知道凭据如何保存。</p></details><details><summary>生成的密码会上传或保存吗？</summary><p>不会。密码只在浏览器中生成，页面没有账户和存储功能。复制后内容会进入设备剪贴板，其他软件或剪贴板历史仍可能保留它。</p></details><details><summary>需要按固定周期修改密码吗？</summary><p>密码泄露、重复使用、被不当分享或发生明确安全事件时应立即更换。机械地周期轮换容易形成可预测规律；使用独立随机密码并妥善保存通常更有意义。</p></details></div></section>
+    <nav class="related-tools" aria-labelledby="password-related"><h2 id="password-related">相关工具</h2><div class="related-links"><a href="/zh/hash/"><strong>哈希生成器</strong><span>计算文本或受支持文件的 SHA 摘要；哈希工具不能代替正规的密码存储方案。</span></a><a href="/zh/qr/"><strong>二维码生成器</strong><span>把 Wi-Fi 名称和生成的密码制作成本地二维码，方便受控分享。</span></a><a href="/zh/uuid/"><strong>UUID 生成器</strong><span>需要标识符而不是登录密码时，生成 RFC 4122 第 4 版 UUID。</span></a></div></nav>
+  </section>
 </main>
 <footer>UtilCover · 私密、快速的浏览器本地工具</footer>
 <script src="/script.js"></script>

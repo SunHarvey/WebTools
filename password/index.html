@@ -9,25 +9,24 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-    <title>Random Password Generator | Secure & Free Tool</title>
-    <meta name="description" content="Generate strong, random passwords with a single click. Customize length, character types, and exclude ambiguous characters for maximum security.">
+    <title>Secure Random Password Generator | UtilCover</title>
+    <meta name="description" content="Generate secure random passwords with Web Crypto in your browser. Choose length, character types and optional ambiguous-character removal.">
     <link rel="stylesheet" href="/shared/tools.css">
     <link rel="stylesheet" href="/style.css">
 
 
-    <meta name="keywords" content="password generator, random password, strong password, secure password, free password generator, online password tool, create password, generate password online">
 
     <!-- Open Graph (Facebook / LinkedIn / WhatsApp) -->
-    <meta property="og:title" content="Random Password Generator | Secure & Free Tool">
-    <meta property="og:description" content="Generate strong, random passwords instantly. Customize length, choose character types, and avoid ambiguous symbols for maximum security and convenience.">
+    <meta property="og:title" content="Secure Random Password Generator | UtilCover">
+    <meta property="og:description" content="Generate secure random passwords with Web Crypto in your browser. Choose length, character types and optional ambiguous-character removal.">
     <meta property="og:url" content="https://www.utilcover.com/password/">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Random Password Generator | Secure & Free Tool">
-    <meta name="twitter:description" content="Generate strong, random passwords instantly. Customize length, choose character types, and avoid ambiguous symbols for maximum security and convenience.">
+    <meta name="twitter:title" content="Secure Random Password Generator | UtilCover">
+    <meta name="twitter:description" content="Generate secure random passwords with Web Crypto in your browser. Choose length, character types and optional ambiguous-character removal.">
     <meta name="twitter:image" content="https://www.utilcover.com/images/og-image.jpg">
 
     <!-- Canonical URL -->
@@ -42,9 +41,9 @@
     {
       "@type": "WebApplication",
       "@id": "https://www.utilcover.com/password/#application",
-      "name": "Random Password Generator",
+      "name": "Secure Random Password Generator",
       "url": "https://www.utilcover.com/password/",
-      "description": "Generate strong, random passwords with a single click. Customize length, character types, and exclude ambiguous characters for maximum security.",
+      "description": "Generate secure random passwords with Web Crypto in your browser. Choose length, character types and optional ambiguous-character removal.",
       "inLanguage": "en",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -68,7 +67,7 @@
         {
           "@type": "ListItem",
           "position": 2,
-          "name": "Random Password Generator",
+          "name": "Secure Random Password Generator",
           "item": "https://www.utilcover.com/password/"
         }
       ]
@@ -80,7 +79,7 @@
 <body class="tool-directory-page password-page">
 <header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="nav-links"><a href="/json/">JSON</a><a href="/image/">Image</a><a href="/qr/">QR</a><a href="/encode/">Encode</a><a href="/password/" aria-current="page">Password</a><a href="/text/">Text</a><a href="/timestamp/">Timestamp</a><a href="/uuid/">UUID</a><a href="/hash/">Hash</a><a href="/color/">Color</a><a href="/unit/">Unit</a><a href="/calculator/">Calculator</a><a class="language-link" href="/zh/password/">Chinese</a></div></nav></header>
 <main class="page-shell">
-  <section class="hero"><h1>Random Password Generator</h1><p>Generate secure random passwords locally with custom length, character types and ambiguity controls.</p></section>
+  <section class="hero"><h1>Secure Random Password Generator</h1><p>Generate random passwords locally with custom length, character types and ambiguity controls.</p></section>
 <section class="tool-card settings-card password-tool">
             <h2 class="settings-title">⚙️ Generation Settings</h2>
             <p class="local-processing-note">Passwords are generated on this device and never uploaded.</p>
@@ -153,13 +152,21 @@
             • Including uppercase, lowercase, numbers, and special characters significantly improves security<br>
             • Excluding ambiguous characters can prevent input errors<br>
             • Use a unique password for each account<br>
-            • Regularly change passwords for important accounts
+            • Change a password when it may be exposed; avoid predictable scheduled changes
         </aside>
 
         <aside class="info-card">
             <strong>🧰 More browser tools:</strong><br>
             <a href="/">Open the UtilCover collection</a> — calculator, JSON, text, encoding, timestamps, UUIDs and SHA hashes.
         </aside>
+  <section class="tool-guide" aria-labelledby="password-guide-title">
+    <header class="guide-intro"><h2 id="password-guide-title">Generate random passwords with browser security APIs</h2><p>This generator creates passwords on the current device with the browser’s Web Crypto API. You control length, quantity and the allowed character categories. The page does not send generated values to UtilCover, but copied passwords still enter your system clipboard and should be stored with the same care as any other credential.</p></header>
+    <section class="guide-section how-to" aria-labelledby="password-how-to"><h2 id="password-how-to">How to generate a secure random password</h2><ol class="steps"><li><strong>Choose length and quantity.</strong> Password length can be 1–128 characters and the batch can contain 1–100 passwords. For an important account, prefer a long unique value that fits the site’s stated password rules.</li><li><strong>Select allowed categories.</strong> Enable uppercase letters, lowercase letters, numbers and special characters as required. The password must be at least as long as the number of selected categories because the generator guarantees each enabled category appears at least once.</li><li><strong>Generate, copy and save safely.</strong> Review the result, copy only what you need, and place it directly in a trusted password manager. Use a different password for each account and replace one promptly if it may have been exposed.</li></ol></section>
+    <section class="guide-section examples" aria-labelledby="password-examples"><h2 id="password-examples">Practical password choices</h2><div class="example-grid"><article><h3>A new account login</h3><p>Select the categories accepted by the service and generate a long password that you do not reuse elsewhere. Save it in a password manager instead of changing characters in an old password or building a memorable pattern around the site name.</p></article><article><h3>A Wi-Fi credential</h3><p>Create a random value that the router and joining devices can enter. Excluding ambiguous characters such as <code>1</code>, <code>I</code>, <code>0</code> and <code>O</code> can reduce transcription mistakes when someone must type the password from a printed card.</p></article><article><h3>Several independent credentials</h3><p>Increase the quantity when provisioning separate test accounts or devices. Each output is generated independently; do not treat the list as a sequence or assign one shared password to multiple real users.</p></article></div></section>
+    <section class="guide-section limitations" aria-labelledby="password-limits"><h2 id="password-limits">Generation and security limits</h2><ul><li>The controls accept lengths from 1–128 and quantities from 1–100. A technically allowed short password may still be rejected by a service or be unsuitable for protecting an account.</li><li>Random indices come from <code>crypto.getRandomValues</code>. Rejection sampling avoids modulo bias when mapping 32-bit samples into a character set, and the final characters are shuffled with the same secure source.</li><li>Every selected category contributes at least one character. The remaining positions are sampled from the combined enabled set. Optional ambiguous-character removal filters <code>0oO1IiLl</code> before generation.</li><li>The strength label is a local heuristic based on length and character variety, not a crack-time estimate or a guarantee. Account protections, reuse, phishing and storage practices also matter.</li><li>This page does not save a vault, synchronize credentials, check breach databases or verify a website’s policy. If Web Crypto is unavailable, secure generation stops rather than falling back to <code>Math.random</code>.</li></ul></section>
+    <section class="guide-section faq-section" aria-labelledby="password-faq"><h2 id="password-faq">Password generator FAQ</h2><div class="faq-list"><details><summary>How are the passwords randomized?</summary><p>The browser supplies random 32-bit values through Web Crypto. The generator uses rejection sampling before selecting characters, includes one value from each enabled category and securely shuffles the finished password.</p></details><details><summary>Does excluding ambiguous characters weaken a password?</summary><p>It reduces the available alphabet slightly in exchange for easier manual reading. Length and uniqueness remain important. Leave the option off when values will always be copied and the receiving system accepts every character.</p></details><details><summary>Is a “Strong” label a security guarantee?</summary><p>No. The label is only a simple indication based on the generated text. It cannot account for password reuse, a compromised device, account recovery weaknesses or how the credential is stored.</p></details><details><summary>Are generated passwords uploaded or saved?</summary><p>No. Generation happens in the browser and the page has no account or storage feature. Copying places a value on the device clipboard, where other software or clipboard history may retain it.</p></details><details><summary>Should I change passwords on a fixed schedule?</summary><p>Change a password when it is exposed, reused, shared improperly or required by a confirmed security event. Predictable periodic changes can encourage weaker patterns; unique generated passwords and secure storage are more useful than arbitrary rotation.</p></details></div></section>
+    <nav class="related-tools" aria-labelledby="password-related"><h2 id="password-related">Related browser tools</h2><div class="related-links"><a href="/hash/"><strong>Hash generator</strong><span>Calculate SHA digests for text or supported files; a hash is not a substitute for password storage.</span></a><a href="/qr/"><strong>QR code generator</strong><span>Put a Wi-Fi network name and generated password into a locally created QR code.</span></a><a href="/uuid/"><strong>UUID generator</strong><span>Create RFC 4122 version 4 identifiers when you need IDs rather than human login secrets.</span></a></div></nav>
+  </section>
 </main>
 <footer>UtilCover · Private, fast, client-side utilities</footer>
 <script src="/shared/locale-redirect.js"></script>
