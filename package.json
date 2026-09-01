@@ -5,7 +5,9 @@
   "description": "Privacy-first browser utilities with no server-side processing",
   "scripts": {
     "test": "node --test calculator/tests/*.test.cjs tests/*.test.cjs",
-    "check:js": "node --check shared/locale-redirect.js && node --check script.js && node --check calculator/calculator.js && node --check json/json-tool.js && node --check text/text-tool.js && node --check encode/encode-tool.js && node --check timestamp/timestamp-tool.js && node --check uuid/uuid-tool.js && node --check hash/hash-tool.js && node --check qr/qr-tool.js && node --check unit/unit-tool.js && node --check color/color-tool.js && node --check image/image-tool.js"
+    "generate:seo": "node scripts/generate-sitemap.cjs && node scripts/generate-structured-data.cjs",
+    "check:seo": "node --test tests/seo.test.cjs && node scripts/check-seo-artifacts.cjs",
+    "check:js": "node --check shared/locale-redirect.js && node --check script.js && node --check calculator/calculator.js && node --check json/json-tool.js && node --check text/text-tool.js && node --check encode/encode-tool.js && node --check timestamp/timestamp-tool.js && node --check uuid/uuid-tool.js && node --check hash/hash-tool.js && node --check qr/qr-tool.js && node --check unit/unit-tool.js && node --check color/color-tool.js && node --check image/image-tool.js && node --check scripts/generate-sitemap.cjs && node --check scripts/generate-structured-data.cjs && node --check scripts/check-seo-artifacts.cjs"
   },
   "license": "GPL-3.0"
 }

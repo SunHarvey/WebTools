@@ -113,12 +113,26 @@ http://127.0.0.1:8000/
 
 如果另行创建传统Cloudflare Pages Git Integration项目，则不需要`wrangler.json`：Framework preset选`None`，Build command留空，Build output directory设为`.`。不要混用Pages的`wrangler pages deploy`与Workers Builds的`wrangler deploy`。
 
+## SEO构件维护
+
+规范页面的结构化数据、`sitemap.xml`和严格CSP哈希由仓库脚本维护：
+
+```bash
+npm run generate:seo
+npm run check:seo
+```
+
+`generate:seo`从页面当前可见标题和描述生成JSON-LD，并按每个页面最近一次Git提交日期生成确定性的ISO `lastmod`；如果页面尚未提交，则使用当前构建日期。随后脚本会同步`_headers`中的JSON-LD SHA-256哈希。修改规范页面元数据或内容后应重新生成，并在提交前运行验证。脚本不访问网络。
+
+线上仍需配置Cloudflare Single Redirect，将`http://utilcover.com/*`和`https://utilcover.com/*`永久重定向到`https://www.utilcover.com/$1`。该主机级规则无法通过静态HTML安全实现；不要用客户端JavaScript或meta refresh替代。
+
 ## 测试
 
 需要Node.js 18或更高版本：
 
 ```bash
 npm test
+npm run check:seo
 npm run check:js
 ```
 

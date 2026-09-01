@@ -227,11 +227,14 @@ test('defines hardened static response headers without inline script execution',
   assert.match(headers, /X-Content-Type-Options: nosniff/);
   assert.match(headers, /Permissions-Policy:/);
 
-  for (const file of ['password/index.html', 'password/index-zh.html', 'zh/password/index.html']) {
+  for (const file of ['password/index.html', 'zh/password/index.html']) {
     const match = read(file).match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
     assert.ok(match, `${file} must contain JSON-LD`);
     const hash = crypto.createHash('sha256').update(match[1]).digest('base64');
     assert.match(headers, new RegExp(`'sha256-${hash.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}'`));
+  }
+  for (const file of ['password/index-zh.html', 'index-zh.html']) {
+    assert.doesNotMatch(read(file), /<script type="application\/ld\+json">/, `${file} alias must not contain JSON-LD`);
   }
 });
 

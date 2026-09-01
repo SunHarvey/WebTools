@@ -4,6 +4,7 @@
 .wrangler/
 node_modules/
 tests/
+scripts/
 .gitignore
 .assetsignore
 .dev.vars

@@ -34,21 +34,47 @@
     <link rel="alternate" hreflang="en" href="https://www.utilcover.com/password/">
     <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/password/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/password/">
-
-    <!-- JSON-LD -->
-    <script type="application/ld+json">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "随机密码生成器",
-        "url": "https://www.utilcover.com/zh/password/",
-        "description": "即时生成强壮、安全、随机的密码。可自定义长度、字符类型，并排除易混淆字符。",
-        "applicationCategory": "Utility",
-        "operatingSystem": "Any",
-        "image": "https://www.utilcover.com/images/og-image.jpg"
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/zh/password/#application",
+      "name": "随机密码生成器",
+      "url": "https://www.utilcover.com/zh/password/",
+      "description": "一键生成强壮的随机密码。可自定义长度、字符类型，并可排除易混淆字符，兼顾安全与易用。",
+      "inLanguage": "zh-CN",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/zh/password/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "工具",
+          "item": "https://www.utilcover.com/zh/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "随机密码生成器",
+          "item": "https://www.utilcover.com/zh/password/"
+        }
+      ]
     }
-    </script>
-
+  ]
+}
+  </script>
 </head>
 <body class="tool-directory-page password-page">
 <header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="nav-links"><a href="/zh/json/">JSON</a><a href="/zh/image/">图片</a><a href="/zh/qr/">二维码</a><a href="/zh/encode/">编解码</a><a href="/zh/password/" aria-current="page">密码</a><a href="/zh/text/">文本</a><a href="/zh/timestamp/">时间戳</a><a href="/zh/uuid/">UUID</a><a href="/zh/hash/">哈希</a><a href="/zh/color/">颜色</a><a href="/zh/unit/">单位</a><a href="/zh/calculator/">计算器</a><a class="language-link" href="/password/?lang=en">英文</a></div></nav></header>
