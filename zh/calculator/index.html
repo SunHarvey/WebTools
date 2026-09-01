@@ -9,14 +9,18 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>网页计算器 | UtilCover</title>
-  <meta name="description" content="支持键盘输入和鼠标点击的快速基础网页计算器，所有计算均在浏览器本地完成。">
+  <title>基础在线算术计算器：支持键盘 | UtilCover</title>
+  <meta name="description" content="进行加、减、乘、除，支持页面按键和键盘，并在浏览器中按连续步骤即时计算。">
   <link rel="canonical" href="https://www.utilcover.com/zh/calculator/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/calculator/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/calculator/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/calculator/">
   <link rel="stylesheet" href="/shared/tools.css">
   <link rel="stylesheet" href="/calculator/calculator.css">
+  <meta property="og:title" content="基础在线算术计算器：支持键盘 | UtilCover">
+  <meta property="og:description" content="通过键盘或页面按键完成基础算术，并按输入顺序即时执行。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/zh/calculator/">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -26,7 +30,7 @@
       "@id": "https://www.utilcover.com/zh/calculator/#application",
       "name": "网页计算器",
       "url": "https://www.utilcover.com/zh/calculator/",
-      "description": "支持键盘输入和鼠标点击的快速基础网页计算器，所有计算均在浏览器本地完成。",
+      "description": "进行加、减、乘、除，支持页面按键和键盘，并在浏览器中按连续步骤即时计算。",
       "inLanguage": "zh-CN",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -90,6 +94,38 @@
     </div>
   </section>
   <aside class="info-card keyboard-help"><strong>键盘快捷键：</strong>数字键、<kbd>+</kbd>、<kbd>-</kbd>、<kbd>*</kbd>、<kbd>/</kbd>、<kbd>Enter</kbd>、<kbd>Backspace</kbd>、<kbd>Esc</kbd></aside>
+  <section class="tool-guide">
+    <div class="guide-intro"><h2>用页面按键或键盘完成基础算术</h2><p>这款紧凑计算器处理日常的加法、减法、乘法和除法，既适合一步运算，也适合连续输入。它模拟简易口袋计算器：选中下一个运算符时，会先算出正在等待的那一步。做合计和连续调整很直接，但它并不是可以输入完整公式、再按优先级解析的表达式工具。</p></div>
+    <div class="guide-section how-to"><h2>三步开始计算</h2><ol class="steps">
+      <li><strong>输入第一个操作数</strong>点击数字按键或使用键盘数字。需要小数时输入一个小数点，也可以在输入前后用 ± 切换正负号。</li>
+      <li><strong>选择运算并继续</strong>选择 +、−、× 或 ÷，再输入下一个操作数。继续选择运算符会立即完成上一项；若尚未开始第二个数，连续选择会替换等待中的运算符。</li>
+      <li><strong>得到结果或修正输入</strong>按 = 或 Enter 结束计算。Backspace 删除最后一个输入字符，Escape、Delete 或 C 会清空当前状态并开始新的计算。</li>
+    </ol></div>
+    <div class="guide-section examples"><h2>日常使用示例</h2><div class="example-grid">
+      <article><h3>逐项累加小额数字</h3><p>依次输入 18.50 + 7.25 + 4.00，再按等号即可合计三项金额。每次选择新的加号时，前两个数会先得到结果，并成为下一步的第一个操作数。无需分组或特殊函数的流水合计很适合这种方式。</p></article>
+      <article><h3>理解连续运算顺序</h3><p>连续即时执行不采用运算符优先级。输入 2 + 3 × 4 在这里得到 20，不是按优先级得到的 14：选择 × 时会先把 2 + 3 算成 5，之后再用 5 乘以 4。</p></article>
+      <article><h3>不清空就修正数字</h3><p>本来要输入 129，却输入了 128，可以按 Backspace 删除 8，再补上 9。如果第二个操作数尚未开始，而之前选错了运算符，直接按正确运算符即可触发替换运算符，不会提前计算。</p></article>
+      <article><h3>输入负的第二个数</h3><p>选择运算符后，可以先用正负号切换让下一项从负数开始，再输入具体数字。这样能够用按键顺序完成 10 +（−3），尽管页面本身没有解析括号表达式的能力。</p></article>
+    </div></div>
+    <div class="guide-section limitations"><h2>执行方式与限制</h2><ul>
+      <li>计算器只处理四种基础二元运算，采用连续即时执行，不采用运算符优先级，也不能把一整条表达式作为文本输入。正负号切换修改当前操作数，替换运算符则修改等待中的运算。</li>
+      <li>每个操作数最多输入 12 位数字；负号和小数点不计入数字位数。达到上限后，继续按数字键不会添加更多字符。</li>
+      <li>结果按 12 位有效数字格式化。如果普通字符串会过长，显示会改用科学记数法并缩短尾数。底层仍是 JavaScript 浮点运算，因此可能出现舍入影响。</li>
+      <li>除以零以及任何非有限结果都会进入错误状态。出错后输入数字或执行清除即可重新开始；页面不会把无穷大当作普通结果显示。</li>
+      <li>本工具不提供 %、括号、科学函数、存储器、历史记录或任意精度。页面刷新或再次访问时不会保留数值，当前显示框就是唯一结果。</li>
+    </ul></div>
+    <div class="guide-section"><h2>常见问题</h2><div class="faq-list">
+      <details><summary>为什么连续计算与书面公式结果不同？</summary><p>每当选择下一个运算符，引擎都会先计算当前等待的一对数值，不会先把乘除排在加减之前。如果公式需要另一种分组方式，应把它拆成多个独立步骤，并手动使用中间结果。</p></details>
+      <details><summary>键盘支持哪些按键？</summary><p>可使用数字、小数点、+、-、*、/、Enter 或 =、Backspace、Escape、Delete 和 C。键盘以星号表示乘法、斜线表示除法，而页面按钮显示的是 × 和 ÷。</p></details>
+      <details><summary>较长的结果怎样显示？</summary><p>格式化过程保留 12 位有效数字。普通写法足够短时直接显示，字符过长时则采用科学记数法。这只是 JavaScript Number 的显示整理，并不代表每一位十进制数字都精确保存。</p></details>
+      <details><summary>连续按两个运算符会怎样？</summary><p>如果还没有开始输入第二个操作数，后按的运算符会替换前一个。例如按 8、+、÷ 后，准备执行的是 8 除以下一个数；如果第二个数已经输入，再选运算符就会先完成当前运算。</p></details>
+    </div></div>
+    <nav class="related-tools" aria-label="相关工具"><h2>相关工具</h2><div class="related-links">
+      <a href="/zh/unit/"><strong>单位换算器</strong><span>先转换计量单位，再把结果用于单独的算术步骤。</span></a>
+      <a href="/zh/timestamp/"><strong>Unix 时间戳转换</strong><span>处理纪元秒与毫秒，不要把日期直接当作普通算术数值。</span></a>
+      <a href="/zh/text/"><strong>文本统计与整理</strong><span>输入内容是文字而不是数字时，可进行统计和行处理。</span></a>
+    </div></nav>
+  </section>
 </main>
 <footer>UtilCover · 私密、快速的浏览器本地工具</footer>
 <script src="/calculator/calculator.js"></script>

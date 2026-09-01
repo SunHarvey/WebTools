@@ -9,15 +9,15 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>SHA Hash Calculator | UtilCover</title>
-  <meta name="description" content="Calculate SHA-256, SHA-384 and SHA-512 hashes for text or local files.">
+  <title>SHA-256 &amp; SHA-512 Checksum Calculator &amp; Verifier | UtilCover</title>
+  <meta name="description" content="Calculate SHA-256, SHA-384 and SHA-512 for UTF-8 text or local files, then verify the checksum in your browser.">
   <link rel="canonical" href="https://www.utilcover.com/hash/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/hash/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/hash/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/hash/">
   <link rel="stylesheet" href="/shared/tools.css">
-  <meta property="og:title" content="SHA Hash Calculator | UtilCover">
-  <meta property="og:description" content="Calculate SHA-256, SHA-384 and SHA-512 hashes for text or local files.">
+  <meta property="og:title" content="SHA-256 &amp; SHA-512 Checksum Calculator &amp; Verifier | UtilCover">
+  <meta property="og:description" content="Calculate and compare SHA-256, SHA-384 and SHA-512 checksums for text or local files.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/hash/">
   <script src="/shared/locale-redirect.js"></script>
@@ -30,7 +30,7 @@
       "@id": "https://www.utilcover.com/hash/#application",
       "name": "SHA Hash Calculator",
       "url": "https://www.utilcover.com/hash/",
-      "description": "Calculate SHA-256, SHA-384 and SHA-512 hashes for text or local files.",
+      "description": "Calculate SHA-256, SHA-384 and SHA-512 for UTF-8 text or local files, then verify the checksum in your browser.",
       "inLanguage": "en",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -68,6 +68,37 @@
 <main class="page-shell">
   <section class="hero"><h1>SHA Hash Calculator</h1><p>Calculate SHA-256, SHA-384 and SHA-512 hashes for text or local files.</p></section>
   <section class="tool-card"><p class="local-processing-note">Text and files are hashed locally and never uploaded.</p><div class="field"><label for="hashAlgorithm">Algorithm</label><select id="hashAlgorithm"><option>SHA-256</option><option>SHA-384</option><option>SHA-512</option></select></div><div class="grid-2"><div><div class="field"><label for="hashText">Text input</label><textarea id="hashText" placeholder="Text to hash"></textarea></div><button id="hashTextButton">Hash text</button></div><div><div class="field"><span class="field-label">File input (processed locally)</span><div class="file-picker-row"><input id="hashFile" class="file-input-native" type="file" aria-describedby="hashFileName"><label class="file-picker-button button-link secondary" for="hashFile">Choose file</label><span id="hashFileName" class="file-picker-name">No file selected</span></div></div><button id="hashFileButton">Hash file</button></div></div><div class="field"><label for="hashOutput">Calculated hash</label><textarea id="hashOutput" class="output" readonly></textarea></div><div class="field"><label for="expectedHash">Expected hash (optional)</label><input id="expectedHash" type="text" spellcheck="false" placeholder="Paste a hash to compare"></div><div class="actions"><button id="compareHash">Compare hashes</button><button id="copyHash" class="secondary">Copy result</button></div><div id="hashStatus" class="status" role="status">Ready</div></section><aside class="info-card"><strong>Privacy:</strong> Selected files never leave your device. Files are capped at 32 MiB because Web Crypto hashes an in-memory buffer.</aside>
+  <section class="tool-guide">
+    <div class="guide-intro"><h2>Calculate and verify a SHA checksum</h2><p>This calculator creates a repeatable hexadecimal integrity fingerprint for text or one local file. Choose SHA-256, SHA-384 or SHA-512 to match the algorithm named by a download publisher, build pipeline or data specification. Everything runs through the browser's Web Crypto API, so the input is not sent to this site.</p></div>
+    <div class="guide-section how-to"><h2>How to use the hash calculator</h2><ol class="steps">
+      <li><strong>Choose the matching algorithm</strong>Select SHA-256, SHA-384 or SHA-512. The algorithm must match before two digests can be checked; equal digests do not by themselves prove that the inputs were identical.</li>
+      <li><strong>Hash text or one file</strong>Enter text and choose “Hash text,” or select a file up to 32 MiB and choose “Hash file.” The two input paths are separate, so the selected action determines what is processed.</li>
+      <li><strong>Copy or compare the result</strong>Copy the lowercase hexadecimal output, or paste a published checksum into the expected field and compare. A match establishes digest equality under that algorithm and is strong integrity evidence when the expected value is trusted, but it is not proof of identical bytes or authorship.</li>
+    </ol></div>
+    <div class="guide-section examples"><h2>Practical checksum examples</h2><div class="example-grid">
+      <article><h3>Verify a downloaded archive</h3><p>If a software publisher lists a SHA-256 checksum, select the downloaded file and SHA-256, then compare the two strings. Matching digests are strong evidence that the download has not changed when the published value is trustworthy. They are not mathematical proof of identical input because hash collisions are possible.</p></article>
+      <article><h3>Confirm text passed between systems</h3><p>Hash a configuration fragment, API sample or release note with the algorithm required by the receiving system. Text is encoded by <code>TextEncoder</code> as UTF-8 before hashing, so capitalization, spaces, line endings and invisible characters all affect the result.</p></article>
+      <article><h3>Record a build artifact fingerprint</h3><p>Create a SHA-512 or SHA-384 fingerprint for a small package before moving it between machines. Recalculate it later to detect changed bytes. Keep the algorithm name beside the digest; a bare hexadecimal string does not identify which SHA variant produced it.</p></article>
+    </div></div>
+    <div class="guide-section limitations"><h2>Behavior and limitations</h2><ul>
+      <li>File hashing calls <code>arrayBuffer()</code> and buffers the whole selected file in memory before Web Crypto processes it. It is not incremental. The 32 MiB cap limits memory use and means larger files need another checksum program.</li>
+      <li>Text hashing uses the exact UTF-8 bytes returned by <code>TextEncoder</code>. The tool does not normalize Unicode, whitespace or line endings, so visually similar text can legitimately produce a different digest.</li>
+      <li>Comparison will trim surrounding whitespace and lowercase both strings only. It does not validate the expected digest's hexadecimal format or length; two identical nonempty strings can compare as equal even when they are not valid digests.</li>
+      <li>If asynchronous calculations overlap, the latest request wins in the UI. An older operation may finish, but it cannot replace the output or status from the newer request.</li>
+      <li>A cryptographic hash is an integrity fingerprint, not encryption, authentication or password hashing. It cannot recover input, prove an author's identity, make an untrusted checksum trustworthy or safely store a human password.</li>
+    </ul></div>
+    <div class="guide-section"><h2>SHA checksum questions</h2><div class="faq-list">
+      <details><summary>Which SHA algorithm should I choose?</summary><p>Use the exact algorithm specified by the source you are checking. SHA-256 output cannot match SHA-384 or SHA-512 output for the same input. When no external requirement exists, SHA-256 is a common integrity-check choice, but this page does not choose a protocol for you.</p></details>
+      <details><summary>Why did a tiny text edit change the entire hash?</summary><p>Digest functions are designed so a small byte change creates a very different output. Check spaces, final newlines, character case and line-ending style. The visible characters alone do not reveal every UTF-8 byte that was hashed.</p></details>
+      <details><summary>Does a matching checksum prove a download is safe?</summary><p>No. It shows digest equality under the chosen algorithm, which is useful integrity evidence but does not eliminate collision risk. If an attacker can replace both the file and the published checksum, the comparison offers no source authentication, and it does not scan content for malware.</p></details>
+      <details><summary>Does hashing upload or save my input?</summary><p>The calculation is performed locally with Web Crypto. This tool adds no network request, tracking or storage for the entered text, selected file or result. Browser extensions and the surrounding device remain outside what the page can guarantee.</p></details>
+    </div></div>
+    <nav class="related-tools" aria-label="Related tools"><h2>Related tools</h2><div class="related-links">
+      <a href="/encode/"><strong>Base64 and URL encoder</strong><span>Convert UTF-8 text when transport encoding, rather than an integrity digest, is required.</span></a>
+      <a href="/password/"><strong>Random password generator</strong><span>Create random credentials instead of treating a fast checksum as password protection.</span></a>
+      <a href="/text/"><strong>Text counter and cleaner</strong><span>Inspect line endings and exact text transformations before producing a fingerprint.</span></a>
+    </div></nav>
+  </section>
 </main>
 <footer>UtilCover · Private, fast, client-side utilities</footer>
 <script src="/hash/hash-tool.js"></script>

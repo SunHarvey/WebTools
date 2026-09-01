@@ -9,16 +9,16 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>单位换算器 | UtilCover</title>
-  <meta name="description" content="在浏览器本地换算长度、质量、温度、面积、体积和数据大小。">
+  <title>公制与英制单位换算：长度、温度和数据 | UtilCover</title>
+  <meta name="description" content="换算长度、质量、温度、面积、美制体积，以及十进制和二进制数据大小。">
   <link rel="canonical" href="https://www.utilcover.com/zh/unit/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/unit/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/unit/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/unit/">
   <link rel="stylesheet" href="/shared/tools.css">
   <link rel="stylesheet" href="/unit/unit.css">
-  <meta property="og:title" content="单位换算器 | UtilCover">
-  <meta property="og:description" content="快速、私密地换算常用计量单位。">
+  <meta property="og:title" content="公制与英制单位换算：长度、温度和数据 | UtilCover">
+  <meta property="og:description" content="换算常见公制与英制计量单位，并区分十进制和二进制数据大小。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/zh/unit/">
   <script type="application/ld+json">
@@ -30,7 +30,7 @@
       "@id": "https://www.utilcover.com/zh/unit/#application",
       "name": "单位换算器",
       "url": "https://www.utilcover.com/zh/unit/",
-      "description": "在浏览器本地换算长度、质量、温度、面积、体积和数据大小。",
+      "description": "换算长度、质量、温度、面积、美制体积，以及十进制和二进制数据大小。",
       "inLanguage": "zh-CN",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -93,6 +93,38 @@
     <div id="unitStatus" class="status" role="status">就绪</div>
   </section>
   <aside class="info-card"><strong>精确且简洁</strong><br>结果保留合理的有效数字，同时消除无意义的浮点噪声。十进制与二进制数据单位分别清晰标注。</aside>
+  <section class="tool-guide">
+    <div class="guide-intro"><h2>换算常用公制、英制与数据单位</h2><p>这是一组边界明确的日常换算，并不是可以任意扩展的单位库。页面正好六类：长度、质量、温度、面积、体积和数据大小。先选类别，再从该类别现有菜单中选择原单位与目标单位。编辑数值时会在本地即时计算，也可以交换两个单位而无需重新输入。</p></div>
+    <div class="guide-section how-to"><h2>完成一次换算</h2><ol class="steps">
+      <li><strong>选择计量类别</strong>从长度、质量、温度、面积、体积或数据大小中选择一项。原单位和目标单位菜单会换成该类别在程序中定义的单位集合。</li>
+      <li><strong>填写数值与两个单位</strong>输入有限数值，再指定从什么单位换到什么单位。修改数值或菜单会立即更新，点击“换算”也会执行同一项计算。</li>
+      <li><strong>读取或反向换算</strong>把结果与旁边的单位符号一起使用；需要反向计算时点击“交换”。记录结果时应保留类别和单位约定，避免只复制一个没有含义的数字。</li>
+    </ol></div>
+    <div class="guide-section examples"><h2>有代表性的换算场景</h2><div class="example-grid">
+      <article><h3>公制与英制长度</h3><p>路线记录可以把 5 千米换成英里，商品尺寸可以把 12 英寸换成厘米。长度菜单包括米、千米、厘米、毫米、英里、码、英尺、英寸和海里，程序通过各自相对米的比例计算。</p></article>
+      <article><h3>带偏移量的温度</h3><p>例如把 68 °F 换成 20 °C，或把 0 °C 换成 273.15 K。温度不能只乘一个倍率；摄氏度、华氏度和开尔文之间采用包含比例与偏移量的仿射温度换算。</p></article>
+      <article><h3>区分存储容量的进位</h3><p>阅读磁盘、网络或内存说明时，可以比较 1 MB 与 MiB。十进制 kB、MB 按 1000 进位，二进制 KiB、MiB 按 1024 进位；GB、TB、GiB、TiB 也遵循相同区别。</p></article>
+      <article><h3>美制食谱与容器体积</h3><p>可以把美制加仑换成升，或把美制杯换成毫升。菜单中的习惯单位是美制加仑、美制夸脱、美制杯和美制液盎司；名称相近的英制体积定义不同，不能直接混用。</p></article>
+    </div></div>
+    <div class="guide-section limitations"><h2>精度、范围与限制</h2><ul>
+      <li>只能在当前类别内部换算，不能跨类别换算。例如长度不能直接变成面积；真实问题即使存在关系，也还需要额外的尺寸或公式。</li>
+      <li>运算使用 JavaScript Number，因此遵循 IEEE-754 浮点特性。换算函数用 <code>toPrecision(15)</code> 减少残留误差。显示时，安全整数直接输出，其他有限数值用 <code>toPrecision(12)</code> 整理；这些处理不等于任意精度。</li>
+      <li>程序按已存储的倍率和偏移量计算，不会建模测量误差、有效数字或具体测量环境。极大或极小输入会受到 Number 范围影响，界面给出的位数也不代表实验室级准确度。</li>
+      <li>工具不检查物理合理性。例如温度低于绝对零度仍会得到数学换算结果，因为这里只执行仿射公式，没有加入物理规则。</li>
+      <li>类别中没有货币、速度和时间。体积只提供标明的美制项目，页面菜单中实际列出的单位就是本工具的覆盖范围。</li>
+    </ul></div>
+    <div class="guide-section"><h2>常见问题</h2><div class="faq-list">
+      <details><summary>MB 和 MiB 有什么区别？</summary><p>1 MB 是 1,000,000 字节，1 MiB 是 1,048,576 字节。kB、MB、GB、TB 等十进制前缀按 1000 进位，KiB、MiB、GiB、TiB 等二进制前缀按 1024 进位，应根据所读规范采用的约定选择。</p></details>
+      <details><summary>加仑和杯是英制还是美制？</summary><p>本页面把加仑、夸脱、杯和液盎司明确标为美制，并采用美制换算因子。不要把结果当成英国英制数量，因为两套体系可能名称相似，但定义体积并不相同。</p></details>
+      <details><summary>为什么结果有时包含很多位？</summary><p>某些单位比例无法写成有限小数。工具会保留有用的有效数字，并清理常见浮点残留，但最终仍是 JavaScript Number 表示的近似值。实际使用时应根据原测量精度继续取舍位数。</p></details>
+      <details><summary>能否输入负数或科学记数法？</summary><p>可以，但输入去除首尾空白后必须非空，并且能被 JavaScript 转成有限 Number；许多负数和科学记数法写法都符合条件。页面不会判断该数值对所选计量是否有现实意义，特定场景的校验仍由使用者完成。</p></details>
+    </div></div>
+    <nav class="related-tools" aria-label="相关工具"><h2>相关工具</h2><div class="related-links">
+      <a href="/zh/calculator/"><strong>基础计算器</strong><span>换算后继续进行算术计算，同时留意它采用连续即时执行方式。</span></a>
+      <a href="/zh/timestamp/"><strong>Unix 时间戳转换</strong><span>单独处理纪元秒和毫秒；日期转换不属于这里的计量类别。</span></a>
+      <a href="/zh/color/"><strong>颜色转换器</strong><span>数值表示颜色而非计量单位时，可转换 HEX、RGB 与 HSL。</span></a>
+    </div></nav>
+  </section>
 </main>
 <footer>UtilCover · 私密、快速的浏览器本地工具</footer>
 <script src="/unit/unit-tool.js"></script>

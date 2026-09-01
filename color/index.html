@@ -9,14 +9,18 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>Color Converter & Contrast Checker | UtilCover</title>
-  <meta name="description" content="Convert HEX, RGB and HSL colors and check WCAG contrast locally in your browser.">
+  <title>HEX, RGB &amp; HSL Converter with WCAG Contrast Checker | UtilCover</title>
+  <meta name="description" content="Convert HEX, RGB and HSL colors, preview rounded values, and check WCAG contrast ratios in your browser.">
   <link rel="canonical" href="https://www.utilcover.com/color/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/color/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/color/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/color/">
   <link rel="stylesheet" href="/shared/tools.css">
   <link rel="stylesheet" href="/color/color.css">
+  <meta property="og:title" content="HEX, RGB &amp; HSL Converter with WCAG Contrast Checker | UtilCover">
+  <meta property="og:description" content="Convert HEX, RGB and HSL colors and evaluate a pair with WCAG contrast thresholds.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/color/">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -26,7 +30,7 @@
       "@id": "https://www.utilcover.com/color/#application",
       "name": "Color Converter",
       "url": "https://www.utilcover.com/color/",
-      "description": "Convert HEX, RGB and HSL colors and check WCAG contrast locally in your browser.",
+      "description": "Convert HEX, RGB and HSL colors, preview rounded values, and check WCAG contrast ratios in your browser.",
       "inLanguage": "en",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -110,6 +114,37 @@
       <div><span>AAA Large</span><strong id="aaaLarge">Pass</strong></div>
     </div>
     <div id="contrastStatus" class="status" role="status">Ready</div>
+  </section>
+  <section class="tool-guide">
+    <div class="guide-intro"><h2>Convert solid colors and check their contrast</h2><p>Move a color between HEX, RGB and HSL notation, then compare a text and background pair with WCAG contrast thresholds. The converter is useful when a design token, stylesheet or handoff uses a different notation from the one you have. The contrast result is a numeric check for two opaque solid colors, not a complete accessibility audit.</p></div>
+    <div class="guide-section how-to"><h2>How to convert and compare colors</h2><ol class="steps">
+      <li><strong>Enter one supported color</strong>Use a 3- or 6-digit HEX value, three RGB channels, or HSL hue, saturation and lightness. Choose the matching convert button to normalize the fields and update the preview.</li>
+      <li><strong>Read or copy each notation</strong>Review the resulting HEX, <code>rgb()</code> and <code>hsl()</code> strings. Copy the set into a stylesheet, token file or design note, remembering that displayed channel values are rounded.</li>
+      <li><strong>Check a foreground/background pair</strong>Enter two HEX colors in the WCAG section and calculate. Read the ratio and the separate AA normal, AA large, AAA normal and AAA large threshold results.</li>
+    </ol></div>
+    <div class="guide-section examples"><h2>Color conversion and contrast examples</h2><div class="example-grid">
+      <article><h3>Translate a brand HEX token</h3><p>Enter <code>#336699</code> to obtain <code>rgb(51, 102, 153)</code> and <code>hsl(210, 50%, 40%)</code>. This is practical when a CSS custom property is stored as HEX but a design discussion refers to HSL adjustments. Converting notation does not change the intended opaque sRGB color.</p></article>
+      <article><h3>Normalize out-of-range channels</h3><p>An RGB input such as 300, 127.6, -20 becomes 255, 128, 0 because each finite channel is clamped to 0–255 and rounded. For HSL, a hue of 390 wraps to 30 by modulo 360, while saturation and lightness are clamped to 0–100 before conversion.</p></article>
+      <article><h3>Check body text against a surface</h3><p>Compare <code>#222222</code> text with a <code>#FFFFFF</code> background and inspect the ratio against the level needed by the actual typography. Repeat for links, muted text, focus indicators and interactive states rather than assuming one pair represents an entire interface.</p></article>
+    </div></div>
+    <div class="guide-section limitations"><h2>Supported input and honest limits</h2><ul>
+      <li>HEX accepts exactly 3 or 6 hexadecimal digits with an optional # prefix and no alpha. Values containing four or eight digits are rejected rather than silently discarding transparency.</li>
+      <li>RGB requires finite numeric values. Every channel is clamped to 0–255 and rounded to an integer. HSL hue wraps by modulo 360; saturation and lightness clamp to 0–100. Conversions and displayed HSL values round, so repeated round trips can lose fractional detail.</li>
+      <li>Contrast uses the WCAG relative luminance formula. The thresholds are AA normal 4.5:1, AA large 3:1, AAA normal 7:1 and AAA large 4.5:1.</li>
+      <li>The displayed ratio floors the computed value to two decimal places instead of rounding upward. Pass or fail is evaluated from the unshortened computed ratio, so a displayed boundary should not be reverse-engineered as extra precision.</li>
+      <li>This checker does not assess actual font size, weight, transparency, gradients, images, hover or disabled states. It cannot decide whether text qualifies as large, and a passing pair does not establish that the full page meets every WCAG requirement.</li>
+    </ul></div>
+    <div class="guide-section"><h2>Color and contrast questions</h2><div class="faq-list">
+      <details><summary>Can I enter HEX with or without a hash sign?</summary><p>Yes. The leading # is optional, but the remaining value must contain exactly three or six hexadecimal digits. Three-digit values expand by repeating each digit, so <code>#369</code> becomes <code>#336699</code>.</p></details>
+      <details><summary>Why did my RGB or HSL numbers change?</summary><p>The tool normalizes values to what its output can represent. RGB channels become rounded integers from 0 through 255. HSL hue is wrapped into one turn, while saturation and lightness stay within percentages from 0 through 100.</p></details>
+      <details><summary>What counts as large text in the result grid?</summary><p>The thresholds commonly describe large text as at least 18pt, or at least 14pt when bold. This calculator does not inspect a rendered element, so you must decide which row applies using the real font size and weight.</p></details>
+      <details><summary>Why floor the visible contrast ratio?</summary><p>Flooring avoids displaying a rounded-up value that appears to reach a threshold when the calculated ratio is slightly below it. The compliance booleans use the full ratio, while the two-decimal string is a compact display.</p></details>
+    </div></div>
+    <nav class="related-tools" aria-label="Related tools"><h2>Related tools</h2><div class="related-links">
+      <a href="/image/"><strong>Image compressor and converter</strong><span>Prepare raster assets after choosing colors; image content needs review beyond two solid swatches.</span></a>
+      <a href="/qr/"><strong>QR code generator</strong><span>Create a code and apply a high-contrast foreground and background before scan testing.</span></a>
+      <a href="/text/"><strong>Text counter and cleaner</strong><span>Prepare interface copy while checking the rendered typography separately from its color pair.</span></a>
+    </div></nav>
   </section>
 </main>
 <footer>UtilCover · Private, fast, client-side utilities</footer>

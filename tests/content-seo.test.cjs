@@ -271,6 +271,163 @@ test('UUID pages explain secure RFC 4122 v4 batch generation without overclaims'
   assert.doesNotMatch(chinese, /保证唯一|绝不碰撞/);
 });
 
+test('hash pages explain local SHA checksums and comparison limits without security overclaims', () => {
+  assertGuide('hash/index.html', 'en', ['/encode/', '/password/', '/text/']);
+  assertGuide('zh/hash/index.html', 'zh', ['/zh/encode/', '/zh/password/', '/zh/text/']);
+  assertMetadata('hash/index.html', /SHA-256.*SHA-512.*(?:Checksum|Hash).*(?:Calculator|Verifier)/i, /SHA-256.*SHA-384.*SHA-512.*(?:text|file).*(?:checksum|verif)/i);
+  assertMetadata('zh/hash/index.html', /SHA-256.*SHA-512.*(?:校验和|哈希).*(?:计算|验证)/, /SHA-256.*SHA-384.*SHA-512.*(?:文本|文件).*(?:校验|核对)/);
+  for (const file of ['hash/index.html', 'zh/hash/index.html']) {
+    const { html, guide } = guideFor(file);
+    const stepList = guide.match(/<ol class="steps">[\s\S]*?<\/ol>/i)?.[0] || '';
+    assert.equal(matches(stepList, /<li\b/gi).length, 3, `${file}: exactly three usage steps`);
+    assert.ok(matches(guide, /<article\b/gi).length >= 3, `${file}: at least three concrete examples`);
+    assert.equal(matches(guide, /<details>[\s\S]*?<summary>[^<]+<\/summary>[\s\S]*?<\/details>/gi).length, 4, `${file}: exactly four accessible FAQs`);
+    assert.equal(matches(guide, /<a\s+href="\/[^"]+"/gi).length, 3, `${file}: exactly three related-tool links`);
+    assert.match(guide, /Web Crypto/);
+    assert.match(guide, /SHA-256/);
+    assert.match(guide, /SHA-384/);
+    assert.match(guide, /SHA-512/);
+    assert.match(guide, /32 MiB/);
+    assert.doesNotMatch(html, /(?:MD5|HMAC|chunked|streaming hash)/i, `${file}: unsupported hash modes`);
+  }
+  const english = guideFor('hash/index.html').text;
+  assert.match(english, /TextEncoder.*UTF-8/i);
+  assert.match(english, /arrayBuffer.*whole.*(?:file|selected file)|whole.*(?:file|selected file).*arrayBuffer/i);
+  assert.match(english, /trim.*lowercase.*does not validate.*(?:format|length)/i);
+  assert.match(english, /latest.*(?:request|operation|task).*wins/i);
+  assert.match(english, /integrity fingerprint.*not encryption.*authentication.*password hashing/i);
+  assert.match(english, /digest equality.*collision/i);
+  assert.doesNotMatch(english, /byte-for-byte agreement|same input bytes/i);
+  assert.doesNotMatch(english, /guarantees? (?:a file|data) (?:is|was) authentic|collision[- ]proof/i);
+  const chinese = guideFor('zh/hash/index.html').text;
+  assert.match(chinese, /TextEncoder.*UTF-8/);
+  assert.match(chinese, /arrayBuffer.*整个.*文件|整个.*文件.*arrayBuffer/);
+  assert.match(chinese, /去除.*首尾空白.*小写.*不(?:会)?验证.*(?:格式|长度)/);
+  assert.match(chinese, /最后.*(?:请求|任务|操作).*(?:生效|显示|结果)/);
+  assert.match(chinese, /完整性指纹.*不是加密.*身份认证.*密码哈希/);
+  assert.match(chinese, /摘要相同.*碰撞/);
+  assert.doesNotMatch(chinese, /字节一致/);
+  assert.doesNotMatch(chinese, /保证.*真实|绝无碰撞/);
+});
+
+test('color pages explain supported formats and WCAG contrast boundaries without design overclaims', () => {
+  assertGuide('color/index.html', 'en', ['/image/', '/qr/', '/text/']);
+  assertGuide('zh/color/index.html', 'zh', ['/zh/image/', '/zh/qr/', '/zh/text/']);
+  assertMetadata('color/index.html', /HEX.*RGB.*HSL.*Converter.*WCAG.*Contrast Checker/i, /convert.*HEX.*RGB.*HSL.*WCAG.*contrast/i);
+  assertMetadata('zh/color/index.html', /HEX.*RGB.*HSL.*转换.*WCAG.*对比度检查/, /转换.*HEX.*RGB.*HSL.*WCAG.*对比度/);
+  for (const file of ['color/index.html', 'zh/color/index.html']) {
+    const { html, guide } = guideFor(file);
+    const stepList = guide.match(/<ol class="steps">[\s\S]*?<\/ol>/i)?.[0] || '';
+    assert.equal(matches(stepList, /<li\b/gi).length, 3, `${file}: exactly three usage steps`);
+    assert.ok(matches(guide, /<article\b/gi).length >= 3, `${file}: at least three concrete examples`);
+    assert.equal(matches(guide, /<details>[\s\S]*?<summary>[^<]+<\/summary>[\s\S]*?<\/details>/gi).length, 4, `${file}: exactly four accessible FAQs`);
+    assert.equal(matches(guide, /<a\s+href="\/[^"]+"/gi).length, 3, `${file}: exactly three related-tool links`);
+    assert.match(guide, /3.*6.*HEX/i);
+    assert.match(guide, /4\.5/);
+    assert.match(guide, /\b3(?:\.0)?\b/);
+    assert.match(guide, /\b7(?:\.0)?\b/);
+    assert.doesNotMatch(html, /(?:8-digit HEX|alpha channel|OKLCH)/i, `${file}: unsupported color formats`);
+  }
+  const english = guideFor('color/index.html').text;
+  assert.match(english, /optional #.*no alpha/i);
+  assert.match(english, /RGB.*finite.*clamp.*0.*255.*round/i);
+  assert.match(english, /hue.*modulo 360.*(?:saturation|S).*lightness.*clamp.*0.*100/i);
+  assert.match(english, /relative luminance/i);
+  assert.match(english, /AA normal.*4\.5.*AA large.*3.*AAA normal.*7.*AAA large.*4\.5/i);
+  assert.match(english, /floor.*two decimal/i);
+  assert.match(english, /does not assess.*font size.*weight.*transparency.*gradients.*states/i);
+  assert.doesNotMatch(english, /guarantees? (?:WCAG|accessibility) compliance|fully accessible/i);
+  const chinese = guideFor('zh/color/index.html').text;
+  assert.match(chinese, /#.*可选.*不支持.*透明/);
+  assert.match(chinese, /RGB.*有限数值.*(?:限制|钳制).*0.*255.*四舍五入/);
+  assert.match(chinese, /色相.*模 360.*饱和度.*亮度.*限制.*0.*100/);
+  assert.match(chinese, /HSL.*一位小数/);
+  assert.doesNotMatch(chinese, /转换和显示都会取整/);
+  assert.match(chinese, /相对亮度/);
+  assert.match(chinese, /AA 普通.*4\.5.*AA 大字.*3.*AAA 普通.*7.*AAA 大字.*4\.5/);
+  assert.match(chinese, /向下截取.*两位小数/);
+  assert.match(chinese, /不会评估.*字号.*字重.*透明.*渐变.*状态/);
+  assert.doesNotMatch(chinese, /保证.*无障碍|完全符合 WCAG/);
+});
+
+test('unit pages explain the implemented measurement sets and numeric limits without category overclaims', () => {
+  assertGuide('unit/index.html', 'en', ['/calculator/', '/timestamp/', '/color/']);
+  assertGuide('zh/unit/index.html', 'zh', ['/zh/calculator/', '/zh/timestamp/', '/zh/color/']);
+  assertMetadata('unit/index.html', /Metric.*Imperial.*Unit Converter.*Length.*Temperature.*Data/i, /length.*mass.*temperature.*area.*US volume.*(?:decimal|binary).*data/i);
+  assertMetadata('zh/unit/index.html', /公制.*英制.*单位换算.*长度.*温度.*数据/, /长度.*质量.*温度.*面积.*美制体积.*十进制.*二进制.*数据/);
+  for (const file of ['unit/index.html', 'zh/unit/index.html']) {
+    const { guide } = guideFor(file);
+    const stepList = guide.match(/<ol class="steps">[\s\S]*?<\/ol>/i)?.[0] || '';
+    assert.equal(matches(stepList, /<li\b/gi).length, 3, `${file}: exactly three usage steps`);
+    assert.ok(matches(guide, /<article\b/gi).length >= 3, `${file}: at least three concrete examples`);
+    assert.equal(matches(guide, /<details>[\s\S]*?<summary>[^<]+<\/summary>[\s\S]*?<\/details>/gi).length, 4, `${file}: exactly four accessible FAQs`);
+    assert.equal(matches(guide, /<a\s+href="\/[^"]+"/gi).length, 3, `${file}: exactly three related-tool links`);
+    assert.match(guide, /kB.*MB.*KiB.*MiB/i);
+    assert.match(guide, /toPrecision\(15\).*toPrecision\(12\)/);
+    assert.doesNotMatch(guide, /converts? (?:currency|speed|time)|支持.*(?:货币|速度|时间).*换算/i, `${file}: unsupported categories`);
+  }
+  const english = guideFor('unit/index.html').text;
+  assert.match(english, /exactly six categories.*length.*mass.*temperature.*area.*volume.*data/i);
+  assert.match(english, /US.*(?:gallon|quart|cup|fluid ounce)/i);
+  assert.match(english, /decimal.*1000.*binary.*1024/i);
+  assert.match(english, /affine.*temperature/i);
+  assert.match(english, /cannot convert across categories/i);
+  assert.match(english, /JavaScript Number/i);
+  assert.match(english, /no physical plausibility.*absolute zero/i);
+  assert.match(english, /trimmed.*nonblank.*finite Number/i);
+  assert.match(english, /safe integers.*toPrecision\(12\).*all other finite|safe integers.*all other finite.*toPrecision\(12\)/i);
+  assert.doesNotMatch(english, /exact results|unlimited precision|all units/i);
+  const chinese = guideFor('zh/unit/index.html').text;
+  assert.match(chinese, /正好六类.*长度.*质量.*温度.*面积.*体积.*数据/);
+  assert.match(chinese, /美制.*(?:加仑|夸脱|杯|液盎司)/);
+  assert.match(chinese, /十进制.*1000.*二进制.*1024/);
+  assert.match(chinese, /仿射.*温度/);
+  assert.match(chinese, /不能跨类别换算/);
+  assert.match(chinese, /JavaScript Number/);
+  assert.match(chinese, /不检查物理合理性.*绝对零度/);
+  assert.match(chinese, /去除首尾空白后.*非空.*有限 Number/);
+  assert.match(chinese, /安全整数.*其他有限数值.*toPrecision\(12\)/);
+  assert.doesNotMatch(chinese, /结果绝对精确|无限精度|所有单位/);
+});
+
+test('calculator pages explain immediate basic arithmetic and input limits without feature overclaims', () => {
+  assertGuide('calculator/index.html', 'en', ['/unit/', '/timestamp/', '/text/']);
+  assertGuide('zh/calculator/index.html', 'zh', ['/zh/unit/', '/zh/timestamp/', '/zh/text/']);
+  assertMetadata('calculator/index.html', /Basic Online Arithmetic Calculator.*Keyboard/i, /add.*subtract.*multiply.*divide.*keyboard.*immediate/i);
+  assertMetadata('zh/calculator/index.html', /基础在线算术计算器.*键盘/, /加.*减.*乘.*除.*键盘.*即时/);
+  for (const file of ['calculator/index.html', 'zh/calculator/index.html']) {
+    const { html, guide } = guideFor(file);
+    const stepList = guide.match(/<ol class="steps">[\s\S]*?<\/ol>/i)?.[0] || '';
+    assert.equal(matches(stepList, /<li\b/gi).length, 3, `${file}: exactly three usage steps`);
+    assert.ok(matches(guide, /<article\b/gi).length >= 3, `${file}: at least three concrete examples`);
+    assert.equal(matches(guide, /<details>[\s\S]*?<summary>[^<]+<\/summary>[\s\S]*?<\/details>/gi).length, 4, `${file}: exactly four accessible FAQs`);
+    assert.equal(matches(guide, /<a\s+href="\/[^"]+"/gi).length, 3, `${file}: exactly three related-tool links`);
+    assert.match(guide, /12/);
+    assert.match(guide, /Enter.*Backspace.*Escape.*Delete.*C/);
+    assert.doesNotMatch(html, /(?:built-in history|memory register|scientific calculator)/i, `${file}: unsupported calculator capabilities`);
+  }
+  const english = guideFor('calculator/index.html').text;
+  assert.match(english, /addition.*subtraction.*multiplication.*division/i);
+  assert.match(english, /sequential immediate execution.*not operator precedence/i);
+  assert.match(english, /2.*\+.*3.*(?:×|\*).*4.*20.*not.*14/i);
+  assert.match(english, /12 entered digits.*operand/i);
+  assert.match(english, /12 significant digits.*exponential/i);
+  assert.match(english, /division by zero.*nonfinite.*error/i);
+  assert.match(english, /sign toggle.*operator replacement/i);
+  assert.match(english, /no.*%.*parentheses.*scientific functions.*memory.*history.*arbitrary precision/i);
+  assert.doesNotMatch(english, /follows? (?:standard )?order of operations|full precision/i);
+  const chinese = guideFor('zh/calculator/index.html').text;
+  assert.match(chinese, /加法.*减法.*乘法.*除法/);
+  assert.match(chinese, /连续即时执行.*不采用运算符优先级/);
+  assert.match(chinese, /2.*\+.*3.*(?:×|\*).*4.*20.*不是.*14/);
+  assert.match(chinese, /每个操作数.*最多输入 12 位数字/);
+  assert.match(chinese, /12 位有效数字.*科学记数法/);
+  assert.match(chinese, /除以零.*非有限.*错误/);
+  assert.match(chinese, /正负号切换.*替换运算符/);
+  assert.match(chinese, /不提供.*%.*括号.*科学函数.*存储器.*历史.*任意精度/);
+  assert.doesNotMatch(chinese, /遵循.*运算优先级|完整精度/);
+});
+
 test('shared tool-guide styles are responsive and keyboard accessible', () => {
   const css = read('shared/tools.css');
   for (const selector of ['.tool-guide', '.guide-intro', '.guide-section', '.steps', '.example-grid', '.faq-list', '.related-links']) {

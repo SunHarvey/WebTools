@@ -9,14 +9,18 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>颜色转换与对比度检查 | UtilCover</title>
-  <meta name="description" content="在浏览器本地转换 HEX、RGB 和 HSL 颜色，并检查 WCAG 对比度。">
+  <title>HEX、RGB、HSL 转换与 WCAG 对比度检查 | UtilCover</title>
+  <meta name="description" content="在浏览器中转换 HEX、RGB、HSL 颜色，预览取整结果并检查 WCAG 对比度。">
   <link rel="canonical" href="https://www.utilcover.com/zh/color/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/color/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/color/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/color/">
   <link rel="stylesheet" href="/shared/tools.css">
   <link rel="stylesheet" href="/color/color.css">
+  <meta property="og:title" content="HEX、RGB、HSL 转换与 WCAG 对比度检查 | UtilCover">
+  <meta property="og:description" content="转换 HEX、RGB、HSL 颜色，并按 WCAG 阈值检查一组前景色和背景色。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/zh/color/">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -26,7 +30,7 @@
       "@id": "https://www.utilcover.com/zh/color/#application",
       "name": "颜色转换器",
       "url": "https://www.utilcover.com/zh/color/",
-      "description": "在浏览器本地转换 HEX、RGB 和 HSL 颜色，并检查 WCAG 对比度。",
+      "description": "在浏览器中转换 HEX、RGB、HSL 颜色，预览取整结果并检查 WCAG 对比度。",
       "inLanguage": "zh-CN",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -110,6 +114,37 @@
       <div><span>AAA 大字</span><strong id="aaaLarge">通过</strong></div>
     </div>
     <div id="contrastStatus" class="status" role="status">就绪</div>
+  </section>
+  <section class="tool-guide">
+    <div class="guide-intro"><h2>转换纯色表示并检查对比度</h2><p>可以在 HEX、RGB 与 HSL 三种写法之间转换同一种颜色，再按照 WCAG 对比度阈值比较文字色和背景色。设计令牌、样式表和交付文档采用不同写法时，这种转换尤其方便。对比度部分只分析两个不透明纯色的数值关系，并不等于完整的无障碍审查。</p></div>
+    <div class="guide-section how-to"><h2>颜色转换与检查步骤</h2><ol class="steps">
+      <li><strong>填写一种受支持的颜色</strong>可输入 3 位或 6 位 HEX、三个 RGB 通道，或者 HSL 的色相、饱和度和亮度。点击对应的转换按钮后，所有字段与预览会同步更新。</li>
+      <li><strong>读取并复制表示结果</strong>查看生成的 HEX、<code>rgb()</code> 和 <code>hsl()</code> 字符串，再复制到样式表、令牌文件或设计记录中。RGB 显示为整数，HSL 通道最多保留一位小数。</li>
+      <li><strong>比较前景色与背景色</strong>在 WCAG 区域填写两个 HEX 颜色并开始检查，分别阅读对比度以及 AA 普通文字、AA 大字、AAA 普通文字和 AAA 大字的结果。</li>
+    </ol></div>
+    <div class="guide-section examples"><h2>常见换色与检查场景</h2><div class="example-grid">
+      <article><h3>转换品牌色令牌</h3><p>输入 <code>#336699</code> 会得到 <code>rgb(51, 102, 153)</code> 和 <code>hsl(210, 50%, 40%)</code>。当 CSS 变量使用 HEX，而设计讨论要调整 HSL 时，可以直接取得另一种写法。写法变化不会改变目标的不透明 sRGB 颜色。</p></article>
+      <article><h3>整理越界通道</h3><p>RGB 输入 300、127.6、-20 后会变成 255、128、0，因为每个有限数值都会限制到 0–255，再四舍五入为整数。HSL 色相 390 会按模 360 回绕成 30，饱和度和亮度则限制在 0–100。</p></article>
+      <article><h3>核对正文与页面底色</h3><p>可以比较 <code>#222222</code> 文字和 <code>#FFFFFF</code> 背景，再根据实际排版选择相应阈值。链接、次要文字、焦点提示和交互状态都应分别检查，不能用一组颜色代表整个界面。</p></article>
+    </div></div>
+    <div class="guide-section limitations"><h2>输入规则与能力边界</h2><ul>
+      <li>HEX 只接受正好 3 位或 6 位十六进制数字，# 前缀可选，但不支持透明度。四位或八位写法会被拒绝，不会悄悄丢弃透明信息。</li>
+      <li>RGB 必须是有限数值，各通道先限制到 0–255，再四舍五入成整数。HSL 色相按模 360 回绕，饱和度与亮度限制在 0–100，HSL 显示最多保留一位小数。转换中的舍入会让多次往返损失小数细节。</li>
+      <li>对比度采用 WCAG 相对亮度公式，判断阈值依次为 AA 普通文字 4.5:1、AA 大字 3:1、AAA 普通文字 7:1、AAA 大字 4.5:1。</li>
+      <li>显示值会把计算结果向下截取到两位小数，而不是向上四舍五入。通过与否仍使用未缩短的计算结果，因此不要把界面上的边界值当成额外精度。</li>
+      <li>工具不会评估真实字号、字重、透明度、渐变、图片以及悬停或禁用状态，也不会自动判断文字是否属于大字。某一颜色组合通过，并不代表页面的其他 WCAG 要求已经满足。</li>
+    </ul></div>
+    <div class="guide-section"><h2>常见问题</h2><div class="faq-list">
+      <details><summary>HEX 前面必须写井号吗？</summary><p>不必，开头的 # 可以省略，但其余部分必须正好包含三位或六位十六进制数字。三位写法会把每一位重复展开，例如 <code>#369</code> 会转换为 <code>#336699</code>。</p></details>
+      <details><summary>为什么 RGB 或 HSL 输入发生了变化？</summary><p>工具会把数值规范到输出能够表示的范围。RGB 通道是 0 到 255 的整数；HSL 色相被放进一个完整色环，饱和度与亮度保持在 0 到 100，并在显示时最多保留一位小数。</p></details>
+      <details><summary>结果中的“大字”应该怎样理解？</summary><p>阈值通常把至少 18pt，或至少 14pt 且为粗体的文字视为大字。本工具不读取实际渲染元素，因此需要根据真实字号和字重自行选择对应结果。</p></details>
+      <details><summary>为什么显示的对比度采用向下截取？</summary><p>这样可以避免一个略低于阈值的比值因为向上取整，看起来好像已经达标。判断逻辑使用完整比值，两位小数字符串只是便于阅读的简短表示。</p></details>
+    </div></div>
+    <nav class="related-tools" aria-label="相关工具"><h2>相关工具</h2><div class="related-links">
+      <a href="/zh/image/"><strong>图片压缩与转换</strong><span>选定颜色后处理位图素材；图片内容不能只靠两个纯色色块来判断。</span></a>
+      <a href="/zh/qr/"><strong>二维码生成器</strong><span>为二维码选择高对比的前景与背景，并在实际设备上扫码测试。</span></a>
+      <a href="/zh/text/"><strong>文本统计与整理</strong><span>准备界面文案，同时把真实排版与颜色组合分开检查。</span></a>
+    </div></nav>
   </section>
 </main>
 <footer>UtilCover · 私密、快速的浏览器本地工具</footer>

@@ -9,14 +9,18 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>Web Calculator | UtilCover</title>
-  <meta name="description" content="A fast, keyboard-friendly web calculator for everyday arithmetic. All calculations happen locally in your browser.">
+  <title>Basic Online Arithmetic Calculator with Keyboard | UtilCover</title>
+  <meta name="description" content="Add, subtract, multiply and divide with keyboard controls and immediate sequential calculation in your browser.">
   <link rel="canonical" href="https://www.utilcover.com/calculator/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/calculator/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/calculator/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/calculator/">
   <link rel="stylesheet" href="/shared/tools.css">
   <link rel="stylesheet" href="/calculator/calculator.css">
+  <meta property="og:title" content="Basic Online Arithmetic Calculator with Keyboard | UtilCover">
+  <meta property="og:description" content="Perform basic arithmetic by keyboard or buttons with immediate sequential execution.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/calculator/">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -26,7 +30,7 @@
       "@id": "https://www.utilcover.com/calculator/#application",
       "name": "Web Calculator",
       "url": "https://www.utilcover.com/calculator/",
-      "description": "A fast, keyboard-friendly web calculator for everyday arithmetic. All calculations happen locally in your browser.",
+      "description": "Add, subtract, multiply and divide with keyboard controls and immediate sequential calculation in your browser.",
       "inLanguage": "en",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -90,6 +94,38 @@
     </div>
   </section>
   <aside class="info-card keyboard-help"><strong>Keyboard shortcuts:</strong> Numbers, <kbd>+</kbd>、<kbd>-</kbd>、<kbd>*</kbd>、<kbd>/</kbd>、<kbd>Enter</kbd>、<kbd>Backspace</kbd>、<kbd>Esc</kbd></aside>
+  <section class="tool-guide">
+    <div class="guide-intro"><h2>Basic arithmetic with buttons or a keyboard</h2><p>This compact calculator handles addition, subtraction, multiplication and division for everyday one-step or chained calculations. It behaves like a simple pocket calculator: each pending operation is resolved as the next operator is chosen. That makes it quick for totals and adjustments, but intentionally different from typing a full mathematical expression into a precedence-aware parser.</p></div>
+    <div class="guide-section how-to"><h2>How to use the calculator</h2><ol class="steps">
+      <li><strong>Enter the first operand</strong>Use the number buttons or keyboard digits. Add one decimal point if needed, and use the ± button to toggle the sign before or after entering digits.</li>
+      <li><strong>Choose an operation and continue</strong>Select +, −, × or ÷, then enter the next operand. Choosing another operator computes the pending operation immediately; choosing operators twice replaces the pending operator.</li>
+      <li><strong>Finish, correct or clear</strong>Press = or Enter for the result. Backspace removes the latest entered character. Escape, Delete or C clears the calculation so a new sequence can begin.</li>
+    </ol></div>
+    <div class="guide-section examples"><h2>Everyday calculation examples</h2><div class="example-grid">
+      <article><h3>Add a short list as you go</h3><p>Enter 18.50 + 7.25 + 4.00 and press equals to total three amounts. When each new plus is selected, the previous pair is calculated and its result becomes the next first operand. This is convenient for a running total when no grouping or special function is needed.</p></article>
+      <article><h3>Understand chained operations</h3><p>Sequential immediate execution is not operator precedence. Entering 2 + 3 × 4 yields 20 here, not the precedence-based 14: selecting × first resolves 2 + 3 to 5, then the calculator multiplies 5 by 4.</p></article>
+      <article><h3>Correct input without restarting</h3><p>If 129 was intended but 128 was entered, Backspace removes the 8 so 9 can replace it. If the wrong pending operator was chosen before the second operand, press the intended operator and the operator replacement behavior updates it without calculating.</p></article>
+      <article><h3>Enter a negative operand</h3><p>After choosing an operator, use the sign toggle to start the next value as negative, then type its digits. This supports calculations such as 10 + (−3) through the button sequence even though the interface has no parentheses parser.</p></article>
+    </div></div>
+    <div class="guide-section limitations"><h2>Calculation model and limits</h2><ul>
+      <li>The calculator supports only the four basic binary operations. It uses sequential immediate execution, not operator precedence, and does not accept a complete expression as text. Its sign toggle changes the current operand, while operator replacement changes a pending operation.</li>
+      <li>Input is limited to 12 entered digits per operand; the minus sign and decimal point do not count as digits. Additional digit presses are ignored once that limit is reached.</li>
+      <li>Results are formatted to 12 significant digits. If the resulting plain string would be long, the display switches to exponential notation with a shortened mantissa. JavaScript floating-point arithmetic can still introduce rounding effects.</li>
+      <li>Division by zero and any nonfinite result produce an error. Entering a digit or clearing after an error starts recovery; this page does not represent infinities as normal calculator results.</li>
+      <li>There is no %, parentheses, scientific functions, memory, history or arbitrary precision. Values are not saved between visits, and the visible display is the only current result.</li>
+    </ul></div>
+    <div class="guide-section"><h2>Basic calculator questions</h2><div class="faq-list">
+      <details><summary>Why is my chained result different from a written formula?</summary><p>The engine evaluates the pending pair whenever another operator is chosen. It does not first rank multiplication and division above addition and subtraction. Break a formula into separate calculations when its intended grouping differs from pocket-calculator order.</p></details>
+      <details><summary>Which keyboard keys are recognized?</summary><p>Use digits, decimal point, +, -, *, /, Enter or =, Backspace, Escape, Delete and C. The keyboard uses an asterisk for multiplication and a slash for division even though the corresponding buttons display × and ÷.</p></details>
+      <details><summary>How are long results displayed?</summary><p>The formatter rounds through 12 significant digits. A compact ordinary number is shown directly; a longer representation uses exponential notation. This is display formatting over JavaScript Number, not a record of every exact decimal digit.</p></details>
+      <details><summary>What happens if I press two operators in a row?</summary><p>Before a second operand has begun, the later operator replaces the earlier one. For example, pressing 8, +, then ÷ prepares 8 for division. After a second operand is entered, choosing an operator instead evaluates the pending pair.</p></details>
+    </div></div>
+    <nav class="related-tools" aria-label="Related tools"><h2>Related tools</h2><div class="related-links">
+      <a href="/unit/"><strong>Unit converter</strong><span>Convert a measurement first, then use the calculator for a separate arithmetic step.</span></a>
+      <a href="/timestamp/"><strong>Unix timestamp converter</strong><span>Work with epoch seconds and milliseconds without treating dates as ordinary arithmetic.</span></a>
+      <a href="/text/"><strong>Text counter and cleaner</strong><span>Count or transform written content when the input is text rather than a number.</span></a>
+    </div></nav>
+  </section>
 </main>
 <footer>UtilCover · Private, fast, client-side utilities</footer>
 <script src="/shared/locale-redirect.js"></script>

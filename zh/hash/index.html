@@ -9,15 +9,15 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>SHA 哈希计算器 | UtilCover</title>
-  <meta name="description" content="计算文本或本地文件的 SHA-256、SHA-384 和 SHA-512 哈希值。">
+  <title>SHA-256 与 SHA-512 校验和计算及验证 | UtilCover</title>
+  <meta name="description" content="在浏览器中计算 SHA-256、SHA-384 和 SHA-512 文本或文件摘要，并核对校验和。">
   <link rel="canonical" href="https://www.utilcover.com/zh/hash/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/hash/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/hash/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/hash/">
   <link rel="stylesheet" href="/shared/tools.css">
-  <meta property="og:title" content="SHA 哈希计算器 | UtilCover">
-  <meta property="og:description" content="计算文本或本地文件的 SHA-256、SHA-384 和 SHA-512 哈希值。">
+  <meta property="og:title" content="SHA-256 与 SHA-512 校验和计算及验证 | UtilCover">
+  <meta property="og:description" content="在本地计算并比较文本或文件的 SHA-256、SHA-384 和 SHA-512 校验和。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/zh/hash/">
   <script type="application/ld+json">
@@ -29,7 +29,7 @@
       "@id": "https://www.utilcover.com/zh/hash/#application",
       "name": "SHA 哈希计算器",
       "url": "https://www.utilcover.com/zh/hash/",
-      "description": "计算文本或本地文件的 SHA-256、SHA-384 和 SHA-512 哈希值。",
+      "description": "在浏览器中计算 SHA-256、SHA-384 和 SHA-512 文本或文件摘要，并核对校验和。",
       "inLanguage": "zh-CN",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -67,6 +67,37 @@
 <main class="page-shell">
   <section class="hero"><h1>SHA 哈希计算器</h1><p>计算文本或本地文件的 SHA-256、SHA-384 和 SHA-512 哈希值。</p></section>
   <section class="tool-card"><p class="local-processing-note">文本和文件仅在本地进行哈希计算，绝不会上传。</p><div class="field"><label for="hashAlgorithm">算法</label><select id="hashAlgorithm"><option>SHA-256</option><option>SHA-384</option><option>SHA-512</option></select></div><div class="grid-2"><div><div class="field"><label for="hashText">文本输入</label><textarea id="hashText" placeholder="输入要计算哈希的文本"></textarea></div><button id="hashTextButton">计算文本哈希</button></div><div><div class="field"><span class="field-label">文件输入（本地处理）</span><div class="file-picker-row"><input id="hashFile" class="file-input-native" type="file" aria-describedby="hashFileName"><label class="file-picker-button button-link secondary" for="hashFile">选择文件</label><span id="hashFileName" class="file-picker-name">尚未选择文件</span></div></div><button id="hashFileButton">计算文件哈希</button></div></div><div class="field"><label for="hashOutput">计算出的哈希值</label><textarea id="hashOutput" class="output" readonly></textarea></div><div class="field"><label for="expectedHash">预期哈希值（可选）</label><input id="expectedHash" type="text" spellcheck="false" placeholder="粘贴哈希值进行比较"></div><div class="actions"><button id="compareHash">比较哈希值</button><button id="copyHash" class="secondary">复制结果</button></div><div id="hashStatus" class="status" role="status">就绪</div></section><aside class="info-card"><strong>隐私：</strong>所选文件绝不会离开您的设备。由于 Web Crypto 会对内存缓冲区进行哈希计算，文件大小上限为 32 MiB。</aside>
+  <section class="tool-guide">
+    <div class="guide-intro"><h2>计算并核对 SHA 校验和</h2><p>本工具把文本或一个本地文件转换成可重复的十六进制完整性指纹。下载页面、构建流程或数据规范写明哪一种算法，就选择对应的 SHA-256、SHA-384 或 SHA-512。计算交给浏览器的 Web Crypto 完成，输入内容不会为了计算而发送到本站。</p></div>
+    <div class="guide-section how-to"><h2>三步完成校验</h2><ol class="steps">
+      <li><strong>先确认算法</strong>按照校验和来源选择 SHA-256、SHA-384 或 SHA-512。比较前必须使用同一种算法；两个摘要相同本身不能证明原始输入完全相同。</li>
+      <li><strong>输入文本或选择文件</strong>文本填写后点击“计算文本哈希”；文件则先选择，再点击“计算文件哈希”。文件上限为 32 MiB，两条输入路径互不混合。</li>
+      <li><strong>复制或核对结果</strong>可以复制小写十六进制结果，也可以把发布方提供的值粘贴到预期值输入框中比较。匹配表示所选算法下摘要相同；预期值可信时，这是很强的完整性证据，但不是输入完全相同或发布者身份的证明。</li>
+    </ol></div>
+    <div class="guide-section examples"><h2>适合使用校验和的场景</h2><div class="example-grid">
+      <article><h3>核对下载文件</h3><p>软件发布页若给出 SHA-256 值，可对下载后的压缩包使用同一种算法，然后比较两个字符串。摘要相同通常是文件未被改变的有力证据，但哈希碰撞在数学上仍然可能；预期值是否可信也取决于获取渠道。</p></article>
+      <article><h3>确认系统间传递的文本</h3><p>对配置片段、接口示例或发布说明计算指定算法的结果。文本会先由 <code>TextEncoder</code> 编码成 UTF-8 字节，因此大小写、空格、换行方式和看不见的字符都会改变结果。</p></article>
+      <article><h3>记录构建产物指纹</h3><p>移动较小的安装包或数据文件之前记录 SHA-384 或 SHA-512，之后重新计算即可发现字节是否改变。记录时应把算法名称与结果放在一起，因为仅看一串十六进制字符不能可靠判断算法。</p></article>
+    </div></div>
+    <div class="guide-section limitations"><h2>处理方式与边界</h2><ul>
+      <li>文件路径会调用 <code>arrayBuffer()</code>，把整个所选文件读入内存后再交给 Web Crypto，并非分段处理。32 MiB 上限用于控制内存占用，更大的文件需要使用其他校验程序。</li>
+      <li>文本路径直接使用 <code>TextEncoder</code> 生成的 UTF-8 字节，不会替用户统一 Unicode、空格或换行符。因此肉眼看起来相同的文本，也可能因为底层字节不同而得到不同结果。</li>
+      <li>比较功能只会去除两端的首尾空白并转成小写，不会验证预期值的十六进制格式或长度。两个相同的非空字符串即使不是有效摘要，也可能显示匹配。</li>
+      <li>若连续发起多个异步计算，最后一次请求的结果生效并显示在界面中。较早的任务即使稍后结束，也不会覆盖较新的输出和状态。</li>
+      <li>加密哈希是完整性指纹，不是加密、身份认证或密码哈希。它不能还原输入，不能证明内容由谁创建，也不能让来自不可信渠道的校验和自动变得可信。</li>
+    </ul></div>
+    <div class="guide-section"><h2>常见问题</h2><div class="faq-list">
+      <details><summary>应该选择哪一种 SHA 算法？</summary><p>核对现有结果时，必须选择来源明确写出的同一种算法。同一份输入的 SHA-256 不会等于 SHA-384 或 SHA-512。没有外部规范时可以按自己的流程决定，但本页面不会替具体协议作安全设计选择。</p></details>
+      <details><summary>为什么只改一个字符，结果就完全不同？</summary><p>摘要算法本来就会让很小的字节变化产生差异很大的输出。遇到不匹配时，请检查大小写、空格、末尾换行和行尾格式；屏幕上可见的字符并不能展示全部 UTF-8 字节。</p></details>
+      <details><summary>校验和匹配就代表文件安全吗？</summary><p>不是。匹配表示指定算法下摘要相同，是完整性核对的证据，但无法排除碰撞，也不等于恶意内容扫描。如果攻击者可以同时替换文件和校验和，单纯比较仍无法认证来源。</p></details>
+      <details><summary>计算过程会上传或保存内容吗？</summary><p>计算在当前浏览器中通过 Web Crypto 执行。本工具不会为输入文本、所选文件或结果新增网络请求、跟踪或存储。不过，浏览器扩展和设备本身的环境并不属于页面能够控制的范围。</p></details>
+    </div></div>
+    <nav class="related-tools" aria-label="相关工具"><h2>相关工具</h2><div class="related-links">
+      <a href="/zh/encode/"><strong>Base64 与 URL 编解码</strong><span>需要传输编码而不是完整性摘要时，可转换 UTF-8 文本。</span></a>
+      <a href="/zh/password/"><strong>随机密码生成器</strong><span>生成随机凭据，不要把快速校验和误当作密码保护方案。</span></a>
+      <a href="/zh/text/"><strong>文本统计与整理</strong><span>生成指纹之前检查换行和文本变换，避免无意改变输入。</span></a>
+    </div></nav>
+  </section>
 </main>
 <footer>UtilCover · 私密、快速的浏览器端工具</footer>
 <script src="/hash/hash-tool.js"></script>

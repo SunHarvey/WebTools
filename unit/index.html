@@ -9,16 +9,16 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
-  <title>Unit Converter | UtilCover</title>
-  <meta name="description" content="Convert length, mass, temperature, area, volume and data sizes locally in your browser.">
+  <title>Metric &amp; Imperial Unit Converter for Length, Temperature &amp; Data | UtilCover</title>
+  <meta name="description" content="Convert length, mass, temperature, area, US volume, and decimal or binary data sizes in your browser.">
   <link rel="canonical" href="https://www.utilcover.com/unit/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/unit/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/unit/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/unit/">
   <link rel="stylesheet" href="/shared/tools.css">
   <link rel="stylesheet" href="/unit/unit.css">
-  <meta property="og:title" content="Unit Converter | UtilCover">
-  <meta property="og:description" content="Fast, private conversions across common measurement units.">
+  <meta property="og:title" content="Metric &amp; Imperial Unit Converter for Length, Temperature &amp; Data | UtilCover">
+  <meta property="og:description" content="Convert common metric and imperial measurements plus decimal and binary data sizes.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/unit/">
   <script type="application/ld+json">
@@ -30,7 +30,7 @@
       "@id": "https://www.utilcover.com/unit/#application",
       "name": "Unit Converter",
       "url": "https://www.utilcover.com/unit/",
-      "description": "Convert length, mass, temperature, area, volume and data sizes locally in your browser.",
+      "description": "Convert length, mass, temperature, area, US volume, and decimal or binary data sizes in your browser.",
       "inLanguage": "en",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -93,6 +93,38 @@
     <div id="unitStatus" class="status" role="status">Ready</div>
   </section>
   <aside class="info-card"><strong>Precision without clutter</strong><br>Results retain useful significant digits while insignificant floating-point noise is removed. SI and binary data units are clearly distinguished.</aside>
+  <section class="tool-guide">
+    <div class="guide-intro"><h2>Convert common metric, imperial and data units</h2><p>This converter covers a defined set of everyday measurements rather than an open-ended unit catalog. It has exactly six categories: length, mass, temperature, area, volume and data size. Select a category first, then choose two units that belong to it. The controls calculate locally as you edit and let you swap the source and target without retyping the value.</p></div>
+    <div class="guide-section how-to"><h2>How to perform a unit conversion</h2><ol class="steps">
+      <li><strong>Select one measurement category</strong>Choose length, mass, temperature, area, volume or data size. The source and target menus are rebuilt with the implementation-defined unit set for that category.</li>
+      <li><strong>Enter a value and two units</strong>Type a finite number, then pick the source and target. Conversion happens immediately when the value or a menu changes; the Convert button runs the same calculation explicitly.</li>
+      <li><strong>Read or reverse the conversion</strong>Use the displayed result with its unit symbol, or choose Swap to exchange source and target. Keep the category and unit convention with any value you copy into another document.</li>
+    </ol></div>
+    <div class="guide-section examples"><h2>Representative conversion examples</h2><div class="example-grid">
+      <article><h3>Metric and imperial length</h3><p>Convert 5 kilometers to miles for a route note, or 12 inches to centimeters for a product dimension. Length options include meter, kilometer, centimeter, millimeter, mile, yard, foot, inch and nautical mile; each is reduced through the category's meter scale.</p></article>
+      <article><h3>Temperature with an offset</h3><p>Convert 68 °F to 20 °C, or 0 °C to 273.15 K. Temperature is not handled by multiplying a scale alone: the implementation uses an affine temperature conversion with a scale and offset for Celsius, Fahrenheit and kelvin.</p></article>
+      <article><h3>Storage labels that use different bases</h3><p>Compare 1 MB with MiB when reading disk, network or memory documentation. Decimal kB and MB are based on powers of 1000, while binary KiB and MiB use powers of 1024. GB, TB, GiB and TiB follow the same distinction.</p></article>
+      <article><h3>US recipe and container volume</h3><p>Translate a US gallon into liters, or a US cup into milliliters. The included customary choices are US gallon, US quart, US cup and US fluid ounce. They are explicitly US definitions, so similarly named imperial volume measures are not interchangeable.</p></article>
+    </div></div>
+    <div class="guide-section limitations"><h2>Precision, scope and limitations</h2><ul>
+      <li>Units can only be converted within the currently selected category. The tool cannot convert across categories, such as length to area, even if a real-world calculation could relate them with additional dimensions.</li>
+      <li>Arithmetic uses JavaScript Number and therefore IEEE-754 floating-point behavior. The conversion function reduces residue with <code>toPrecision(15)</code>. The visible formatter prints safe integers directly and applies <code>toPrecision(12)</code> to all other finite values. Those choices improve readability but do not create arbitrary precision.</li>
+      <li>The converter applies stored scale and offset definitions without uncertainty, significant-figure or measurement-context modeling. Very large or very small inputs can expose Number limits, and displayed digits should not be treated as laboratory accuracy.</li>
+      <li>There is no physical plausibility validation. For example, the temperature category accepts values below absolute zero because it performs the mathematical affine conversion rather than enforcing a physics rule.</li>
+      <li>The available categories do not include currency, speed or time. Volume uses US customary entries only, and the exact unit menus shown in the interface define this tool's coverage.</li>
+    </ul></div>
+    <div class="guide-section"><h2>Unit conversion questions</h2><div class="faq-list">
+      <details><summary>What is the difference between MB and MiB?</summary><p>One MB is 1,000,000 bytes, while one MiB is 1,048,576 bytes. The decimal prefixes kB, MB, GB and TB advance by 1000; the binary prefixes KiB, MiB, GiB and TiB advance by 1024. Choose the convention used by the specification you are reading.</p></details>
+      <details><summary>Are gallons and cups imperial or US units?</summary><p>The volume menu labels gallon, quart, cup and fluid ounce as US units and uses US conversion factors. Do not use those results as UK imperial quantities, because the names can be similar while the defined volumes differ.</p></details>
+      <details><summary>Why can the result have many digits?</summary><p>Some conversion ratios do not end neatly in decimal notation. The tool keeps useful significant digits and removes common floating-point residue, but the final number remains an approximation represented by JavaScript Number. Round it further according to your real measurement precision.</p></details>
+      <details><summary>Can I convert a negative or scientific-notation value?</summary><p>Yes, when the trimmed input is nonblank and JavaScript converts it to a finite Number. This includes many negative and scientific-notation values. The tool does not judge whether that input is meaningful for the selected measurement, so context-specific validation remains your responsibility.</p></details>
+    </div></div>
+    <nav class="related-tools" aria-label="Related tools"><h2>Related tools</h2><div class="related-links">
+      <a href="/calculator/"><strong>Basic calculator</strong><span>Continue with arithmetic after converting a measurement, while accounting for its immediate-execution model.</span></a>
+      <a href="/timestamp/"><strong>Unix timestamp converter</strong><span>Handle epoch seconds and milliseconds separately; date conversion is outside the unit categories.</span></a>
+      <a href="/color/"><strong>Color converter</strong><span>Translate HEX, RGB and HSL values when the quantity is a color rather than a measurement unit.</span></a>
+    </div></nav>
+  </section>
 </main>
 <footer>UtilCover · Private, fast, client-side utilities</footer>
 <script src="/shared/locale-redirect.js"></script>
