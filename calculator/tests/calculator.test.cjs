@@ -83,7 +83,7 @@ test('calculator page exposes complete mouse controls without inline handlers', 
   const html = fs.readFileSync(require('node:path').join(__dirname, '..', 'index.html'), 'utf8');
   const script = fs.readFileSync(require('node:path').join(__dirname, '..', 'calculator.js'), 'utf8');
 
-  assert.equal((html.match(/<button /g) || []).length, 19);
+  assert.equal((html.match(/<button type="button" class="key/g) || []).length, 19);
   for (const operator of ['+', '-', '*', '/']) {
     assert.ok(html.includes(`data-operator="${operator}"`));
   }

@@ -13,13 +13,19 @@ const routes = [
   ['json/', 'json/index.html'],
   ['text/', 'text/index.html'],
   ['encode/', 'encode/index.html'],
+  ['base64/', 'base64/index.html'],
+  ['url-encoder/', 'url-encoder/index.html'],
   ['timestamp/', 'timestamp/index.html'],
   ['uuid/', 'uuid/index.html'],
   ['hash/', 'hash/index.html'],
   ['qr/', 'qr/index.html'],
   ['unit/', 'unit/index.html'],
   ['color/', 'color/index.html'],
-  ['image/', 'image/index.html']
+  ['image/', 'image/index.html'],
+  ['privacy/', 'privacy/index.html'],
+  ['about/', 'about/index.html'],
+  ['licenses/', 'licenses/index.html'],
+  ['contact/', 'contact/index.html']
 ];
 const cjk = /[\u3400-\u9fff]/;
 const esc = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -30,14 +36,15 @@ test('keeps every canonical English page English-only with a Chinese alternate',
     const enUrl = `https://www.utilcover.com/${route}`;
     const zhUrl = `https://www.utilcover.com/zh/${route}`;
     assert.match(html, /<html lang="en">/, `${file} must declare English`);
-    assert.doesNotMatch(html, cjk, `${file} contains Chinese text`);
+    const contentWithoutLanguageLink = html.replace(/<a class="language-link"[^>]*>[^<]*<\/a>/, '');
+    assert.doesNotMatch(contentWithoutLanguageLink, cjk, `${file} contains Chinese text outside its language switch`);
     assert.match(html, new RegExp(`<link rel="canonical" href="${esc(enUrl)}">`));
     assert.match(html, new RegExp(`<link rel="alternate" hreflang="en" href="${esc(enUrl)}">`));
     assert.match(html, new RegExp(`<link rel="alternate" hreflang="zh-CN" href="${esc(zhUrl)}">`));
     assert.match(html, new RegExp(`<link rel="alternate" hreflang="x-default" href="${esc(enUrl)}">`));
     assert.match(html, /<script src="\/shared\/locale-redirect\.js"><\/script>/);
-    const navigation = html.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1] || '';
-    assert.match(navigation, new RegExp(`<a class="language-link" href="/zh/${esc(route)}">Chinese<\/a>`));
+    const navigation = html.match(/<div class="[^"]*nav-links[^"]*">([\s\S]*?)<\/div>/)?.[1] || '';
+    assert.match(navigation, new RegExp(`<a class="language-link" href="/zh/${esc(route)}">(?:Chinese|中文)<\/a>`));
   }
   for (const file of ['tools/index.html', '404.html']) {
     assert.doesNotMatch(read(file), cjk, `${file} contains Chinese text`);
@@ -64,7 +71,7 @@ test('publishes a static Chinese counterpart for every canonical page', () => {
     assert.match(html, new RegExp(`<link rel="alternate" hreflang="zh-CN" href="${esc(zhUrl)}">`));
     assert.match(html, new RegExp(`<link rel="alternate" hreflang="x-default" href="${esc(enUrl)}">`));
     assert.match(html, /<a class="brand" href="\/zh\/">/);
-    const navigation = html.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1] || '';
+    const navigation = html.match(/<div class="[^"]*nav-links[^"]*">([\s\S]*?)<\/div>/)?.[1] || '';
     assert.match(navigation, new RegExp(`<a class="language-link" href="${esc(enPath)}\\?lang=en">英文<\/a>`));
     assert.doesNotMatch(html, /locale-redirect\.js/);
   }

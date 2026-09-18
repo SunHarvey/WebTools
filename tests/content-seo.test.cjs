@@ -65,6 +65,10 @@ test('JSON pages explain strict formatting, validation and minification in each 
     const guide = guideFor(file).text;
     assert.match(guide, /JSON\.parse/);
     assert.match(guide, /JSON5/);
+    assert.match(guide, /(?:syntax highlighting|语法高亮)/i);
+    assert.match(guide, /(?:line and column|行列)/i);
+    assert.match(guide, /(?:tree view|树视图)/i);
+    assert.doesNotMatch(guide, /does not[^.]*highlight syntax|不提供语法高亮/i);
   }
 });
 
@@ -84,7 +88,7 @@ test('JSON pages warn about parse and stringify transformations in each locale',
   assert.doesNotMatch(chinese, /只调整空白|只删除无意义空白|数据值会保留/, 'Chinese: no whitespace-only or value-preservation overclaim');
 });
 
-test('image pages explain one-file compression, resizing and conversion in each locale', () => {
+test('image pages explain local batch compression, resizing and conversion in each locale', () => {
   assertGuide('image/index.html', 'en', ['/color/', '/qr/']);
   assertGuide('zh/image/index.html', 'zh', ['/zh/color/', '/zh/qr/']);
   assertMetadata('image/index.html', /Image Compressor.*Resizer.*Converter/i, /compress.*resiz.*convert/i);
@@ -98,6 +102,11 @@ test('image pages explain one-file compression, resizing and conversion in each 
     assert.match(guide, /JPEG/);
     assert.match(guide, /WebP/);
     assert.match(guide, /(?:AVIF|HEIC)/);
+    assert.match(guide, /(?:drag|拖放)/i);
+    assert.match(guide, /(?:paste|粘贴)/i);
+    assert.match(guide, /(?:batch|批量)/i);
+    assert.match(guide, /(?:target size|目标大小)/i);
+    assert.doesNotMatch(guide, /Batch processing is not available|不支持批量处理|每次只能选择一张/i);
   }
 });
 
@@ -206,16 +215,18 @@ test('encode pages explain UTF-8 Base64 and URL component conversion honestly in
   assert.match(chinese, /编码.*不是加密/);
 });
 
-test('timestamp pages document epoch conversion, units and timezone limits in each locale', () => {
+test('timestamp pages document exact units and Intl timezone conversion in each locale', () => {
   assertGuide('timestamp/index.html', 'en', ['/encode/', '/uuid/', '/calculator/']);
   assertGuide('zh/timestamp/index.html', 'zh', ['/zh/encode/', '/zh/uuid/', '/zh/calculator/']);
-  assertMetadata('timestamp/index.html', /Unix Timestamp.*Date Converter.*Seconds.*Milliseconds/i, /epoch.*seconds.*milliseconds.*ISO 8601.*local/i);
-  assertMetadata('zh/timestamp/index.html', /Unix 时间戳.*日期转换.*秒.*毫秒/, /Unix.*秒.*毫秒.*ISO 8601.*本地/);
+  assertMetadata('timestamp/index.html', /Unix Timestamp.*Date Converter/i, /seconds.*milliseconds.*microseconds.*nanoseconds.*timezone/i);
+  assertMetadata('zh/timestamp/index.html', /Unix 时间戳.*日期转换/, /秒.*毫秒.*微秒.*纳秒.*时区/);
   for (const file of ['timestamp/index.html', 'zh/timestamp/index.html']) {
     const { guide } = guideFor(file);
     assert.equal(matches(guide, /<li\b/gi).filter(match => match.index > guide.indexOf('<ol class="steps">') && match.index < guide.indexOf('</ol>')).length, 3, `${file}: exactly three usage steps`);
     assert.ok(matches(guide, /<article\b/gi).length >= 3, `${file}: three concrete examples`);
     assert.match(guide, /100[,_]?000[,_]?000[,_]?000/);
+    assert.match(guide, /(?:microseconds.*nanoseconds|微秒.*纳秒)/i);
+    assert.match(guide, /(?:Intl.*timezone|Intl.*时区)/i);
   }
   const english = guideFor('timestamp/index.html').text;
   assert.match(english, /absolute value.*below.*seconds.*otherwise milliseconds/i);
@@ -227,7 +238,8 @@ test('timestamp pages document epoch conversion, units and timezone limits in ea
   assert.match(english, /datetime-local.*browser.*local timezone/i);
   assert.match(english, /ISO.*UTC/i);
   assert.match(english, /browser Date range/i);
-  assert.match(english, /no timezone selector.*DST disambiguation/i);
+  assert.match(english, /timezone selector.*DST/i);
+  assert.doesNotMatch(english, /no timezone selector/i);
 
   const chinese = guideFor('zh/timestamp/index.html').text;
   assert.match(chinese, /绝对值.*小于.*秒.*否则.*毫秒/);
@@ -239,25 +251,26 @@ test('timestamp pages document epoch conversion, units and timezone limits in ea
   assert.match(chinese, /datetime-local.*浏览器本地时区/);
   assert.match(chinese, /ISO.*UTC/);
   assert.match(chinese, /浏览器 Date.*范围/);
-  assert.match(chinese, /没有时区选择器.*夏令时.*消歧/);
+  assert.match(chinese, /时区选择器.*夏令时/);
+  assert.doesNotMatch(chinese, /没有时区选择器/);
 });
 
-test('UUID pages explain secure RFC 4122 v4 batch generation without overclaims', () => {
+test('UUID pages explain secure RFC 9562 v4 and v7 batch generation without overclaims', () => {
   assertGuide('uuid/index.html', 'en', ['/hash/', '/password/', '/timestamp/']);
   assertGuide('zh/uuid/index.html', 'zh', ['/zh/hash/', '/zh/password/', '/zh/timestamp/']);
-  assertMetadata('uuid/index.html', /Secure Bulk UUID v4.*GUID Generator/i, /generate.*1.*100.*UUID v4.*GUID/i);
-  assertMetadata('zh/uuid/index.html', /安全批量 UUID v4.*GUID 生成器/, /生成.*1.*100.*UUID v4.*GUID/);
+  assertMetadata('uuid/index.html', /UUID v4.*v7.*Generator/i, /generate.*UUID v4.*v7.*1000/i);
+  assertMetadata('zh/uuid/index.html', /UUID v4.*v7.*生成器/, /生成.*UUID v4.*v7.*1000/);
   for (const file of ['uuid/index.html', 'zh/uuid/index.html']) {
     const { html, guide } = guideFor(file);
     assert.equal(matches(guide, /<li\b/gi).filter(match => match.index > guide.indexOf('<ol class="steps">') && match.index < guide.indexOf('</ol>')).length, 3, `${file}: exactly three usage steps`);
     assert.ok(matches(guide, /<article\b/gi).length >= 3, `${file}: three concrete examples`);
     assert.match(guide, /crypto\.getRandomValues/);
-    assert.match(guide, /RFC 4122/);
-    assert.match(guide, /1.?–.?100|1-100/);
-    assert.doesNotMatch(html, /RFC 9562/);
+    assert.match(guide, /RFC 9562/);
+    assert.match(guide, /(?:1.*10.*100.*1000|1、10、100、1000)/);
   }
   const english = guideFor('uuid/index.html').text;
   assert.match(english, /version 4.*variant bits/i);
+  assert.match(english, /version 7.*timestamp/i);
   assert.match(english, /uppercase.*hyphens.*presentation/i);
   assert.match(english, /no persistence.*deduplication check/i);
   assert.match(english, /identifiers.*not secrets.*tokens/i);
@@ -265,6 +278,7 @@ test('UUID pages explain secure RFC 4122 v4 batch generation without overclaims'
 
   const chinese = guideFor('zh/uuid/index.html').text;
   assert.match(chinese, /版本 4.*变体位/);
+  assert.match(chinese, /版本 7.*时间戳/);
   assert.match(chinese, /大写.*连字符.*显示形式/);
   assert.match(chinese, /不会持久保存.*去重检查/);
   assert.match(chinese, /标识符.*不是秘密.*令牌/);

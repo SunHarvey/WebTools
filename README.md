@@ -10,16 +10,18 @@
 |---|---|---|
 | 安全随机密码生成器 | [`/password/`](password/)、[`/password/index-zh`](password/index-zh.html) | Web Crypto、安全随机、批量生成、字符规则 |
 | 网页计算器 | [`/calculator/`](calculator/) | 鼠标与键盘、四则运算、连续计算 |
-| JSON格式化与校验 | [`/json/`](json/) | 格式化、压缩、语法校验 |
+| JSON格式化与校验 | [`/json/`](json/) | 格式化、压缩、行列错误定位、语法高亮与树视图 |
 | 文本统计与整理 | [`/text/`](text/) | 字符/单词/中文/行数统计、去重、排序、大小写 |
 | Base64与URL编解码 | [`/encode/`](encode/) | Unicode安全Base64、URL组件编解码 |
-| Unix时间戳转换 | [`/timestamp/`](timestamp/) | 秒/毫秒自动识别、本地时间、UTC、ISO 8601 |
-| UUID v4生成器 | [`/uuid/`](uuid/) | Web Crypto、批量生成、大小写与连字符选项 |
+| Base64编解码器 | [`/base64/`](base64/) | 面向Base64搜索意图的完整独立入口 |
+| URL编解码器 | [`/url-encoder/`](url-encoder/) | 面向URL组件编解码的完整独立入口 |
+| Unix时间戳转换 | [`/timestamp/`](timestamp/) | 秒/毫秒/微秒/纳秒、Intl时区、本地时间、UTC、ISO 8601 |
+| UUID生成器 | [`/uuid/`](uuid/) | Web Crypto、UUID v4/v7、最多1000个、复制与TXT下载 |
 | SHA哈希计算器 | [`/hash/`](hash/) | 文本/文件SHA-256、SHA-384、SHA-512与哈希比较 |
 | 二维码生成器 | [`/qr/`](qr/) | 文本、URL、Wi-Fi二维码，本地PNG导出 |
 | 单位换算器 | [`/unit/`](unit/) | 长度、质量、温度、面积、体积、数据大小 |
 | 颜色与对比度 | [`/color/`](color/) | HEX/RGB/HSL互转、WCAG对比度 |
-| 图片压缩与缩放 | [`/image/`](image/) | 本地调整尺寸，导出PNG/JPEG/WebP |
+| 图片压缩与缩放 | [`/image/`](image/) | 拖放/粘贴/批量、目标KB、本地导出PNG/JPEG/WebP |
 | 工具中心 | [`/`](index.html) | 所有工具的主页导航入口；`/tools/`保留为兼容别名 |
 
 ## 语言与URL
@@ -35,7 +37,7 @@
 
 - 不调用后端计算接口
 - 不上传文本、密码、JSON、Token或文件
-- 不使用Local Storage、Session Storage或IndexedDB保存输入
+- 不使用Session Storage或IndexedDB保存工具输入；Local Storage仅保存用户主动选择的收藏与最近工具ID，不保存工具内容
 - 密码和UUID使用`crypto.getRandomValues()`
 - SHA哈希使用`crypto.subtle.digest()`
 - JSON工具使用`JSON.parse()`，不使用`eval()`
@@ -57,17 +59,22 @@ WebTools/
 ├── tools/                      # 工具中心兼容入口（canonical指向主页）
 ├── password/                   # 中英文密码生成器
 ├── shared/tools.css            # 新工具共享响应式样式
+├── shared/tools-data.js        # 工具、分类与相关推荐的唯一元数据源
+├── shared/site.js              # 搜索、快捷键、收藏、最近工具、移动导航
 ├── calculator/                 # 网页计算器
 ├── json/                       # JSON格式化与校验
 ├── text/                       # 文本统计与整理
 ├── encode/                     # Base64与URL编解码
+├── base64/                     # 独立Base64入口
+├── url-encoder/                # 独立URL组件编解码入口
 ├── timestamp/                  # Unix时间戳转换
-├── uuid/                       # UUID v4生成
+├── uuid/                       # UUID v4/v7生成
 ├── hash/                       # SHA文本与文件哈希
 ├── qr/                         # 文本、URL和Wi-Fi二维码
 ├── unit/                       # 六类单位换算
 ├── color/                      # 颜色格式与WCAG对比度
 ├── image/                      # 图片压缩、缩放与格式转换
+├── privacy|about|licenses|contact/ # 品牌、隐私与反馈页面
 ├── tests/                      # 新工具核心逻辑测试
 └── package.json                # 测试与语法检查命令
 ```

@@ -62,10 +62,13 @@ function attachEncodeTool() {
       status.dataset.state = 'error';
     }
   };
-  document.getElementById('base64Encode').addEventListener('click', () => run(encodeBase64));
-  document.getElementById('base64Decode').addEventListener('click', () => run(decodeBase64));
-  document.getElementById('urlEncode').addEventListener('click', () => run(encodeUrl));
-  document.getElementById('urlDecode').addEventListener('click', () => run(decodeUrl));
+  const operations = [
+    ['base64Encode', encodeBase64],
+    ['base64Decode', decodeBase64],
+    ['urlEncode', encodeUrl],
+    ['urlDecode', decodeUrl],
+  ];
+  operations.forEach(([id, operation]) => document.getElementById(id)?.addEventListener('click', () => run(operation)));
   document.getElementById('swapEncode').addEventListener('click', () => { [input.value, output.value] = [output.value, input.value]; status.textContent = encodeMessage('swapped', language); });
   document.getElementById('clearEncode').addEventListener('click', () => { input.value = ''; output.value = ''; status.textContent = encodeMessage('ready', language); });
   document.getElementById('copyEncode').addEventListener('click', async () => {

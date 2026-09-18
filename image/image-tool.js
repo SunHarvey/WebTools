@@ -200,6 +200,48 @@ function normalizeQuality(value, fallback = 80) {
   return Math.min(100, Math.max(0, percent)) / 100;
 }
 
+function normalizeImageSettings(settings = {}) {
+  const targetKilobytes = Number(settings.targetSizeKb);
+  return Object.freeze({
+    targetWidth: String(settings.targetWidth ?? ''),
+    targetHeight: String(settings.targetHeight ?? ''),
+    keepAspect: Boolean(settings.keepAspect),
+    preventUpscale: Boolean(settings.preventUpscale),
+    outputMime: normalizeOutputMime(settings.outputFormat),
+    quality: normalizeQuality(settings.quality),
+    targetBytes: Number.isFinite(targetKilobytes) && targetKilobytes > 0 ? targetKilobytes * 1024 : 0,
+  });
+}
+
+function calculateReduction(originalBytes, outputBytes) {
+  const original = Number(originalBytes);
+  const output = Number(outputBytes);
+  if (!Number.isFinite(original) || original <= 0 || !Number.isFinite(output)) return 0;
+  return Math.max(0, Math.round((1 - output / original) * 1000) / 10);
+}
+
+function extractImageFiles(items) {
+  return Array.from(items || [], item => item?.kind === 'file' && typeof item.getAsFile === 'function' ? item.getAsFile() : item)
+    .filter(file => file && String(file.type).toLowerCase().startsWith('image/'));
+}
+
+async function encodeToTargetSize(encode, targetBytes, { iterations = 8, minQuality = 0.05, maxQuality = 1 } = {}) {
+  if (typeof encode !== 'function') throw new TypeError('An encoder function is required.');
+  const target = Number(targetBytes);
+  if (!Number.isFinite(target) || target <= 0) throw new RangeError('Target size must be positive.');
+  let low = minQuality;
+  let high = maxQuality;
+  let smallest = await encode(low);
+  let best = smallest.size <= target ? smallest : null;
+  for (let attempt = 0; attempt < iterations; attempt += 1) {
+    const quality = (low + high) / 2;
+    const result = await encode(quality);
+    if (result.size <= target) { best = result; low = quality; }
+    else high = quality;
+  }
+  return best || smallest;
+}
+
 function calculateTargetDimensions(sourceWidth, sourceHeight, requestedWidth, requestedHeight, keepAspectRatio = true, preventUpscale = true) {
   const sourceW = Number(sourceWidth);
   const sourceH = Number(sourceHeight);
@@ -241,7 +283,9 @@ function loadImage(url) {
 
 function attachImageTool() {
   const language = document.documentElement.lang;
+  const zh = String(language).toLowerCase().startsWith('zh');
   const fileInput = document.getElementById('imageFile');
+  const dropZone = document.getElementById('imageDropZone');
   const fileName = document.getElementById('imageFileName');
   const originalPreview = document.getElementById('originalPreview');
   const resultPreview = document.getElementById('resultPreview');
@@ -253,146 +297,220 @@ function attachImageTool() {
   const qualityInput = document.getElementById('quality');
   const qualityValue = document.getElementById('qualityValue');
   const qualityField = document.getElementById('qualityField');
+  const targetSize = document.getElementById('targetSizeKb');
   const compressButton = document.getElementById('compressButton');
   const downloadLink = document.getElementById('downloadLink');
+  const downloadAll = document.getElementById('downloadAllImages');
+  const batchResults = document.getElementById('imageBatchResults');
   const originalInfo = document.getElementById('originalInfo');
   const resultInfo = document.getElementById('resultInfo');
   const status = document.getElementById('imageStatus');
-  if (!fileInput || !originalPreview || !resultPreview || !widthInput || !heightInput || !compressButton) return;
+  if (!fileInput || !dropZone || !batchResults || !widthInput || !heightInput || !compressButton) return;
 
-  let sourceImage = null;
-  let sourceFile = null;
-  let originalUrl = '';
-  let resultUrl = '';
-  let selectionId = 0;
-
+  let sourceFiles = [];
+  let previewUrl = '';
+  let outputResults = [];
+  let selectionGeneration = 0;
+  let compressionGeneration = 0;
+  let downloadTimers = [];
   const revoke = url => { if (url) URL.revokeObjectURL(url); };
   const showStatus = (message, state = '') => { status.textContent = message; status.dataset.state = state; };
-  const clearResult = () => {
-    revoke(resultUrl);
-    resultUrl = '';
-    resultPreview.removeAttribute('src');
+  const cancelPendingDownloads = () => {
+    downloadTimers.forEach(clearTimeout);
+    downloadTimers = [];
+  };
+  const clearOutputs = () => {
+    cancelPendingDownloads();
+    outputResults.forEach(result => revoke(result.url));
+    outputResults = [];
+    batchResults.replaceChildren();
     resultPreview.hidden = true;
+    resultPreview.removeAttribute('src');
     resultInfo.textContent = imageMessage('noResult', language);
     downloadLink.hidden = true;
-    downloadLink.removeAttribute('href');
+    downloadAll.hidden = true;
   };
   const extensionFor = mime => ({ 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' })[mime];
 
-  const runCompression = createLatestTaskRunner({
-    onStart: () => { compressButton.disabled = true; showStatus(imageMessage('processing', language)); },
-    onSuccess: ({ blob, dimensions, mime }) => {
-      revoke(resultUrl);
-      resultUrl = URL.createObjectURL(blob);
-      resultPreview.src = resultUrl;
-      resultPreview.hidden = false;
-      resultInfo.textContent = `${dimensions.width} × ${dimensions.height} · ${formatFileSize(blob.size)} (${sourceFile ? `${Math.round((1 - blob.size / sourceFile.size) * 100)}%` : '—'})`;
-      const baseName = sourceFile.name.replace(/\.[^.]*$/, '') || 'image';
-      downloadLink.href = resultUrl;
-      downloadLink.download = `${baseName}-optimized.${extensionFor(mime)}`;
-      downloadLink.hidden = false;
-      compressButton.disabled = false;
-      showStatus(imageMessage('done', language), 'success');
-    },
-    onError: error => {
-      compressButton.disabled = false;
-      const message = String(language).toLowerCase().startsWith('zh')
-        ? imageMessage('failed', language)
-        : (error instanceof Error ? error.message : imageMessage('failed', language));
-      showStatus(message, 'error');
-    },
-  });
-
-  fileInput.addEventListener('change', async () => {
-    const selected = fileInput.files && fileInput.files[0];
-    if (fileName) fileName.textContent = imageSelectedFileName(selected, language);
-    const currentSelection = ++selectionId;
-    runCompression.cancel();
-    clearResult();
-    revoke(originalUrl);
-    originalUrl = '';
-    originalPreview.removeAttribute('src');
-    originalPreview.hidden = true;
-    originalInfo.textContent = imageMessage('loading', language);
-    sourceImage = null;
-    sourceFile = null;
+  async function decodeFile(file) {
+    await inspectImageFileHeader(file);
+    const url = URL.createObjectURL(file);
     try {
-      await inspectImageFileHeader(selected);
-      if (currentSelection !== selectionId) return;
-      const candidateUrl = URL.createObjectURL(selected);
-      try {
-        const decoded = await loadImage(candidateUrl);
-        if (currentSelection !== selectionId) { revoke(candidateUrl); return; }
-        validatePixelCount(decoded.naturalWidth, decoded.naturalHeight);
-        revoke(originalUrl);
-        originalUrl = candidateUrl;
-        sourceImage = decoded;
-        sourceFile = selected;
-        originalPreview.src = originalUrl;
-        originalPreview.hidden = false;
-        widthInput.value = decoded.naturalWidth;
-        heightInput.value = decoded.naturalHeight;
-        originalInfo.textContent = `${decoded.naturalWidth} × ${decoded.naturalHeight} · ${formatFileSize(selected.size)}`;
-        compressButton.disabled = false;
-        showStatus(imageMessage('loaded', language), 'success');
-      } catch (error) {
-        revoke(candidateUrl);
-        throw error;
-      }
-    } catch (error) {
-      if (currentSelection !== selectionId) return;
-      originalPreview.removeAttribute('src');
-      originalPreview.hidden = true;
-      originalInfo.textContent = imageMessage('noImage', language);
-      compressButton.disabled = true;
-      const message = String(language).toLowerCase().startsWith('zh')
-        ? imageMessage('invalidImage', language)
-        : (error instanceof Error ? error.message : imageMessage('invalidImage', language));
-      showStatus(message, 'error');
-    }
-  });
+      const image = await loadImage(url);
+      validatePixelCount(image.naturalWidth, image.naturalHeight);
+      return { image, url };
+    } catch (error) { revoke(url); throw error; }
+  }
 
+  async function selectFiles(files) {
+    const selection = ++selectionGeneration;
+    compressionGeneration += 1;
+    sourceFiles = [];
+    compressButton.disabled = true;
+    clearOutputs();
+    revoke(previewUrl);
+    previewUrl = '';
+    originalPreview.hidden = true;
+    originalPreview.removeAttribute('src');
+    originalInfo.textContent = imageMessage('noImage', language);
+    fileName.textContent = imageMessage('noImage', language);
+    const candidates = Array.from(files || []).filter(file => file && String(file.type).startsWith('image/'));
+    if (!candidates.length) {
+      showStatus(imageMessage('invalidImage', language), 'error');
+      return;
+    }
+    showStatus(imageMessage('loading', language));
+    let decoded;
+    try {
+      await Promise.all(candidates.map(inspectImageFileHeader));
+      if (selection !== selectionGeneration) return;
+      decoded = await decodeFile(candidates[0]);
+      if (selection !== selectionGeneration) { revoke(decoded.url); return; }
+      sourceFiles = candidates;
+      previewUrl = decoded.url;
+      originalPreview.src = previewUrl;
+      originalPreview.hidden = false;
+      widthInput.value = decoded.image.naturalWidth;
+      heightInput.value = decoded.image.naturalHeight;
+      originalInfo.textContent = `${decoded.image.naturalWidth} × ${decoded.image.naturalHeight} · ${formatFileSize(candidates[0].size)}`;
+      fileName.textContent = candidates.length === 1 ? candidates[0].name : (zh ? `已选择 ${candidates.length} 张图片` : `${candidates.length} images selected`);
+      compressButton.disabled = false;
+      showStatus(imageMessage('loaded', language), 'success');
+    } catch (error) {
+      if (selection === selectionGeneration) {
+        sourceFiles = [];
+        compressButton.disabled = true;
+        showStatus(zh ? imageMessage('invalidImage', language) : error.message, 'error');
+      }
+    }
+  }
+
+  async function processFile(file, settings) {
+    const decoded = await decodeFile(file);
+    try {
+      const dimensions = calculateTargetDimensions(decoded.image.naturalWidth, decoded.image.naturalHeight, settings.targetWidth, settings.targetHeight, settings.keepAspect, settings.preventUpscale);
+      validatePixelCount(dimensions.width, dimensions.height);
+      const mime = settings.outputMime;
+      const canvas = document.createElement('canvas');
+      canvas.width = dimensions.width;
+      canvas.height = dimensions.height;
+      const context = canvas.getContext('2d', { alpha: mime !== 'image/jpeg' });
+      if (!context) throw new Error('Canvas is unavailable in this browser.');
+      if (mime === 'image/jpeg') { context.fillStyle = '#fff'; context.fillRect(0, 0, canvas.width, canvas.height); }
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = 'high';
+      context.drawImage(decoded.image, 0, 0, dimensions.width, dimensions.height);
+      const encode = async quality => {
+        const blob = await canvasToBlob(canvas, mime, quality);
+        return { blob, size: blob.size, quality };
+      };
+      const encoded = settings.targetBytes > 0 && mime !== 'image/png'
+        ? await encodeToTargetSize(encode, settings.targetBytes)
+        : await encode(settings.quality);
+      canvas.width = 1; canvas.height = 1;
+      const baseName = file.name.replace(/\.[^.]*$/, '') || 'image';
+      return { file, blob: encoded.blob, dimensions, mime, name: `${baseName}-optimized.${extensionFor(mime)}` };
+    } finally { revoke(decoded.url); }
+  }
+
+  function renderBatch(results) {
+    batchResults.replaceChildren();
+    results.forEach(result => {
+      const row = document.createElement('article');
+      row.className = 'image-batch-row';
+      const summary = document.createElement('div');
+      summary.textContent = `${result.file.name} · ${formatFileSize(result.file.size)} → ${formatFileSize(result.blob.size)} · ${calculateReduction(result.file.size, result.blob.size)}% ${zh ? '节省' : 'saved'}`;
+      const link = document.createElement('a');
+      link.className = 'button-link secondary';
+      link.href = result.url;
+      link.download = result.name;
+      link.textContent = zh ? '下载' : 'Download';
+      row.append(summary, link);
+      batchResults.appendChild(row);
+    });
+  }
+
+  fileInput.addEventListener('change', () => selectFiles(fileInput.files));
+  dropZone.addEventListener('dragover', event => { event.preventDefault(); dropZone.classList.add('is-dragging'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('is-dragging'));
+  dropZone.addEventListener('drop', event => { event.preventDefault(); dropZone.classList.remove('is-dragging'); selectFiles(event.dataTransfer?.files); });
+  document.addEventListener('paste', event => {
+    const files = extractImageFiles(event.clipboardData?.items);
+    if (files.length) { event.preventDefault(); selectFiles(files); }
+  });
   qualityInput.addEventListener('input', () => { qualityValue.textContent = `${Math.round(Number(qualityInput.value))}%`; });
   outputFormat.addEventListener('change', () => { qualityField.hidden = outputFormat.value === 'image/png'; });
-
-  compressButton.addEventListener('click', () => runCompression(async () => {
-    if (!sourceImage || !sourceFile) throw new Error('Choose an image first.');
-    const dimensions = calculateTargetDimensions(
-      sourceImage.naturalWidth,
-      sourceImage.naturalHeight,
-      widthInput.value,
-      heightInput.value,
-      keepAspect.checked,
-      preventUpscale.checked
-    );
-    validatePixelCount(dimensions.width, dimensions.height);
-    widthInput.value = dimensions.width;
-    heightInput.value = dimensions.height;
-    const mime = normalizeOutputMime(outputFormat.value);
-    const canvas = document.createElement('canvas');
-    canvas.width = dimensions.width;
-    canvas.height = dimensions.height;
-    const context = canvas.getContext('2d', { alpha: mime !== 'image/jpeg' });
-    if (!context) throw new Error('Canvas is unavailable in this browser.');
-    if (mime === 'image/jpeg') { context.fillStyle = '#fff'; context.fillRect(0, 0, canvas.width, canvas.height); }
-    context.imageSmoothingEnabled = true;
-    context.imageSmoothingQuality = 'high';
-    context.drawImage(sourceImage, 0, 0, dimensions.width, dimensions.height);
-    const blob = await canvasToBlob(canvas, mime, normalizeQuality(qualityInput.value));
-    canvas.width = 1;
-    canvas.height = 1;
-    return { blob, dimensions, mime };
-  }));
-
-  window.addEventListener('beforeunload', () => { selectionId += 1; revoke(originalUrl); revoke(resultUrl); });
+  const invalidateCompression = () => {
+    compressionGeneration += 1;
+    clearOutputs();
+    if (sourceFiles.length) {
+      compressButton.disabled = false;
+      showStatus(imageMessage('loaded', language), 'success');
+    }
+  };
+  [widthInput, heightInput, qualityInput, targetSize]
+    .forEach(control => control.addEventListener('input', invalidateCompression));
+  [keepAspect, preventUpscale, outputFormat]
+    .forEach(control => control.addEventListener('change', invalidateCompression));
+  compressButton.addEventListener('click', async () => {
+    if (!sourceFiles.length) return;
+    const compression = ++compressionGeneration;
+    const files = [...sourceFiles];
+    const settings = normalizeImageSettings({
+      targetWidth: widthInput.value,
+      targetHeight: heightInput.value,
+      keepAspect: keepAspect.checked,
+      preventUpscale: preventUpscale.checked,
+      outputFormat: outputFormat.value,
+      quality: qualityInput.value,
+      targetSizeKb: targetSize.value,
+    });
+    compressButton.disabled = true;
+    clearOutputs();
+    showStatus(imageMessage('processing', language));
+    try {
+      const processed = [];
+      for (const file of files) {
+        const result = await processFile(file, settings);
+        if (compression !== compressionGeneration) return;
+        processed.push(result);
+      }
+      if (compression !== compressionGeneration) return;
+      outputResults = processed.map(result => ({ ...result, url: URL.createObjectURL(result.blob) }));
+      renderBatch(outputResults);
+      const first = outputResults[0];
+      resultPreview.src = first.url;
+      resultPreview.hidden = false;
+      resultInfo.textContent = `${first.dimensions.width} × ${first.dimensions.height} · ${formatFileSize(first.blob.size)} (${calculateReduction(first.file.size, first.blob.size)}% ${zh ? '节省' : 'saved'})`;
+      downloadLink.href = first.url;
+      downloadLink.download = first.name;
+      downloadLink.hidden = outputResults.length !== 1;
+      downloadAll.hidden = outputResults.length < 2;
+      showStatus(imageMessage('done', language), 'success');
+    } catch (error) {
+      if (compression === compressionGeneration) showStatus(zh ? imageMessage('failed', language) : error.message, 'error');
+    } finally {
+      if (compression === compressionGeneration) compressButton.disabled = false;
+    }
+  });
+  downloadAll.addEventListener('click', () => {
+    cancelPendingDownloads();
+    [...outputResults].forEach((result, index) => {
+      const timer = setTimeout(() => {
+        const anchor = document.createElement('a'); anchor.href = result.url; anchor.download = result.name; anchor.click();
+      }, index * 150);
+      downloadTimers.push(timer);
+    });
+  });
+  window.addEventListener('beforeunload', () => { cancelPendingDownloads(); revoke(previewUrl); outputResults.forEach(result => revoke(result.url)); });
 }
-
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachImageTool);
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     calculateTargetDimensions,
     normalizeQuality,
+    normalizeImageSettings,
     normalizeOutputMime,
     formatFileSize,
     validateImageInput,
@@ -401,5 +519,8 @@ if (typeof module !== 'undefined' && module.exports) {
     createLatestTaskRunner,
     imageMessage,
     imageSelectedFileName,
+    extractImageFiles,
+    encodeToTargetSize,
+    calculateReduction,
   };
 }

@@ -92,6 +92,20 @@ test('normalizes quality percentages to a browser encoder fraction', () => {
   assert.equal(imageTool.normalizeQuality('not a number'), 0.8);
 });
 
+test('snapshots one immutable set of image processing controls per batch', () => {
+  const controls = {
+    targetWidth: '1200', targetHeight: '800', keepAspect: true, preventUpscale: true,
+    outputFormat: 'image/jpeg', quality: '75', targetSizeKb: '200',
+  };
+  const settings = imageTool.normalizeImageSettings(controls);
+  controls.targetWidth = '20';
+  controls.outputFormat = 'image/png';
+  assert.deepEqual(settings, {
+    targetWidth: '1200', targetHeight: '800', keepAspect: true, preventUpscale: true,
+    outputMime: 'image/jpeg', quality: 0.75, targetBytes: 204800,
+  });
+});
+
 test('accepts only PNG, JPEG and WebP output MIME types', () => {
   assert.equal(imageTool.normalizeOutputMime('image/png'), 'image/png');
   assert.equal(imageTool.normalizeOutputMime('IMAGE/JPEG'), 'image/jpeg');
@@ -202,4 +216,50 @@ test('applies only the newest asynchronous operation result', async () => {
   resolveOld('old');
   await oldTask;
   assert.deepEqual(applied, ['new']);
+});
+
+test('browser image selection and compression reject stale async results', () => {
+  const source = fs.readFileSync(path.join(__dirname, '../image/image-tool.js'), 'utf8');
+  assert.match(source, /let selectionGeneration = 0/);
+  assert.match(source, /let compressionGeneration = 0/);
+  assert.match(source, /selection !== selectionGeneration/);
+  assert.match(source, /compression !== compressionGeneration/);
+  assert.match(source, /if \(selection === selectionGeneration\)/);
+  assert.match(source, /if \(compression === compressionGeneration\)/);
+  assert.match(source, /processFile\(file, settings\)/);
+  assert.match(source, /invalidateCompression/);
+  assert.match(source, /let downloadTimers = \[\]/);
+  assert.match(source, /downloadTimers\.forEach\(clearTimeout\)/);
+});
+
+test('image pages offer local batch input, target size and download all controls', () => {
+  for (const file of ['image/index.html', 'zh/image/index.html']) {
+    const html = fs.readFileSync(path.join(__dirname, '..', file), 'utf8');
+    assert.match(html, /id="imageDropZone"/);
+    assert.match(html, /id="targetSizeKb"/);
+    assert.match(html, /id="imageBatchResults"/);
+    assert.match(html, /id="downloadAllImages"/);
+    assert.match(html, /multiple/);
+  }
+});
+
+test('extracts only image files from drop and clipboard lists', () => {
+  const image = { type: 'image/png', name: 'one.png' };
+  const text = { type: 'text/plain', name: 'note.txt' };
+  const items = [{ kind: 'file', getAsFile: () => image }, { kind: 'string', getAsFile: () => null }, { kind: 'file', getAsFile: () => text }];
+  assert.deepEqual(imageTool.extractImageFiles(items), [image]);
+});
+
+test('finds a browser encoder quality close to a target size', async () => {
+  const encode = async quality => ({ size: Math.round(100_000 + quality * 900_000), quality });
+  const result = await imageTool.encodeToTargetSize(encode, 500_000, { iterations: 10 });
+  assert.ok(result.size <= 525_000);
+  assert.ok(result.size >= 450_000);
+  assert.ok(result.quality >= 0.35 && result.quality <= 0.5);
+});
+
+test('calculates batch savings without negative percentages', () => {
+  assert.equal(imageTool.calculateReduction(1000, 400), 60);
+  assert.equal(imageTool.calculateReduction(1000, 1200), 0);
+  assert.equal(imageTool.calculateReduction(0, 10), 0);
 });

@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 const {
   parseUnixTimestamp,
   dateToUnix,
+  formatInTimezone,
 } = require('../timestamp/timestamp-tool.js');
 
 test('auto-detects Unix seconds', () => {
@@ -71,4 +72,46 @@ test('converts an ISO date to Unix seconds and milliseconds', () => {
     milliseconds: 1704067200000,
     iso: '2024-01-01T00:00:00.000Z',
   });
+});
+
+test('preserves exact integer microseconds and nanoseconds with BigInt', () => {
+  const micros = parseUnixTimestamp('1704067200123456', 'microseconds');
+  assert.equal(micros.microseconds, '1704067200123456');
+  assert.equal(micros.nanoseconds, '1704067200123456000');
+  assert.equal(micros.milliseconds, 1704067200123);
+  const nanos = parseUnixTimestamp('1704067200123456789', 'nanoseconds');
+  assert.equal(nanos.microseconds, '1704067200123456');
+  assert.equal(nanos.nanoseconds, '1704067200123456789');
+  assert.equal(nanos.iso, '2024-01-01T00:00:00.123Z');
+  assert.throws(() => parseUnixTimestamp('1.5', 'nanoseconds'), /integer/i);
+});
+
+test('formats a timestamp in a selected Intl timezone', () => {
+  const utc = formatInTimezone(0, 'UTC', 'en-GB');
+  const tokyo = formatInTimezone(0, 'Asia/Tokyo', 'en-GB');
+  assert.match(utc, /00:00:00/);
+  assert.match(tokyo, /09:00:00/);
+  assert.throws(() => formatInTimezone(0, 'Mars/Olympus'), /timezone/i);
+});
+
+test('timestamp pages expose timezone and precision selectors', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  for (const file of ['../timestamp/index.html', '../zh/timestamp/index.html']) {
+    const html = fs.readFileSync(path.join(__dirname, file), 'utf8');
+    assert.match(html, /id="timezoneSelect"/);
+    assert.match(html, /value="microseconds"/);
+    assert.match(html, /value="nanoseconds"/);
+    assert.match(html, /id="resultMicroseconds"/);
+    assert.match(html, /id="resultNanoseconds"/);
+  }
+});
+
+test('timezone changes retain the exact sub-millisecond result', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const source = fs.readFileSync(path.join(__dirname, '../timestamp/timestamp-tool.js'), 'utf8');
+  assert.match(source, /let currentResult/);
+  assert.match(source, /if \(currentResult\) render\(currentResult\)/);
+  assert.doesNotMatch(source, /resultFromMilliseconds\(Number\(value\)\)/);
 });

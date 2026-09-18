@@ -21,6 +21,7 @@
   <meta property="og:description" content="换算常见公制与英制计量单位，并区分十进制和二进制数据大小。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/zh/unit/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -64,7 +65,7 @@
   </script>
 </head>
 <body class="tool-directory-page">
-<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="nav-links"><a href="/zh/json/">JSON</a><a href="/zh/image/">图片</a><a href="/zh/qr/">二维码</a><a href="/zh/encode/">编解码</a><a href="/zh/password/">密码</a><a href="/zh/text/">文本</a><a href="/zh/timestamp/">时间戳</a><a href="/zh/uuid/">UUID</a><a href="/zh/hash/">哈希</a><a href="/zh/color/">颜色</a><a href="/zh/unit/" aria-current="page">单位</a><a href="/zh/calculator/">计算器</a><a class="language-link" href="/unit/?lang=en">英文</a></div></nav></header>
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="platform-nav nav-links"><a href="/zh/#popular-tools">工具</a><a href="/zh/#categories">分类</a><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><button class="search-trigger" type="button" aria-label="搜索工具">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/unit/?lang=en">英文</a></div></nav></header>
 <main class="page-shell">
   <section class="hero">
     <h1>单位换算器</h1>
@@ -93,7 +94,7 @@
     <div id="unitStatus" class="status" role="status">就绪</div>
   </section>
   <aside class="info-card"><strong>精确且简洁</strong><br>结果保留合理的有效数字，同时消除无意义的浮点噪声。十进制与二进制数据单位分别清晰标注。</aside>
-  <section class="tool-guide">
+<section class="tool-guide">
     <div class="guide-intro"><h2>换算常用公制、英制与数据单位</h2><p>这是一组边界明确的日常换算，并不是可以任意扩展的单位库。页面正好六类：长度、质量、温度、面积、体积和数据大小。先选类别，再从该类别现有菜单中选择原单位与目标单位。编辑数值时会在本地即时计算，也可以交换两个单位而无需重新输入。</p></div>
     <div class="guide-section how-to"><h2>完成一次换算</h2><ol class="steps">
       <li><strong>选择计量类别</strong>从长度、质量、温度、面积、体积或数据大小中选择一项。原单位和目标单位菜单会换成该类别在程序中定义的单位集合。</li>
@@ -119,14 +120,15 @@
       <details><summary>为什么结果有时包含很多位？</summary><p>某些单位比例无法写成有限小数。工具会保留有用的有效数字，并清理常见浮点残留，但最终仍是 JavaScript Number 表示的近似值。实际使用时应根据原测量精度继续取舍位数。</p></details>
       <details><summary>能否输入负数或科学记数法？</summary><p>可以，但输入去除首尾空白后必须非空，并且能被 JavaScript 转成有限 Number；许多负数和科学记数法写法都符合条件。页面不会判断该数值对所选计量是否有现实意义，特定场景的校验仍由使用者完成。</p></details>
     </div></div>
-    <nav class="related-tools" aria-label="相关工具"><h2>相关工具</h2><div class="related-links">
+    <nav class="related-tools" data-related-tools="unit" aria-label="相关工具"><h2>相关工具</h2><div class="related-links">
       <a href="/zh/calculator/"><strong>基础计算器</strong><span>换算后继续进行算术计算，同时留意它采用连续即时执行方式。</span></a>
       <a href="/zh/timestamp/"><strong>Unix 时间戳转换</strong><span>单独处理纪元秒和毫秒；日期转换不属于这里的计量类别。</span></a>
       <a href="/zh/color/"><strong>颜色转换器</strong><span>数值表示颜色而非计量单位时，可转换 HEX、RGB 与 HSL。</span></a>
     </div></nav>
   </section>
 </main>
+
 <footer>UtilCover · 私密、快速的浏览器本地工具</footer>
 <script src="/unit/unit-tool.js"></script>
-</body>
+<script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
 </html>

@@ -21,6 +21,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/hash/">
   <script src="/shared/locale-redirect.js"></script>
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -64,11 +65,11 @@
   </script>
 </head>
 <body class="tool-directory-page">
-<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="nav-links"><a href="/json/">JSON</a><a href="/image/">Image</a><a href="/qr/">QR</a><a href="/encode/">Encode</a><a href="/password/">Password</a><a href="/text/">Text</a><a href="/timestamp/">Timestamp</a><a href="/uuid/">UUID</a><a href="/hash/" aria-current="page">Hash</a><a href="/color/">Color</a><a href="/unit/">Unit</a><a href="/calculator/">Calculator</a><a class="language-link" href="/zh/hash/">Chinese</a></div></nav></header>
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/hash/">中文</a></div></nav></header>
 <main class="page-shell">
   <section class="hero"><h1>SHA Hash Calculator</h1><p>Calculate SHA-256, SHA-384 and SHA-512 hashes for text or local files.</p></section>
   <section class="tool-card"><p class="local-processing-note">Text and files are hashed locally and never uploaded.</p><div class="field"><label for="hashAlgorithm">Algorithm</label><select id="hashAlgorithm"><option>SHA-256</option><option>SHA-384</option><option>SHA-512</option></select></div><div class="grid-2"><div><div class="field"><label for="hashText">Text input</label><textarea id="hashText" placeholder="Text to hash"></textarea></div><button id="hashTextButton">Hash text</button></div><div><div class="field"><span class="field-label">File input (processed locally)</span><div class="file-picker-row"><input id="hashFile" class="file-input-native" type="file" aria-describedby="hashFileName"><label class="file-picker-button button-link secondary" for="hashFile">Choose file</label><span id="hashFileName" class="file-picker-name">No file selected</span></div></div><button id="hashFileButton">Hash file</button></div></div><div class="field"><label for="hashOutput">Calculated hash</label><textarea id="hashOutput" class="output" readonly></textarea></div><div class="field"><label for="expectedHash">Expected hash (optional)</label><input id="expectedHash" type="text" spellcheck="false" placeholder="Paste a hash to compare"></div><div class="actions"><button id="compareHash">Compare hashes</button><button id="copyHash" class="secondary">Copy result</button></div><div id="hashStatus" class="status" role="status">Ready</div></section><aside class="info-card"><strong>Privacy:</strong> Selected files never leave your device. Files are capped at 32 MiB because Web Crypto hashes an in-memory buffer.</aside>
-  <section class="tool-guide">
+<section class="tool-guide">
     <div class="guide-intro"><h2>Calculate and verify a SHA checksum</h2><p>This calculator creates a repeatable hexadecimal integrity fingerprint for text or one local file. Choose SHA-256, SHA-384 or SHA-512 to match the algorithm named by a download publisher, build pipeline or data specification. Everything runs through the browser's Web Crypto API, so the input is not sent to this site.</p></div>
     <div class="guide-section how-to"><h2>How to use the hash calculator</h2><ol class="steps">
       <li><strong>Choose the matching algorithm</strong>Select SHA-256, SHA-384 or SHA-512. The algorithm must match before two digests can be checked; equal digests do not by themselves prove that the inputs were identical.</li>
@@ -93,14 +94,15 @@
       <details><summary>Does a matching checksum prove a download is safe?</summary><p>No. It shows digest equality under the chosen algorithm, which is useful integrity evidence but does not eliminate collision risk. If an attacker can replace both the file and the published checksum, the comparison offers no source authentication, and it does not scan content for malware.</p></details>
       <details><summary>Does hashing upload or save my input?</summary><p>The calculation is performed locally with Web Crypto. This tool adds no network request, tracking or storage for the entered text, selected file or result. Browser extensions and the surrounding device remain outside what the page can guarantee.</p></details>
     </div></div>
-    <nav class="related-tools" aria-label="Related tools"><h2>Related tools</h2><div class="related-links">
+    <nav class="related-tools" data-related-tools="hash" aria-label="Related tools"><h2>Related tools</h2><div class="related-links">
       <a href="/encode/"><strong>Base64 and URL encoder</strong><span>Convert UTF-8 text when transport encoding, rather than an integrity digest, is required.</span></a>
       <a href="/password/"><strong>Random password generator</strong><span>Create random credentials instead of treating a fast checksum as password protection.</span></a>
       <a href="/text/"><strong>Text counter and cleaner</strong><span>Inspect line endings and exact text transformations before producing a fingerprint.</span></a>
     </div></nav>
   </section>
 </main>
+
 <footer>UtilCover · Private, fast, client-side utilities</footer>
 <script src="/hash/hash-tool.js"></script>
-</body>
+<script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
 </html>

@@ -21,6 +21,7 @@
   <meta property="og:description" content="Convert HEX, RGB and HSL colors and evaluate a pair with WCAG contrast thresholds.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/color/">
+<meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -64,7 +65,7 @@
   </script>
 </head>
 <body class="tool-directory-page">
-<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="nav-links"><a href="/json/">JSON</a><a href="/image/">Image</a><a href="/qr/">QR</a><a href="/encode/">Encode</a><a href="/password/">Password</a><a href="/text/">Text</a><a href="/timestamp/">Timestamp</a><a href="/uuid/">UUID</a><a href="/hash/">Hash</a><a href="/color/" aria-current="page">Color</a><a href="/unit/">Unit</a><a href="/calculator/">Calculator</a><a class="language-link" href="/zh/color/">Chinese</a></div></nav></header>
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/color/">中文</a></div></nav></header>
 <main class="page-shell">
   <section class="hero">
     <h1>Color Converter</h1>
@@ -115,7 +116,7 @@
     </div>
     <div id="contrastStatus" class="status" role="status">Ready</div>
   </section>
-  <section class="tool-guide">
+<section class="tool-guide">
     <div class="guide-intro"><h2>Convert solid colors and check their contrast</h2><p>Move a color between HEX, RGB and HSL notation, then compare a text and background pair with WCAG contrast thresholds. The converter is useful when a design token, stylesheet or handoff uses a different notation from the one you have. The contrast result is a numeric check for two opaque solid colors, not a complete accessibility audit.</p></div>
     <div class="guide-section how-to"><h2>How to convert and compare colors</h2><ol class="steps">
       <li><strong>Enter one supported color</strong>Use a 3- or 6-digit HEX value, three RGB channels, or HSL hue, saturation and lightness. Choose the matching convert button to normalize the fields and update the preview.</li>
@@ -140,15 +141,16 @@
       <details><summary>What counts as large text in the result grid?</summary><p>The thresholds commonly describe large text as at least 18pt, or at least 14pt when bold. This calculator does not inspect a rendered element, so you must decide which row applies using the real font size and weight.</p></details>
       <details><summary>Why floor the visible contrast ratio?</summary><p>Flooring avoids displaying a rounded-up value that appears to reach a threshold when the calculated ratio is slightly below it. The compliance booleans use the full ratio, while the two-decimal string is a compact display.</p></details>
     </div></div>
-    <nav class="related-tools" aria-label="Related tools"><h2>Related tools</h2><div class="related-links">
+    <nav class="related-tools" data-related-tools="color" aria-label="Related tools"><h2>Related tools</h2><div class="related-links">
       <a href="/image/"><strong>Image compressor and converter</strong><span>Prepare raster assets after choosing colors; image content needs review beyond two solid swatches.</span></a>
       <a href="/qr/"><strong>QR code generator</strong><span>Create a code and apply a high-contrast foreground and background before scan testing.</span></a>
       <a href="/text/"><strong>Text counter and cleaner</strong><span>Prepare interface copy while checking the rendered typography separately from its color pair.</span></a>
     </div></nav>
   </section>
 </main>
+
 <footer>UtilCover · Private, fast, client-side utilities</footer>
 <script src="/shared/locale-redirect.js"></script>
 <script src="/color/color-tool.js"></script>
-</body>
+<script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
 </html>

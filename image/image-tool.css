@@ -26,9 +26,15 @@ small { color: var(--muted); line-height: 1.45; }
 .options { margin-top: 20px; }
 button:disabled { opacity: .48; cursor: not-allowed; transform: none; }
 .button-link[hidden] { display: none; }
+.image-drop-zone { padding: 16px; border: 1px dashed rgba(97, 218, 251, .38); border-radius: 14px; background: rgba(4, 12, 24, .48); line-height: 1.5; }
+.image-drop-zone.is-dragging { border-color: var(--primary); background: rgba(97, 218, 251, .09); }
+.image-drop-zone .file-picker-row { margin-top: 10px; }
+.image-batch-results { display: grid; gap: 10px; margin-top: 18px; }
+.image-batch-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; color: var(--muted); background: rgba(4, 12, 24, .48); overflow-wrap: anywhere; }
 @media (max-width: 820px) {
   .settings-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 600px) {
   .preview-grid, .settings-grid { grid-template-columns: 1fr; }
+  .image-batch-row { align-items: stretch; flex-direction: column; }
 }

@@ -8,12 +8,14 @@ const path = require('node:path');
 const root = path.join(__dirname, '..');
 const read = relativePath => fs.readFileSync(path.join(root, relativePath), 'utf8');
 
-const toolRoutes = ['password', 'calculator', 'json', 'text', 'encode', 'timestamp', 'uuid', 'hash', 'qr', 'unit', 'color', 'image'];
+const toolRoutes = ['password', 'calculator', 'json', 'text', 'encode', 'base64', 'url-encoder', 'timestamp', 'uuid', 'hash', 'qr', 'unit', 'color', 'image'];
+const contentRoutes = ['privacy', 'about', 'licenses', 'contact'];
+const indexedRoutes = [...toolRoutes, ...contentRoutes];
 const canonicalPages = [
   { file: 'index.html', route: '/', language: 'en', peer: '/zh/' },
-  ...toolRoutes.map(tool => ({ file: `${tool}/index.html`, route: `/${tool}/`, language: 'en', peer: `/zh/${tool}/` })),
+  ...indexedRoutes.map(route => ({ file: `${route}/index.html`, route: `/${route}/`, language: 'en', peer: `/zh/${route}/` })),
   { file: 'zh/index.html', route: '/zh/', language: 'zh-CN', peer: '/' },
-  ...toolRoutes.map(tool => ({ file: `zh/${tool}/index.html`, route: `/zh/${tool}/`, language: 'zh-CN', peer: `/${tool}/` }))
+  ...indexedRoutes.map(route => ({ file: `zh/${route}/index.html`, route: `/zh/${route}/`, language: 'zh-CN', peer: `/${route}/` }))
 ];
 const origin = 'https://www.utilcover.com';
 const escapeRegex = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -126,13 +128,13 @@ test('sitemap lastmod uses the build date for dirty pages and Git history for cl
   assert.equal(lastModified('index.html', { isDirty: () => false, now, gitDate }), '2026-08-25');
 });
 
-test('sitemap contains only the 26 canonical URLs with deterministic ISO lastmod dates', () => {
+test('sitemap contains every canonical URL with deterministic ISO lastmod dates', () => {
   const sitemap = read('sitemap.xml');
   const locations = matches(sitemap, /<loc>([^<]+)<\/loc>/g).map(match => match[1]);
-  assert.equal(locations.length, 26);
+  assert.equal(locations.length, canonicalPages.length);
   assert.deepEqual(locations, canonicalPages.map(page => origin + page.route));
   const lastmods = matches(sitemap, /<lastmod>([^<]+)<\/lastmod>/g).map(match => match[1]);
-  assert.equal(lastmods.length, 26);
+  assert.equal(lastmods.length, canonicalPages.length);
   for (const date of lastmods) {
     assert.match(date, /^\d{4}-\d{2}-\d{2}$/);
     assert.equal(new Date(`${date}T00:00:00Z`).toISOString().slice(0, 10), date);

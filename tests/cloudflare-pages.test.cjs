@@ -60,7 +60,7 @@ test('uses the tool directory as the canonical homepage and keeps password gener
   const password = read('password/index.html');
 
   assert.match(homepage, /<body class="home-directory">/);
-  assert.match(homepage, /<h1>Useful tools\. Zero uploads\.<\/h1>/);
+  assert.match(homepage, /<h1>Private browser tools\. Nothing uploaded\.<\/h1>/);
   assert.match(homepage, /<link rel="canonical" href="https:\/\/www\.utilcover\.com\/">/);
   assert.match(homepage, /href="\/password\/"/);
   assert.doesNotMatch(homepage, /id="generateButton"/);
@@ -78,23 +78,23 @@ test('keeps the homepage introduction compact so tools remain above the fold', (
   assert.match(css, /\.nav-trust\s*\{/);
 });
 
-test('uses a one-line English desktop introduction and a four-by-three homepage grid', () => {
+test('uses a concise introduction and a responsive popular-tools grid', () => {
   const css = read('shared/tools.css');
-  assert.match(css, /html\[lang="en"\] \.home-directory \.hero p\s*\{[^}]*white-space:\s*nowrap/s);
-  assert.match(css, /\.home-directory \.tool-grid\s*\{[^}]*grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/s);
-  for (const file of ['index.html', 'tools/index.html', 'zh/index.html', 'zh/tools/index.html']) {
-    assert.equal((read(file).match(/class="tool-tile"/g) || []).length, 12, `${file} does not have twelve tools`);
+  assert.match(css, /\.home-directory \.tool-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/s);
+  for (const file of ['index.html', 'zh/index.html']) {
+    assert.equal((read(file).match(/class="tool-tile"/g) || []).length, 6, `${file} does not have six popular tools`);
+    assert.match(read(file), /id="categories"/);
   }
 });
 
-test('orders homepage tools by the requested three-row workflow', () => {
-  const englishOrder = ['/json/', '/image/', '/qr/', '/encode/', '/password/', '/text/', '/timestamp/', '/uuid/', '/hash/', '/color/', '/unit/', '/calculator/'];
-  for (const file of ['index.html', 'tools/index.html', 'zh/index.html', 'zh/tools/index.html']) {
+test('orders homepage popular tools by the requested workflow', () => {
+  const englishOrder = ['/json/', '/image/', '/qr/', '/timestamp/', '/uuid/', '/password/'];
+  for (const file of ['index.html', 'zh/index.html']) {
     const html = read(file);
-    const grid = html.match(/<section class="tool-grid"[\s\S]*?<\/section>/)?.[0] || '';
-    const actual = [...grid.matchAll(/<a class="tool-tile" href="([^"]+)"/g)].map(match => match[1]);
+    const grid = html.match(/<section id="popular-tools">[\s\S]*?<\/section>/)?.[0] || '';
+    const actual = [...grid.matchAll(/<a class="tool-tile"[^>]*href="([^"]+)"/g)].map(match => match[1]);
     const expected = file.startsWith('zh/') ? englishOrder.map(route => `/zh${route}`) : englishOrder;
-    assert.deepEqual(actual, expected, `${file} has the wrong tool order`);
+    assert.deepEqual(actual, expected, `${file} has the wrong popular tool order`);
   }
 });
 
@@ -106,28 +106,26 @@ test('keeps every tool-page introduction and title compact', () => {
   assert.match(read('json/index.html'), /<body class="tool-directory-page">/);
 });
 
-test('shows direct links to all twelve tools in every shared top navigation', () => {
-  const routes = ['/password/', '/calculator/', '/json/', '/text/', '/encode/', '/timestamp/', '/uuid/', '/hash/', '/qr/', '/unit/', '/color/', '/image/'];
-  const pages = fs.readdirSync(root, { recursive: true }).filter(name => name.endsWith('.html') && read(name).includes('class="nav-links"'));
-  assert.ok(pages.length >= 12);
+test('uses compact platform navigation with search on canonical pages', () => {
+  const pages = fs.readdirSync(root, { recursive: true }).filter(name => name.endsWith('index.html') && read(name).includes('platform-nav'));
+  assert.ok(pages.length >= 30);
   for (const file of pages) {
     const html = read(file);
-    const nav = html.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1] || '';
-    const expectedRoutes = /<html lang="zh-CN">/.test(html) ? routes.map(route => `/zh${route}`) : routes;
-    for (const route of expectedRoutes) assert.match(nav, new RegExp(`href="${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`), `${file} navigation is missing ${route}`);
+    const nav = html.match(/<div class="platform-nav nav-links">([\s\S]*?)<\/div>/)?.[1] || '';
+    const prefix = /<html lang="zh-CN">/.test(html) ? '/zh' : '';
+    for (const route of ['/#popular-tools', '/#categories', '/privacy/', '/about/']) {
+      assert.match(nav, new RegExp(`href="${prefix}${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`), `${file} navigation is missing ${route}`);
+    }
+    assert.match(nav, /class="search-trigger"/);
   }
 });
 
-test('orders every shared navigation like the homepage and keeps language last', () => {
-  const routes = ['/json/', '/image/', '/qr/', '/encode/', '/password/', '/text/', '/timestamp/', '/uuid/', '/hash/', '/color/', '/unit/', '/calculator/'];
-  const pages = fs.readdirSync(root, { recursive: true }).filter(name => name.endsWith('.html') && read(name).includes('class="nav-links"'));
-  assert.equal(pages.length, 32);
+test('keeps the language switch last in shared navigation', () => {
+  const pages = fs.readdirSync(root, { recursive: true }).filter(name => name.endsWith('index.html') && read(name).includes('platform-nav'));
   for (const file of pages) {
     const html = read(file);
-    const nav = html.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1] || '';
+    const nav = html.match(/<div class="platform-nav nav-links">([\s\S]*?)<\/div>/)?.[1] || '';
     const anchors = [...nav.matchAll(/<a([^>]*)href="([^"]+)"[^>]*>/g)].map(match => ({ attrs: match[1], href: match[2] }));
-    const expected = /<html lang="zh-CN">/.test(html) ? routes.map(route => `/zh${route}`) : routes;
-    assert.deepEqual(anchors.filter(anchor => !anchor.attrs.includes('language-link')).map(anchor => anchor.href), expected, `${file} navigation order differs`);
     assert.match(anchors.at(-1)?.attrs || '', /language-link/, `${file} language switch is not last`);
   }
 });
@@ -145,7 +143,7 @@ test('uses the shared UtilCover layout for password and calculator pages', () =>
     const html = read(file);
     assert.match(html, /href="\/shared\/tools\.css"/);
     assert.match(html, /class="site-header"/);
-    assert.match(html, /class="nav-links"/);
+    assert.match(html, /class="[^"]*nav-links[^"]*"/);
     assert.match(html, /<body class="tool-directory-page/);
     assert.match(html, /class="tool-card/);
   }
@@ -190,7 +188,7 @@ test('styles the homepage trust message as a distinct logo-adjacent brand signal
 test('shows the localized privacy statement beside the logo on every shared-navigation page', () => {
   const pages = fs.readdirSync(root, { recursive: true })
     .filter(name => name.endsWith('.html') && read(name).includes('class="nav-shell"'));
-  assert.equal(pages.length, 32);
+  assert.ok(pages.length >= 40);
   for (const file of pages) {
     const html = read(file);
     const nav = html.match(/<nav class="nav-shell"[\s\S]*?<\/nav>/)?.[0] || '';

@@ -21,6 +21,7 @@
   <meta property="og:description" content="Perform basic arithmetic by keyboard or buttons with immediate sequential execution.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/calculator/">
+<meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -64,7 +65,7 @@
   </script>
 </head>
 <body class="tool-directory-page calculator-page">
-<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="nav-links"><a href="/json/">JSON</a><a href="/image/">Image</a><a href="/qr/">QR</a><a href="/encode/">Encode</a><a href="/password/">Password</a><a href="/text/">Text</a><a href="/timestamp/">Timestamp</a><a href="/uuid/">UUID</a><a href="/hash/">Hash</a><a href="/color/">Color</a><a href="/unit/">Unit</a><a href="/calculator/" aria-current="page">Calculator</a><a class="language-link" href="/zh/calculator/">Chinese</a></div></nav></header>
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/calculator/">中文</a></div></nav></header>
 <main class="page-shell">
   <section class="hero"><h1>Web Calculator</h1><p>Fast everyday arithmetic with mouse and keyboard support.</p></section>
   <section class="tool-card calculator-panel" aria-label="Basic calculator">
@@ -94,7 +95,7 @@
     </div>
   </section>
   <aside class="info-card keyboard-help"><strong>Keyboard shortcuts:</strong> Numbers, <kbd>+</kbd>、<kbd>-</kbd>、<kbd>*</kbd>、<kbd>/</kbd>、<kbd>Enter</kbd>、<kbd>Backspace</kbd>、<kbd>Esc</kbd></aside>
-  <section class="tool-guide">
+<section class="tool-guide">
     <div class="guide-intro"><h2>Basic arithmetic with buttons or a keyboard</h2><p>This compact calculator handles addition, subtraction, multiplication and division for everyday one-step or chained calculations. It behaves like a simple pocket calculator: each pending operation is resolved as the next operator is chosen. That makes it quick for totals and adjustments, but intentionally different from typing a full mathematical expression into a precedence-aware parser.</p></div>
     <div class="guide-section how-to"><h2>How to use the calculator</h2><ol class="steps">
       <li><strong>Enter the first operand</strong>Use the number buttons or keyboard digits. Add one decimal point if needed, and use the ± button to toggle the sign before or after entering digits.</li>
@@ -120,15 +121,16 @@
       <details><summary>How are long results displayed?</summary><p>The formatter rounds through 12 significant digits. A compact ordinary number is shown directly; a longer representation uses exponential notation. This is display formatting over JavaScript Number, not a record of every exact decimal digit.</p></details>
       <details><summary>What happens if I press two operators in a row?</summary><p>Before a second operand has begun, the later operator replaces the earlier one. For example, pressing 8, +, then ÷ prepares 8 for division. After a second operand is entered, choosing an operator instead evaluates the pending pair.</p></details>
     </div></div>
-    <nav class="related-tools" aria-label="Related tools"><h2>Related tools</h2><div class="related-links">
+    <nav class="related-tools" data-related-tools="calculator" aria-label="Related tools"><h2>Related tools</h2><div class="related-links">
       <a href="/unit/"><strong>Unit converter</strong><span>Convert a measurement first, then use the calculator for a separate arithmetic step.</span></a>
       <a href="/timestamp/"><strong>Unix timestamp converter</strong><span>Work with epoch seconds and milliseconds without treating dates as ordinary arithmetic.</span></a>
       <a href="/text/"><strong>Text counter and cleaner</strong><span>Count or transform written content when the input is text rather than a number.</span></a>
     </div></nav>
   </section>
 </main>
+
 <footer>UtilCover · Private, fast, client-side utilities</footer>
 <script src="/shared/locale-redirect.js"></script>
 <script src="/calculator/calculator.js"></script>
-</body>
+<script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
 </html>

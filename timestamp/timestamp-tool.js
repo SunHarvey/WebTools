@@ -23,11 +23,39 @@ function resultFromMilliseconds(milliseconds) {
 function parseUnixTimestamp(value, unit = 'auto') {
   const text = String(value).trim();
   if (text === '') throw new TypeError('Enter a Unix timestamp.');
+  if (!['auto', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'].includes(unit)) throw new RangeError('Timestamp unit is invalid.');
+  if (unit === 'microseconds' || unit === 'nanoseconds') {
+    if (!/^-?\d+$/.test(text)) throw new TypeError('Microsecond and nanosecond timestamps must be integers.');
+    const exact = BigInt(text);
+    const scale = unit === 'microseconds' ? 1000n : 1_000_000n;
+    const floorDivide = (number, divisor) => {
+      const quotient = number / divisor;
+      return number < 0n && number % divisor !== 0n ? quotient - 1n : quotient;
+    };
+    const millisecondsBigInt = floorDivide(exact, scale);
+    const milliseconds = Number(millisecondsBigInt);
+    const result = resultFromMilliseconds(milliseconds);
+    const microseconds = unit === 'microseconds' ? exact : floorDivide(exact, 1000n);
+    const nanoseconds = unit === 'nanoseconds' ? exact : exact * 1000n;
+    return { ...result, microseconds: microseconds.toString(), nanoseconds: nanoseconds.toString() };
+  }
   const numeric = Number(text);
   if (!Number.isFinite(numeric)) throw new TypeError('Timestamp must be numeric.');
-  if (!['auto', 'seconds', 'milliseconds'].includes(unit)) throw new RangeError('Timestamp unit is invalid.');
   const isSeconds = unit === 'seconds' || (unit === 'auto' && Math.abs(numeric) < 100_000_000_000);
   return resultFromMilliseconds(isSeconds ? numeric * 1000 : numeric);
+}
+
+function formatInTimezone(milliseconds, timeZone = 'UTC', locales) {
+  try {
+    return new Intl.DateTimeFormat(locales, {
+      timeZone,
+      dateStyle: 'full',
+      timeStyle: 'long',
+      hourCycle: 'h23',
+    }).format(new Date(milliseconds));
+  } catch (error) {
+    throw new RangeError(`Invalid timezone: ${timeZone}`);
+  }
 }
 
 function dateToUnix(value) {
@@ -41,14 +69,21 @@ function attachTimestampTool() {
   const unixInput = document.getElementById('unixInput');
   const unixUnit = document.getElementById('unixUnit');
   const dateInput = document.getElementById('dateInput');
+  const timezoneSelect = document.getElementById('timezoneSelect');
   const status = document.getElementById('timestampStatus');
-  if (!unixInput || !unixUnit || !dateInput || !status) return;
+  if (!unixInput || !unixUnit || !dateInput || !timezoneSelect || !status) return;
+  let currentResult = null;
 
   const render = result => {
+    currentResult = result;
+    const milliseconds = BigInt(result.milliseconds);
     document.getElementById('resultSeconds').textContent = String(result.seconds);
     document.getElementById('resultMilliseconds').textContent = String(result.milliseconds);
+    document.getElementById('resultMicroseconds').textContent = result.microseconds || String(milliseconds * 1000n);
+    document.getElementById('resultNanoseconds').textContent = result.nanoseconds || String(milliseconds * 1_000_000n);
     document.getElementById('resultIso').textContent = result.iso;
-    document.getElementById('resultLocal').textContent = new Date(result.milliseconds).toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'long' });
+    const selectedZone = timezoneSelect.value === 'local' ? (Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC') : timezoneSelect.value;
+    document.getElementById('resultLocal').textContent = formatInTimezone(result.milliseconds, selectedZone);
     status.textContent = timestampMessage('converted', language);
     status.dataset.state = 'success';
   };
@@ -74,9 +109,11 @@ function attachTimestampTool() {
     try { await navigator.clipboard.writeText(value); status.textContent = timestampMessage('copied', language); }
     catch { status.textContent = timestampMessage('copyFailed', language); status.dataset.state = 'error'; }
   }));
-  document.getElementById('currentTimezone').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || timestampMessage('localTime', language);
+  timezoneSelect.addEventListener('change', () => {
+    if (currentResult) render(currentResult);
+  });
   document.getElementById('useCurrentTime').click();
 }
 
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachTimestampTool);
-if (typeof module !== 'undefined' && module.exports) module.exports = { parseUnixTimestamp, dateToUnix, timestampMessage };
+if (typeof module !== 'undefined' && module.exports) module.exports = { parseUnixTimestamp, dateToUnix, timestampMessage, formatInTimezone };

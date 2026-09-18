@@ -21,6 +21,7 @@
   <meta property="og:description" content="转换 HEX、RGB、HSL 颜色，并按 WCAG 阈值检查一组前景色和背景色。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/zh/color/">
+<meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -64,7 +65,7 @@
   </script>
 </head>
 <body class="tool-directory-page">
-<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="nav-links"><a href="/zh/json/">JSON</a><a href="/zh/image/">图片</a><a href="/zh/qr/">二维码</a><a href="/zh/encode/">编解码</a><a href="/zh/password/">密码</a><a href="/zh/text/">文本</a><a href="/zh/timestamp/">时间戳</a><a href="/zh/uuid/">UUID</a><a href="/zh/hash/">哈希</a><a href="/zh/color/" aria-current="page">颜色</a><a href="/zh/unit/">单位</a><a href="/zh/calculator/">计算器</a><a class="language-link" href="/color/?lang=en">英文</a></div></nav></header>
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="platform-nav nav-links"><a href="/zh/#popular-tools">工具</a><a href="/zh/#categories">分类</a><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><button class="search-trigger" type="button" aria-label="搜索工具">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/color/?lang=en">英文</a></div></nav></header>
 <main class="page-shell">
   <section class="hero">
     <h1>颜色转换器</h1>
@@ -115,7 +116,7 @@
     </div>
     <div id="contrastStatus" class="status" role="status">就绪</div>
   </section>
-  <section class="tool-guide">
+<section class="tool-guide">
     <div class="guide-intro"><h2>转换纯色表示并检查对比度</h2><p>可以在 HEX、RGB 与 HSL 三种写法之间转换同一种颜色，再按照 WCAG 对比度阈值比较文字色和背景色。设计令牌、样式表和交付文档采用不同写法时，这种转换尤其方便。对比度部分只分析两个不透明纯色的数值关系，并不等于完整的无障碍审查。</p></div>
     <div class="guide-section how-to"><h2>颜色转换与检查步骤</h2><ol class="steps">
       <li><strong>填写一种受支持的颜色</strong>可输入 3 位或 6 位 HEX、三个 RGB 通道，或者 HSL 的色相、饱和度和亮度。点击对应的转换按钮后，所有字段与预览会同步更新。</li>
@@ -140,14 +141,15 @@
       <details><summary>结果中的“大字”应该怎样理解？</summary><p>阈值通常把至少 18pt，或至少 14pt 且为粗体的文字视为大字。本工具不读取实际渲染元素，因此需要根据真实字号和字重自行选择对应结果。</p></details>
       <details><summary>为什么显示的对比度采用向下截取？</summary><p>这样可以避免一个略低于阈值的比值因为向上取整，看起来好像已经达标。判断逻辑使用完整比值，两位小数字符串只是便于阅读的简短表示。</p></details>
     </div></div>
-    <nav class="related-tools" aria-label="相关工具"><h2>相关工具</h2><div class="related-links">
+    <nav class="related-tools" data-related-tools="color" aria-label="相关工具"><h2>相关工具</h2><div class="related-links">
       <a href="/zh/image/"><strong>图片压缩与转换</strong><span>选定颜色后处理位图素材；图片内容不能只靠两个纯色色块来判断。</span></a>
       <a href="/zh/qr/"><strong>二维码生成器</strong><span>为二维码选择高对比的前景与背景，并在实际设备上扫码测试。</span></a>
       <a href="/zh/text/"><strong>文本统计与整理</strong><span>准备界面文案，同时把真实排版与颜色组合分开检查。</span></a>
     </div></nav>
   </section>
 </main>
+
 <footer>UtilCover · 私密、快速的浏览器本地工具</footer>
 <script src="/color/color-tool.js"></script>
-</body>
+<script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
 </html>

@@ -21,6 +21,7 @@
   <meta property="og:description" content="通过键盘或页面按键完成基础算术，并按输入顺序即时执行。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/zh/calculator/">
+<meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -64,7 +65,7 @@
   </script>
 </head>
 <body class="tool-directory-page calculator-page">
-<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="nav-links"><a href="/zh/json/">JSON</a><a href="/zh/image/">图片</a><a href="/zh/qr/">二维码</a><a href="/zh/encode/">编解码</a><a href="/zh/password/">密码</a><a href="/zh/text/">文本</a><a href="/zh/timestamp/">时间戳</a><a href="/zh/uuid/">UUID</a><a href="/zh/hash/">哈希</a><a href="/zh/color/">颜色</a><a href="/zh/unit/">单位</a><a href="/zh/calculator/" aria-current="page">计算器</a><a class="language-link" href="/calculator/?lang=en">英文</a></div></nav></header>
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="platform-nav nav-links"><a href="/zh/#popular-tools">工具</a><a href="/zh/#categories">分类</a><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><button class="search-trigger" type="button" aria-label="搜索工具">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/calculator/?lang=en">英文</a></div></nav></header>
 <main class="page-shell">
   <section class="hero"><h1>网页计算器</h1><p>支持鼠标和键盘操作的快速日常算术计算。</p></section>
   <section class="tool-card calculator-panel" aria-label="基础计算器">
@@ -94,7 +95,7 @@
     </div>
   </section>
   <aside class="info-card keyboard-help"><strong>键盘快捷键：</strong>数字键、<kbd>+</kbd>、<kbd>-</kbd>、<kbd>*</kbd>、<kbd>/</kbd>、<kbd>Enter</kbd>、<kbd>Backspace</kbd>、<kbd>Esc</kbd></aside>
-  <section class="tool-guide">
+<section class="tool-guide">
     <div class="guide-intro"><h2>用页面按键或键盘完成基础算术</h2><p>这款紧凑计算器处理日常的加法、减法、乘法和除法，既适合一步运算，也适合连续输入。它模拟简易口袋计算器：选中下一个运算符时，会先算出正在等待的那一步。做合计和连续调整很直接，但它并不是可以输入完整公式、再按优先级解析的表达式工具。</p></div>
     <div class="guide-section how-to"><h2>三步开始计算</h2><ol class="steps">
       <li><strong>输入第一个操作数</strong>点击数字按键或使用键盘数字。需要小数时输入一个小数点，也可以在输入前后用 ± 切换正负号。</li>
@@ -120,14 +121,15 @@
       <details><summary>较长的结果怎样显示？</summary><p>格式化过程保留 12 位有效数字。普通写法足够短时直接显示，字符过长时则采用科学记数法。这只是 JavaScript Number 的显示整理，并不代表每一位十进制数字都精确保存。</p></details>
       <details><summary>连续按两个运算符会怎样？</summary><p>如果还没有开始输入第二个操作数，后按的运算符会替换前一个。例如按 8、+、÷ 后，准备执行的是 8 除以下一个数；如果第二个数已经输入，再选运算符就会先完成当前运算。</p></details>
     </div></div>
-    <nav class="related-tools" aria-label="相关工具"><h2>相关工具</h2><div class="related-links">
+    <nav class="related-tools" data-related-tools="calculator" aria-label="相关工具"><h2>相关工具</h2><div class="related-links">
       <a href="/zh/unit/"><strong>单位换算器</strong><span>先转换计量单位，再把结果用于单独的算术步骤。</span></a>
       <a href="/zh/timestamp/"><strong>Unix 时间戳转换</strong><span>处理纪元秒与毫秒，不要把日期直接当作普通算术数值。</span></a>
       <a href="/zh/text/"><strong>文本统计与整理</strong><span>输入内容是文字而不是数字时，可进行统计和行处理。</span></a>
     </div></nav>
   </section>
 </main>
+
 <footer>UtilCover · 私密、快速的浏览器本地工具</footer>
 <script src="/calculator/calculator.js"></script>
-</body>
+<script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
 </html>
