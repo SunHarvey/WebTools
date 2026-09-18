@@ -316,8 +316,8 @@ button.danger { color: #fecdd3; background: rgba(251, 113, 133, 0.1); border-col
 .favorite-button { min-width: 44px; padding: 8px 11px; font-size: 1.2rem; }
 .search-close { width: 100%; }
 
-.json-view-tabs { display: flex; gap: 8px; margin: 14px 0 8px; }
-.json-highlighted, .json-tree { min-height: 220px; margin: 0; padding: 14px; overflow: auto; border: 1px solid var(--line); border-radius: 13px; color: var(--text); background: rgba(2, 8, 18, .86); font: .88rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; }
+.view-tabs { display: flex; gap: 8px; margin: 14px 0 8px; }
+.json-view, .json-tree { min-height: 220px; margin: 0; padding: 14px; overflow: auto; border: 1px solid var(--line); border-radius: 13px; color: var(--text); background: rgba(2, 8, 18, .86); font: .88rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; }
 .json-key { color: #7dd3fc; } .json-string { color: #86efac; } .json-number { color: #f0abfc; } .json-boolean, .json-null { color: #fda4af; }
 .json-tree details { margin-left: 14px; } .json-tree summary { cursor: pointer; }
 

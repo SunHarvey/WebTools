@@ -77,6 +77,14 @@ function buildJsonTree(value) {
   return { type: value === null ? 'null' : typeof value, value };
 }
 
+function tabIndexForKey(currentIndex, key, length) {
+  if (key === 'Home') return 0;
+  if (key === 'End') return length - 1;
+  if (key === 'ArrowRight') return (currentIndex + 1) % length;
+  if (key === 'ArrowLeft') return (currentIndex - 1 + length) % length;
+  return null;
+}
+
 function validateJson(input) {
   try {
     return { valid: true, value: parseJson(input) };
@@ -133,6 +141,8 @@ function attachJsonTool() {
     treeView.hidden = !tree;
     showText.setAttribute('aria-selected', String(!tree));
     showTree.setAttribute('aria-selected', String(tree));
+    showText.tabIndex = tree ? -1 : 0;
+    showTree.tabIndex = tree ? 0 : -1;
   };
   const renderResult = value => {
     output.value = value;
@@ -160,6 +170,14 @@ function attachJsonTool() {
   document.getElementById('minifyJson').addEventListener('click', () => run(minifyJson));
   showText.addEventListener('click', () => selectView(false));
   showTree.addEventListener('click', () => selectView(true));
+  const tabs = [showText, showTree];
+  tabs.forEach((tab, index) => tab.addEventListener('keydown', event => {
+    const nextIndex = tabIndexForKey(index, event.key, tabs.length);
+    if (nextIndex === null) return;
+    event.preventDefault();
+    selectView(nextIndex === 1);
+    tabs[nextIndex].focus();
+  }));
   document.getElementById('validateJson').addEventListener('click', () => {
     const result = validateJson(input.value);
     status.textContent = result.valid ? jsonMessage('valid', language) : (String(language).toLowerCase().startsWith('zh') ? `第 ${result.line} 行，第 ${result.column} 列：${result.reason}` : `Line ${result.line}, column ${result.column}: ${result.reason}`);
@@ -187,4 +205,4 @@ function attachJsonTool() {
 }
 
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachJsonTool);
-if (typeof module !== 'undefined' && module.exports) module.exports = { formatJson, minifyJson, validateJson, jsonMessage, highlightJson, locateJsonError, buildJsonTree };
+if (typeof module !== 'undefined' && module.exports) module.exports = { formatJson, minifyJson, validateJson, jsonMessage, highlightJson, locateJsonError, buildJsonTree, tabIndexForKey };

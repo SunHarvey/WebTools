@@ -31,6 +31,12 @@ test('favorites toggle and recent tools persist locally with safe bounds', () =>
   assert.deepEqual(site.readStoredIds(storage, 'utilcover.recent'), ['color', 'hash', 'uuid', 'timestamp', 'qr']);
 });
 
+test('site behavior survives a blocked localStorage getter', () => {
+  const blocked = {};
+  Object.defineProperty(blocked, 'localStorage', { get() { throw new Error('blocked'); } });
+  assert.equal(site.getStorage(blocked), null);
+});
+
 test('every canonical page loads shared metadata and accessible site behavior', () => {
   const files = fs.readdirSync(root, { recursive: true }).filter(file => file.endsWith('index.html') && !file.includes('tools/') && !file.includes('password/index-zh'));
   for (const file of files) {

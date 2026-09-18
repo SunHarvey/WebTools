@@ -26,6 +26,10 @@ function writeStoredIds(storage, key, ids) {
   return ids;
 }
 
+function getStorage(scope = globalThis) {
+  try { return scope.localStorage || null; } catch { return null; }
+}
+
 function toggleFavorite(storage, id) {
   const ids = readStoredIds(storage, FAVORITES_KEY);
   const next = ids.includes(id) ? ids.filter(item => item !== id) : [...ids, id];
@@ -69,13 +73,13 @@ function createToolLink(tool, language) {
   return link;
 }
 
-function renderSavedTools() {
-  if (!globalThis.localStorage) return;
+function renderSavedTools(storage = getStorage()) {
+  if (!storage) return;
   const language = pageLanguage();
   for (const [elementId, key] of [['favorite-tools', FAVORITES_KEY], ['recent-tools', RECENT_KEY]]) {
     const region = document.getElementById(elementId);
     if (!region) continue;
-    const ids = readStoredIds(localStorage, key);
+    const ids = readStoredIds(storage, key);
     const links = ids.map(id => globalThis.UTILCOVER_TOOLS.find(tool => tool.id === id)).filter(Boolean).map(tool => createToolLink(tool, language));
     region.hidden = links.length === 0;
     const list = region.querySelector('.saved-tool-list');
@@ -83,7 +87,7 @@ function renderSavedTools() {
   }
 }
 
-function createSearchDialog() {
+function createSearchDialog(storage = getStorage()) {
   const language = pageLanguage();
   const dialog = document.createElement('dialog');
   dialog.className = 'tool-search-dialog';
@@ -106,7 +110,7 @@ function createSearchDialog() {
   close.textContent = language === 'zh' ? '关闭' : 'Close';
 
   const render = () => {
-    const favorites = readStoredIds(localStorage, FAVORITES_KEY);
+    const favorites = readStoredIds(storage, FAVORITES_KEY);
     const items = searchTools(input.value, language).map(tool => {
       const row = document.createElement('div');
       row.className = 'search-result';
@@ -123,7 +127,7 @@ function createSearchDialog() {
       favorite.className = 'favorite-button secondary';
       favorite.setAttribute('aria-label', `${favorites.includes(tool.id) ? (language === 'zh' ? '取消收藏' : 'Remove favorite') : (language === 'zh' ? '收藏' : 'Add favorite')} ${tool.name[language]}`);
       favorite.textContent = favorites.includes(tool.id) ? '★' : '☆';
-      favorite.addEventListener('click', () => { toggleFavorite(localStorage, tool.id); render(); renderSavedTools(); });
+      favorite.addEventListener('click', () => { toggleFavorite(storage, tool.id); render(); renderSavedTools(storage); });
       row.append(link, favorite);
       return row;
     });
@@ -167,7 +171,8 @@ function attachNavigation(search) {
 
 function attachSite() {
   renderRelatedTools();
-  const search = createSearchDialog();
+  const storage = getStorage();
+  const search = createSearchDialog(storage);
   attachNavigation(search);
   document.addEventListener('keydown', event => {
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
@@ -179,9 +184,9 @@ function attachSite() {
     if (event.key === 'Escape' && search.dialog.open) search.dialog.close();
   });
   const match = location.pathname.match(/^\/(?:zh\/)?([^/]+)\/$/);
-  if (match && globalThis.UTILCOVER_TOOLS?.some(tool => tool.id === match[1])) recordRecent(localStorage, match[1]);
-  renderSavedTools();
+  if (storage && match && globalThis.UTILCOVER_TOOLS?.some(tool => tool.id === match[1])) recordRecent(storage, match[1]);
+  renderSavedTools(storage);
 }
 
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachSite);
-if (typeof module !== 'undefined' && module.exports) module.exports = { renderRelatedTools, searchTools, readStoredIds, toggleFavorite, recordRecent };
+if (typeof module !== 'undefined' && module.exports) module.exports = { renderRelatedTools, searchTools, readStoredIds, toggleFavorite, recordRecent, getStorage };

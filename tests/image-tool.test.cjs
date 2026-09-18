@@ -236,6 +236,7 @@ test('image pages offer local batch input, target size and download all controls
   for (const file of ['image/index.html', 'zh/image/index.html']) {
     const html = fs.readFileSync(path.join(__dirname, '..', file), 'utf8');
     assert.match(html, /id="imageDropZone"/);
+    assert.doesNotMatch(html, /id="imageDropZone"[^>]*tabindex=/);
     assert.match(html, /id="targetSizeKb"/);
     assert.match(html, /id="imageBatchResults"/);
     assert.match(html, /id="downloadAllImages"/);
