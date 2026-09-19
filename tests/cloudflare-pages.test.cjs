@@ -200,10 +200,26 @@ test('shows the localized privacy statement beside the logo on every shared-navi
 });
 
 test('places concise privacy notes beside sensitive inputs only', () => {
-  const sensitivePages = ['password/index.html', 'json/index.html', 'text/index.html', 'encode/index.html', 'hash/index.html', 'qr/index.html', 'image/index.html'];
+  const sensitivePages = ['password/index.html', 'json/index.html', 'text/index.html', 'encode/index.html', 'hash/index.html', 'image/index.html'];
   for (const file of sensitivePages) assert.match(read(file), /class="local-processing-note"/, `${file} lacks a contextual local-processing note`);
+  for (const file of ['qr/index.html', 'zh/qr/index.html']) {
+    assert.doesNotMatch(read(file), /class="local-processing-note"/, `${file} repeats a non-interactive privacy banner above its controls`);
+  }
   const css = read('shared/tools.css');
   assert.match(css, /\.local-processing-note\s*\{[^}]*font-size:\s*0\.78rem/s);
+});
+
+test('JSON presents one result surface aligned with the input editor', () => {
+  for (const file of ['json/index.html', 'zh/json/index.html']) {
+    const html = read(file);
+    assert.match(html, /class="grid-2 json-workspace"/);
+    assert.match(html, /id="jsonOutput"[^>]*class="visually-hidden"[^>]*hidden/);
+  }
+  const css = read('shared/tools.css');
+  assert.match(css, /#jsonInput,\s*\.json-view,\s*\.json-tree\s*\{[^}]*height:\s*clamp\(/s);
+  assert.match(css, /\.json-workspace\s*>\s*\.field\s*\+\s*\.field\s*\{[^}]*margin-top:\s*0/s);
+  assert.match(css, /\.json-workspace\s+\.view-heading\s*\{[^}]*min-height:/s);
+  assert.match(css, /\.visually-hidden\s*\{[^}]*position:\s*absolute/s);
 });
 
 test('provides a top-level Cloudflare Pages 404 instead of SPA fallback', () => {
