@@ -67,24 +67,55 @@ function updatePage(route) {
   return source.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1];
 }
 
-function updateCsp(sources) {
-  const hashes = [...new Set(sources.map(source => `'sha256-${crypto.createHash('sha256').update(source).digest('base64')}'`))].sort();
-  const file = path.join(root, '_headers');
-  const headers = fs.readFileSync(file, 'utf8');
-  const updated = headers.replace(/script-src 'self'(?: 'sha256-[^']+')*;/, `script-src 'self' ${hashes.join(' ')};`);
-  if (updated === headers && !hashes.every(hash => headers.includes(hash))) throw new Error('Could not update CSP script-src hashes');
-  fs.writeFileSync(file, updated);
+function csp(hash = '') {
+  const scriptSource = hash ? `script-src 'self' ${hash};` : "script-src 'self';";
+  return `default-src 'self'; ${scriptSource} script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests`;
+}
+
+function headerPattern(route) {
+  return route === '/' || route === '/zh/' ? route : `${route}*`;
+}
+
+function renderHeaders(routeSources) {
+  const globalHeaders = [
+    '/*',
+    `  Content-Security-Policy: ${csp()}`,
+    '  X-Frame-Options: DENY',
+    '  X-Content-Type-Options: nosniff',
+    '  Referrer-Policy: strict-origin-when-cross-origin',
+    '  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), serial=()'
+  ].join('\n');
+  const routeHeaders = routeSources.map(({ route, source }) => {
+    const hash = `'sha256-${crypto.createHash('sha256').update(source).digest('base64')}'`;
+    return [
+      headerPattern(route),
+      '  ! Content-Security-Policy',
+      `  Content-Security-Policy: ${csp(hash)}`
+    ].join('\n');
+  }).join('\n\n');
+  const previewHeaders = [
+    'https://:project.pages.dev/*',
+    '  X-Robots-Tag: noindex',
+    '',
+    'https://:version.:project.pages.dev/*',
+    '  X-Robots-Tag: noindex'
+  ].join('\n');
+  return `${globalHeaders}\n\n${routeHeaders}\n\n${previewHeaders}\n`;
+}
+
+function updateCsp(routeSources) {
+  fs.writeFileSync(path.join(root, '_headers'), renderHeaders(routeSources));
 }
 
 function generate() {
-  const sources = routes.map(updatePage);
+  const routeSources = routes.map(route => ({ route, source: updatePage(route) }));
   for (const file of aliases) {
     const fullPath = path.join(root, file);
     const html = fs.readFileSync(fullPath, 'utf8').replace(blockPattern, '\n').replace(plainBlockPattern, '\n');
     fs.writeFileSync(fullPath, html);
   }
-  updateCsp(sources);
+  updateCsp(routeSources);
 }
 
 if (require.main === module) generate();
-module.exports = { decodeHtml, generate, schemaFor };
+module.exports = { decodeHtml, generate, headerPattern, renderHeaders, schemaFor };

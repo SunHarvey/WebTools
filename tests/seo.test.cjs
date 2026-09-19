@@ -142,13 +142,35 @@ test('sitemap contains every canonical URL with deterministic ISO lastmod dates'
   assert.equal(sitemap, require('../scripts/generate-sitemap.cjs').generate());
 });
 
-test('strict CSP authorizes every and only canonical JSON-LD block', () => {
+test('strict CSP scopes each canonical JSON-LD hash within Cloudflare header limits', () => {
   const crypto = require('node:crypto');
+  const headers = read('_headers');
+  for (const [index, line] of headers.split('\n').entries()) {
+    assert.ok(line.length <= 2000, `_headers line ${index + 1} exceeds Cloudflare's 2000-character limit`);
+  }
+
+  const globalRule = headers.match(/^\/\*\n([\s\S]*?)(?=\n\n|$)/)?.[1] || '';
+  assert.match(globalRule, /Content-Security-Policy: default-src 'self'/);
+  assert.doesNotMatch(globalRule, /'sha256-/);
+
+  const actual = [];
+  for (const page of canonicalPages) {
+    const source = jsonLdBlocks(read(page.file))[0].source;
+    const hash = `sha256-${crypto.createHash('sha256').update(source).digest('base64')}`;
+    const pattern = page.route === '/' || page.route === '/zh/'
+      ? page.route
+      : `${page.route}*`;
+    const escapedPattern = escapeRegex(pattern);
+    const block = headers.match(new RegExp(`(?:^|\\n)${escapedPattern}\\n([\\s\\S]*?)(?=\\n\\n|$)`))?.[1] || '';
+    assert.match(block, /! Content-Security-Policy/, `${pattern} must replace the baseline CSP`);
+    assert.match(block, new RegExp(`'${escapeRegex(hash)}'`), `${pattern} lacks its JSON-LD hash`);
+    actual.push(...matches(block, /'sha256-([^']+)'/g).map(match => `sha256-${match[1]}`));
+  }
+
   const expected = canonicalPages.map(page => jsonLdBlocks(read(page.file))[0].source)
     .map(source => `sha256-${crypto.createHash('sha256').update(source).digest('base64')}`)
     .sort();
-  const actual = matches(read('_headers'), /'sha256-([^']+)'/g).map(match => `sha256-${match[1]}`).sort();
-  assert.deepEqual(actual, expected);
+  assert.deepEqual(actual.sort(), expected);
 });
 
 test('sitemap declares XHTML alternates for every canonical URL', () => {
