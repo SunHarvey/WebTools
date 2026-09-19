@@ -235,10 +235,10 @@ test('timestamp pages document exact units and Intl timezone conversion in each 
   assert.match(english, /seconds.*floor.*negative/i);
   assert.match(english, /normalized millisecond value remains negative.*-1.*-999/i);
   assert.doesNotMatch(english, /negative subsecond instants move to the preceding integer second/i);
-  assert.match(english, /datetime-local.*browser.*local timezone/i);
+  assert.match(english, /datetime-local.*selected.*timezone/i);
   assert.match(english, /ISO.*UTC/i);
   assert.match(english, /browser Date range/i);
-  assert.match(english, /timezone selector.*DST/i);
+  assert.match(english, /Intl.*daylight-saving.*nonexistent.*ambiguous/i);
   assert.doesNotMatch(english, /no timezone selector/i);
 
   const chinese = guideFor('zh/timestamp/index.html').text;
@@ -248,10 +248,10 @@ test('timestamp pages document exact units and Intl timezone conversion in each 
   assert.match(chinese, /秒数.*向下取整.*负数/);
   assert.match(chinese, /归一化后的毫秒值仍为负数.*-1.*-999/);
   assert.doesNotMatch(chinese, /负的亚秒值.*前一个整数秒/);
-  assert.match(chinese, /datetime-local.*浏览器本地时区/);
+  assert.match(chinese, /datetime-local.*输入与显示时区/);
   assert.match(chinese, /ISO.*UTC/);
   assert.match(chinese, /浏览器 Date.*范围/);
-  assert.match(chinese, /时区选择器.*夏令时/);
+  assert.match(chinese, /Intl.*夏令时.*不存在.*重叠/);
   assert.doesNotMatch(chinese, /没有时区选择器/);
 });
 

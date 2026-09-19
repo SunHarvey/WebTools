@@ -10,15 +10,15 @@
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#08111f">
   <title>图片压缩、尺寸调整与格式转换工具 | UtilCover</title>
-  <meta name="description" content="在浏览器本地压缩图片、调整尺寸并转换 PNG、JPEG 或 WebP 格式，文件无需上传。">
+  <meta name="description" content="在浏览器本地批量压缩、调整尺寸并转换 PNG、JPEG 和 WebP 图片；支持拖放、粘贴和目标大小，文件无需上传。">
   <link rel="canonical" href="https://www.utilcover.com/zh/image/">
   <link rel="alternate" hreflang="en" href="https://www.utilcover.com/image/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/image/">
   <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/image/">
   <link rel="stylesheet" href="/shared/tools.css">
   <link rel="stylesheet" href="/image/image-tool.css">
-  <meta property="og:title" content="图片压缩与尺寸调整 | UtilCover">
-  <meta property="og:description" content="在浏览器本地私密地压缩 PNG、JPEG 和 WebP 图片并调整尺寸。">
+  <meta property="og:title" content="批量图片压缩、尺寸调整与格式转换 | UtilCover">
+  <meta property="og:description" content="在浏览器本地批量压缩、调整尺寸并转换 PNG、JPEG 和 WebP 图片，文件无需上传。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.utilcover.com/zh/image/">
   <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
@@ -31,7 +31,7 @@
       "@id": "https://www.utilcover.com/zh/image/#application",
       "name": "图片压缩与尺寸调整",
       "url": "https://www.utilcover.com/zh/image/",
-      "description": "在浏览器本地压缩图片、调整尺寸并转换 PNG、JPEG 或 WebP 格式，文件无需上传。",
+      "description": "在浏览器本地批量压缩、调整尺寸并转换 PNG、JPEG 和 WebP 图片；支持拖放、粘贴和目标大小，文件无需上传。",
       "inLanguage": "zh-CN",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -75,7 +75,7 @@
     <div class="field">
       <span class="field-label">图片文件</span>
       <div id="imageDropZone" class="image-drop-zone">拖放图片到这里，或使用 Ctrl/⌘+V 粘贴<br><div class="file-picker-row"><input id="imageFile" class="file-input-native" type="file" accept="image/png,image/jpeg,image/webp" multiple aria-describedby="imageFileName"><label class="file-picker-button button-link secondary" for="imageFile">选择文件</label><span id="imageFileName" class="file-picker-name">尚未选择图片</span></div></div>
-      <small>仅支持 PNG、JPEG 或 WebP；最大 16 MiB / 1200 万像素</small>
+      <small>仅支持 PNG、JPEG 或 WebP；每批最多 25 张，每张最大 16 MiB / 1200 万像素</small>
     </div>
     <div class="preview-grid" aria-live="polite">
       <article class="preview-panel">
@@ -119,7 +119,7 @@
   </section>
 </main>
 
-<footer>UtilCover · 私密、快速的浏览器本地工具</footer>
+<footer><nav class="footer-nav" aria-label="页脚导航"><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><a href="/zh/contact/">联系</a><a href="/zh/licenses/">开源许可</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · 私密、快速的浏览器本地工具</p></footer>
 <script src="/image/image-tool.js"></script>
 <script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
 </html>

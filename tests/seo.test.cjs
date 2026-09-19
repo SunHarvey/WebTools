@@ -82,18 +82,31 @@ test('canonical pages publish truthful localized structured data only', () => {
       assert.equal(types.get('Organization')['@id'], `${origin}/#organization`);
       assert.equal(types.get('Organization').url, `${origin}/`);
     } else {
-      assert.deepEqual([...types.keys()], ['WebApplication', 'BreadcrumbList'], `${page.file}: tool schema types`);
-      const app = types.get('WebApplication');
-      assert.equal(app.url, origin + page.route);
-      assert.equal(app.inLanguage, page.language);
-      assert.equal(app.name, decodeHtml(read(page.file).match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)[1]));
-      assert.equal(app.offers.price, '0');
-      assert.equal(app.offers.priceCurrency, 'USD');
-      assert.ok(!('aggregateRating' in app), `${page.file}: fabricated rating`);
-      assert.ok(!('review' in app), `${page.file}: fabricated review`);
+      const section = page.route.replace(/^\/zh\//, '/').split('/').filter(Boolean)[0];
+      const informationTypes = { privacy: 'WebPage', about: 'AboutPage', contact: 'ContactPage', licenses: 'WebPage' };
+      const pageType = informationTypes[section];
+      if (pageType) {
+        assert.deepEqual([...types.keys()], [pageType, 'BreadcrumbList'], `${page.file}: information-page schema types`);
+        const info = types.get(pageType);
+        assert.equal(info.url, origin + page.route);
+        assert.equal(info.inLanguage, page.language);
+        assert.ok(!('offers' in info), `${page.file}: information pages must not publish offers`);
+        assert.ok(!('applicationCategory' in info), `${page.file}: information pages must not be applications`);
+      } else {
+        assert.deepEqual([...types.keys()], ['WebApplication', 'BreadcrumbList'], `${page.file}: tool schema types`);
+        const app = types.get('WebApplication');
+        assert.equal(app.url, origin + page.route);
+        assert.equal(app.inLanguage, page.language);
+        assert.equal(app.offers.price, '0');
+        assert.equal(app.offers.priceCurrency, 'USD');
+      }
+      const primary = types.get(pageType || 'WebApplication');
+      assert.equal(primary.name, decodeHtml(read(page.file).match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)[1]));
+      assert.ok(!('aggregateRating' in primary), `${page.file}: fabricated rating`);
+      assert.ok(!('review' in primary), `${page.file}: fabricated review`);
       const crumbs = types.get('BreadcrumbList').itemListElement;
       assert.equal(crumbs.at(-1).item, origin + page.route);
-      assert.equal(crumbs.at(-1).name, app.name);
+      assert.equal(crumbs.at(-1).name, primary.name);
     }
   }
 
@@ -104,8 +117,10 @@ test('canonical pages publish truthful localized structured data only', () => {
 
 test('SEO generation and validation are wired into package scripts and deployment exclusions', () => {
   const pkg = JSON.parse(read('package.json'));
-  assert.equal(pkg.scripts['generate:seo'], 'npm run generate:directory && node scripts/generate-sitemap.cjs && node scripts/generate-structured-data.cjs');
-  assert.equal(pkg.scripts['check:seo'], 'npm run check:directory && node --test tests/seo.test.cjs && node scripts/check-seo-artifacts.cjs');
+  assert.equal(pkg.scripts['generate:seo'], 'npm run generate:directory && npm run generate:footer && node scripts/generate-sitemap.cjs && node scripts/generate-structured-data.cjs');
+  assert.equal(pkg.scripts['check:seo'], 'npm run check:directory && npm run check:footer && node --test tests/seo.test.cjs && node scripts/check-seo-artifacts.cjs');
+  assert.equal(pkg.scripts['generate:footer'], 'node scripts/generate-site-footer.cjs');
+  assert.equal(pkg.scripts['check:footer'], 'node scripts/generate-site-footer.cjs --check');
   assert.match(read('.assetsignore'), /^scripts\/$/m);
   assert.ok(fs.existsSync(path.join(root, 'scripts/check-seo-artifacts.cjs')));
 });

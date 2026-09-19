@@ -126,12 +126,14 @@ http://127.0.0.1:8000/
 
 ```bash
 npm run generate:directory
+npm run generate:footer
 npm run generate:seo
 npm run check:directory
+npm run check:footer
 npm run check:seo
 ```
 
-`shared/tools-data.js`是工具名称、描述、分类、常用状态和Related Tools关系的单一数据源。`generate:directory`把这些数据同步到英文和中文静态HTML，使无JavaScript访问和搜索引擎仍能读取完整链接；`check:directory`会阻止生成标记漂移。`generate:seo`会先同步目录，再从页面当前可见标题和描述生成JSON-LD，并按每个页面最近一次Git提交日期生成确定性的ISO `lastmod`；如果页面尚未提交，则使用当前构建日期。随后脚本会同步`_headers`中的JSON-LD SHA-256哈希。修改规范页面元数据、工具目录或内容后应重新生成，并在提交前运行验证。脚本不访问网络。
+`shared/tools-data.js`是工具名称、描述、分类、常用状态和Related Tools关系的单一数据源。`generate:directory`把这些数据同步到英文和中文静态HTML，使无JavaScript访问和搜索引擎仍能读取完整链接；`check:directory`会阻止生成标记漂移。`generate:footer`从一个模板向全部HTML页面同步本地化页脚导航，`check:footer`负责检测漂移。`generate:seo`会先同步目录和页脚，再从页面当前可见标题和描述生成JSON-LD，并按每个页面最近一次Git提交日期生成确定性的ISO `lastmod`；如果页面尚未提交，则使用当前构建日期。随后脚本会同步`_headers`中的JSON-LD SHA-256哈希。修改规范页面元数据、工具目录、页脚或内容后应重新生成，并在提交前运行验证。脚本不访问网络。
 
 线上仍需配置Cloudflare Single Redirect，将`http://utilcover.com/*`和`https://utilcover.com/*`永久重定向到`https://www.utilcover.com/$1`。该主机级规则无法通过静态HTML安全实现；不要用客户端JavaScript或meta refresh替代。
 

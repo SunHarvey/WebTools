@@ -38,14 +38,20 @@ function schemaFor(route, html, file) {
   const name = valueFrom(html, /<h1\b[^>]*>([\s\S]*?)<\/h1>/i, file);
   const description = valueFrom(html, /<meta\s+name="description"\s+content="([^"]+)"/i, file);
   const homeUrl = language === 'zh-CN' ? `${origin}/zh/` : `${origin}/`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
+  const section = route.replace(/^\/zh\//, '/').split('/').filter(Boolean)[0];
+  const informationTypes = { privacy: 'WebPage', about: 'AboutPage', contact: 'ContactPage', licenses: 'WebPage' };
+  const pageType = informationTypes[section];
+  const primary = pageType
+    ? { '@type': pageType, '@id': `${url}#page`, name, url, description, inLanguage: language, isPartOf: { '@id': `${homeUrl}#website` } }
+    : {
         '@type': 'WebApplication', '@id': `${url}#application`, name, url, description, inLanguage: language,
         applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', browserRequirements: 'Requires JavaScript and a modern web browser',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
-      },
+      };
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      primary,
       {
         '@type': 'BreadcrumbList', '@id': `${url}#breadcrumb`,
         itemListElement: [

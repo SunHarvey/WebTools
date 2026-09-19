@@ -3,6 +3,11 @@
 const MAX_DIMENSION = 8192;
 const MAX_FILE_BYTES = 16 * 1024 * 1024;
 const MAX_PIXEL_COUNT = 12_000_000;
+const MAX_BATCH_FILES = 25;
+const HEADER_READ_BYTES = 32;
+const SELECTION_CONCURRENCY = 3;
+const MAX_JPEG_SEGMENTS = 2048;
+const MAX_JPEG_FILL_BYTES = 4096;
 const INPUT_MIME_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp']);
 const OUTPUT_MIME_TYPES = new Map([
   ['png', 'image/png'],
@@ -24,6 +29,7 @@ const IMAGE_MESSAGES = {
   loaded: { en: 'Image loaded locally', zh: '图片已在本地加载' },
   noImage: { en: 'No image selected', zh: '尚未选择图片' },
   invalidImage: { en: 'Choose a valid image.', zh: '请选择有效图片。' },
+  batchLimit: { en: `Choose no more than ${MAX_BATCH_FILES} images at a time.`, zh: `每次最多选择 ${MAX_BATCH_FILES} 张图片。` },
 };
 
 function imageMessage(key, language) {
@@ -105,6 +111,46 @@ function parseJpegDimensions(bytes) {
   throw new TypeError('The JPEG header is malformed or its dimensions are unavailable.');
 }
 
+async function readFileBytes(file, start, end) {
+  const boundedStart = Math.max(0, Math.min(file.size, start));
+  const boundedEnd = Math.max(boundedStart, Math.min(file.size, end));
+  return new Uint8Array(await file.slice(boundedStart, boundedEnd).arrayBuffer());
+}
+
+async function inspectJpegDimensions(file) {
+  const signature = await readFileBytes(file, 0, 2);
+  if (!hasBytes(signature, [0xff, 0xd8])) throw new TypeError('The JPEG header is malformed.');
+  const startOfFrameMarkers = new Set([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf]);
+  let offset = 2;
+  let segments = 0;
+  while (offset < file.size) {
+    segments += 1;
+    if (segments > MAX_JPEG_SEGMENTS) throw new TypeError('The JPEG metadata is too complex.');
+    const markerBytes = await readFileBytes(file, offset, offset + MAX_JPEG_FILL_BYTES + 2);
+    if (markerBytes[0] !== 0xff) throw new TypeError('The JPEG header is malformed.');
+    let markerOffset = 1;
+    while (markerOffset < markerBytes.length && markerBytes[markerOffset] === 0xff) markerOffset += 1;
+    if (markerOffset > MAX_JPEG_FILL_BYTES || markerOffset >= markerBytes.length) {
+      throw new TypeError('The JPEG metadata is malformed or excessive.');
+    }
+    const marker = markerBytes[markerOffset];
+    offset += markerOffset + 1;
+    if (marker === 0xd9 || marker === 0xda) break;
+    if (marker === 0x01 || (marker >= 0xd0 && marker <= 0xd7)) continue;
+    const lengthBytes = await readFileBytes(file, offset, offset + 2);
+    if (lengthBytes.length < 2) break;
+    const segmentLength = lengthBytes[0] * 256 + lengthBytes[1];
+    if (segmentLength < 2 || offset + segmentLength > file.size) break;
+    if (startOfFrameMarkers.has(marker)) {
+      const frame = await readFileBytes(file, offset, offset + 7);
+      if (frame.length < 7 || segmentLength < 7) break;
+      return { width: frame[5] * 256 + frame[6], height: frame[3] * 256 + frame[4] };
+    }
+    offset += segmentLength;
+  }
+  throw new TypeError('The JPEG header is malformed or its dimensions are unavailable.');
+}
+
 function readUint24LE(bytes, offset) {
   return bytes[offset] + bytes[offset + 1] * 256 + bytes[offset + 2] * 65536;
 }
@@ -113,7 +159,7 @@ function readUint32LE(bytes, offset) {
   return bytes[offset] + bytes[offset + 1] * 256 + bytes[offset + 2] * 65536 + bytes[offset + 3] * 16777216;
 }
 
-function parseWebpDimensions(bytes, fileLength = bytes.length) {
+function parseWebpDimensions(bytes, fileLength = bytes.length, paddingByte = null) {
   if (bytes.length < 20 || !hasBytes(bytes, [82, 73, 70, 70]) || !hasBytes(bytes, [87, 69, 66, 80], 8)) {
     throw new TypeError('The WebP header is malformed.');
   }
@@ -124,7 +170,8 @@ function parseWebpDimensions(bytes, fileLength = bytes.length) {
   const minimumChunkSize = minimumChunkSizes[chunk] ?? Infinity;
   const paddedChunkEnd = 20 + chunkSize + (chunkSize % 2);
   const invalidFixedSize = chunk === 'VP8X' && chunkSize !== 10;
-  const invalidPadding = chunkSize % 2 === 1 && bytes[20 + chunkSize] !== 0;
+  const declaredPadding = 20 + chunkSize < bytes.length ? bytes[20 + chunkSize] : paddingByte;
+  const invalidPadding = chunkSize % 2 === 1 && declaredPadding !== 0;
   if (riffSize + 8 !== fileLength || chunkSize < minimumChunkSize || invalidFixedSize ||
       paddedChunkEnd > fileLength || invalidPadding) {
     throw new TypeError('The WebP header is malformed.');
@@ -148,7 +195,7 @@ function parseWebpDimensions(bytes, fileLength = bytes.length) {
 async function inspectImageFileHeader(file) {
   validateImageInput(file);
   if (typeof file.slice !== 'function') throw new TypeError('The image file cannot be read.');
-  const bytes = new Uint8Array(await file.slice(0, file.size).arrayBuffer());
+  const bytes = await readFileBytes(file, 0, HEADER_READ_BYTES);
   let detectedMime;
   let dimensions;
   if (hasBytes(bytes, [137, 80, 78, 71, 13, 10, 26, 10])) {
@@ -156,10 +203,15 @@ async function inspectImageFileHeader(file) {
     dimensions = parsePngDimensions(bytes);
   } else if (hasBytes(bytes, [255, 216])) {
     detectedMime = 'image/jpeg';
-    dimensions = parseJpegDimensions(bytes);
+    dimensions = await inspectJpegDimensions(file);
   } else if (hasBytes(bytes, [82, 73, 70, 70]) && hasBytes(bytes, [87, 69, 66, 80], 8)) {
     detectedMime = 'image/webp';
-    dimensions = parseWebpDimensions(bytes, file.size);
+    const chunkSize = readUint32LE(bytes, 16);
+    const paddingOffset = 20 + chunkSize;
+    const padding = chunkSize % 2 && paddingOffset >= bytes.length
+      ? await readFileBytes(file, paddingOffset, paddingOffset + 1)
+      : null;
+    dimensions = parseWebpDimensions(bytes, file.size, padding ? padding[0] : null);
   } else {
     throw new TypeError('The image signature is missing or unsupported.');
   }
@@ -168,6 +220,27 @@ async function inspectImageFileHeader(file) {
   }
   validatePixelCount(dimensions.width, dimensions.height);
   return { mime: detectedMime, ...dimensions };
+}
+
+function validateImageBatch(files) {
+  const candidates = Array.from(files || []).filter(file => file && String(file.type).toLowerCase().startsWith('image/'));
+  if (candidates.length > MAX_BATCH_FILES) throw new RangeError(`Choose no more than ${MAX_BATCH_FILES} images at a time.`);
+  return candidates;
+}
+
+async function mapWithConcurrency(items, concurrency, operation) {
+  const values = Array.from(items || []);
+  const results = new Array(values.length);
+  let next = 0;
+  async function worker() {
+    while (next < values.length) {
+      const index = next++;
+      results[index] = await operation(values[index], index);
+    }
+  }
+  const count = Math.max(1, Math.min(values.length, Math.floor(Number(concurrency)) || 1));
+  await Promise.all(Array.from({ length: count }, worker));
+  return results;
 }
 
 function createLatestTaskRunner({ onStart = () => {}, onSuccess = () => {}, onError = () => {} } = {}) {
@@ -239,7 +312,31 @@ async function encodeToTargetSize(encode, targetBytes, { iterations = 8, minQual
     if (result.size <= target) { best = result; low = quality; }
     else high = quality;
   }
-  return best || smallest;
+  const result = best || smallest;
+  return { ...result, targetBytes: target, targetReached: result.size <= target };
+}
+
+async function encodeForTarget(encode, mime, quality, targetBytes) {
+  const target = Number(targetBytes);
+  if (!(target > 0)) return encode(quality);
+  if (mime !== 'image/png') return encodeToTargetSize(encode, target);
+  const result = await encode(1);
+  return { ...result, targetBytes: target, targetReached: result.size <= target };
+}
+
+function formatKilobytes(bytes) {
+  const value = Number(bytes) / 1024;
+  const digits = value >= 100 || Number.isInteger(value) ? 0 : 1;
+  return `${value.toFixed(digits).replace(/\.0$/, '')} KB`;
+}
+
+function targetSizeMessage(result, language) {
+  if (!result || !result.targetBytes) return '';
+  const target = formatKilobytes(result.targetBytes);
+  const actual = formatKilobytes(result.size ?? result.blob?.size);
+  const zh = String(language).toLowerCase().startsWith('zh');
+  if (result.targetReached) return zh ? `已达到 ${target} 目标，实际大小：${actual}。` : `Target ${target} reached. Actual size: ${actual}.`;
+  return zh ? `无法达到 ${target}，当前可生成的最小文件为 ${actual}。` : `Target ${target} could not be reached. Smallest result: ${actual}.`;
 }
 
 function calculateTargetDimensions(sourceWidth, sourceHeight, requestedWidth, requestedHeight, keepAspectRatio = true, preventUpscale = true) {
@@ -354,7 +451,13 @@ function attachImageTool() {
     originalPreview.removeAttribute('src');
     originalInfo.textContent = imageMessage('noImage', language);
     fileName.textContent = imageMessage('noImage', language);
-    const candidates = Array.from(files || []).filter(file => file && String(file.type).startsWith('image/'));
+    let candidates;
+    try {
+      candidates = validateImageBatch(files);
+    } catch {
+      showStatus(imageMessage('batchLimit', language), 'error');
+      return;
+    }
     if (!candidates.length) {
       showStatus(imageMessage('invalidImage', language), 'error');
       return;
@@ -362,7 +465,7 @@ function attachImageTool() {
     showStatus(imageMessage('loading', language));
     let decoded;
     try {
-      await Promise.all(candidates.map(inspectImageFileHeader));
+      await mapWithConcurrency(candidates, SELECTION_CONCURRENCY, inspectImageFileHeader);
       if (selection !== selectionGeneration) return;
       decoded = await decodeFile(candidates[0]);
       if (selection !== selectionGeneration) { revoke(decoded.url); return; }
@@ -404,12 +507,18 @@ function attachImageTool() {
         const blob = await canvasToBlob(canvas, mime, quality);
         return { blob, size: blob.size, quality };
       };
-      const encoded = settings.targetBytes > 0 && mime !== 'image/png'
-        ? await encodeToTargetSize(encode, settings.targetBytes)
-        : await encode(settings.quality);
+      const encoded = await encodeForTarget(encode, mime, settings.quality, settings.targetBytes);
       canvas.width = 1; canvas.height = 1;
       const baseName = file.name.replace(/\.[^.]*$/, '') || 'image';
-      return { file, blob: encoded.blob, dimensions, mime, name: `${baseName}-optimized.${extensionFor(mime)}` };
+      return {
+        file,
+        blob: encoded.blob,
+        dimensions,
+        mime,
+        name: `${baseName}-optimized.${extensionFor(mime)}`,
+        targetBytes: encoded.targetBytes || 0,
+        targetReached: encoded.targetReached ?? null,
+      };
     } finally { revoke(decoded.url); }
   }
 
@@ -419,7 +528,8 @@ function attachImageTool() {
       const row = document.createElement('article');
       row.className = 'image-batch-row';
       const summary = document.createElement('div');
-      summary.textContent = `${result.file.name} · ${formatFileSize(result.file.size)} → ${formatFileSize(result.blob.size)} · ${calculateReduction(result.file.size, result.blob.size)}% ${zh ? '节省' : 'saved'}`;
+      const targetNote = result.targetBytes ? ` · ${targetSizeMessage({ ...result, size: result.blob.size }, language)}` : '';
+      summary.textContent = `${result.file.name} · ${formatFileSize(result.file.size)} → ${formatFileSize(result.blob.size)} · ${calculateReduction(result.file.size, result.blob.size)}% ${zh ? '节省' : 'saved'}${targetNote}`;
       const link = document.createElement('a');
       link.className = 'button-link secondary';
       link.href = result.url;
@@ -486,7 +596,17 @@ function attachImageTool() {
       downloadLink.download = first.name;
       downloadLink.hidden = outputResults.length !== 1;
       downloadAll.hidden = outputResults.length < 2;
-      showStatus(imageMessage('done', language), 'success');
+      const unreached = outputResults.filter(result => result.targetReached === false);
+      if (unreached.length === 1 && outputResults.length === 1) {
+        showStatus(targetSizeMessage({ ...unreached[0], size: unreached[0].blob.size }, language), 'warning');
+      } else if (unreached.length) {
+        const target = formatKilobytes(unreached[0].targetBytes);
+        showStatus(zh
+          ? `${unreached.length} 张图片无法达到 ${target}，请查看下方实际最小大小。`
+          : `${unreached.length} images could not reach ${target}; see their smallest results below.`, 'warning');
+      } else {
+        showStatus(imageMessage('done', language), 'success');
+      }
     } catch (error) {
       if (compression === compressionGeneration) showStatus(zh ? imageMessage('failed', language) : error.message, 'error');
     } finally {
@@ -520,7 +640,11 @@ if (typeof module !== 'undefined' && module.exports) {
     imageMessage,
     imageSelectedFileName,
     extractImageFiles,
+    validateImageBatch,
+    mapWithConcurrency,
     encodeToTargetSize,
+    encodeForTarget,
+    targetSizeMessage,
     calculateReduction,
   };
 }
