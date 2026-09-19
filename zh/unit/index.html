@@ -120,11 +120,7 @@
       <details><summary>为什么结果有时包含很多位？</summary><p>某些单位比例无法写成有限小数。工具会保留有用的有效数字，并清理常见浮点残留，但最终仍是 JavaScript Number 表示的近似值。实际使用时应根据原测量精度继续取舍位数。</p></details>
       <details><summary>能否输入负数或科学记数法？</summary><p>可以，但输入去除首尾空白后必须非空，并且能被 JavaScript 转成有限 Number；许多负数和科学记数法写法都符合条件。页面不会判断该数值对所选计量是否有现实意义，特定场景的校验仍由使用者完成。</p></details>
     </div></div>
-    <nav class="related-tools" data-related-tools="unit" aria-label="相关工具"><h2>相关工具</h2><div class="related-links">
-      <a href="/zh/calculator/"><strong>基础计算器</strong><span>换算后继续进行算术计算，同时留意它采用连续即时执行方式。</span></a>
-      <a href="/zh/timestamp/"><strong>Unix 时间戳转换</strong><span>单独处理纪元秒和毫秒；日期转换不属于这里的计量类别。</span></a>
-      <a href="/zh/color/"><strong>颜色转换器</strong><span>数值表示颜色而非计量单位时，可转换 HEX、RGB 与 HSL。</span></a>
-    </div></nav>
+    <nav class="related-tools" data-related-tools="unit" aria-label="相关工具"><h2>相关工具</h2><div class="related-links"><a href="/zh/calculator/"><strong>计算器</strong><span>支持键盘操作的日常算术。</span></a><a href="/zh/timestamp/"><strong>时间戳转换器</strong><span>跨时区转换 Unix 时间戳。</span></a><a href="/zh/color/"><strong>颜色与对比度</strong><span>转换颜色并检查 WCAG 对比度。</span></a></div></nav>
   </section>
 </main>
 

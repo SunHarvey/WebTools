@@ -43,6 +43,17 @@ function recordRecent(storage, id, limit = 7) {
 
 function toolHref(tool, language) { return `${language === 'zh' ? '/zh' : ''}/${tool.id}/`; }
 
+function createRelatedLink(tool, language, doc = document) {
+  const link = doc.createElement('a');
+  link.href = toolHref(tool, language);
+  const name = doc.createElement('strong');
+  name.textContent = tool.name[language];
+  const description = doc.createElement('span');
+  description.textContent = tool.description[language];
+  link.append(name, description);
+  return link;
+}
+
 function renderRelatedTools(root = document) {
   const language = pageLanguage();
   root.querySelectorAll('[data-related-tools]').forEach(container => {
@@ -55,11 +66,7 @@ function renderRelatedTools(root = document) {
     links.className = 'related-links';
     ids.forEach(id => {
       const tool = globalThis.UTILCOVER_TOOLS?.find(item => item.id === id);
-      if (!tool) return;
-      const link = document.createElement('a');
-      link.href = toolHref(tool, language);
-      link.textContent = tool.name[language];
-      links.appendChild(link);
+      if (tool) links.appendChild(createRelatedLink(tool, language));
     });
     container.replaceChildren(heading, links);
   });
@@ -189,4 +196,4 @@ function attachSite() {
 }
 
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachSite);
-if (typeof module !== 'undefined' && module.exports) module.exports = { renderRelatedTools, searchTools, readStoredIds, toggleFavorite, recordRecent, getStorage };
+if (typeof module !== 'undefined' && module.exports) module.exports = { renderRelatedTools, createRelatedLink, searchTools, readStoredIds, toggleFavorite, recordRecent, getStorage };

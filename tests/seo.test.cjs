@@ -104,8 +104,8 @@ test('canonical pages publish truthful localized structured data only', () => {
 
 test('SEO generation and validation are wired into package scripts and deployment exclusions', () => {
   const pkg = JSON.parse(read('package.json'));
-  assert.equal(pkg.scripts['generate:seo'], 'node scripts/generate-sitemap.cjs && node scripts/generate-structured-data.cjs');
-  assert.equal(pkg.scripts['check:seo'], 'node --test tests/seo.test.cjs && node scripts/check-seo-artifacts.cjs');
+  assert.equal(pkg.scripts['generate:seo'], 'npm run generate:directory && node scripts/generate-sitemap.cjs && node scripts/generate-structured-data.cjs');
+  assert.equal(pkg.scripts['check:seo'], 'npm run check:directory && node --test tests/seo.test.cjs && node scripts/check-seo-artifacts.cjs');
   assert.match(read('.assetsignore'), /^scripts\/$/m);
   assert.ok(fs.existsSync(path.join(root, 'scripts/check-seo-artifacts.cjs')));
 });

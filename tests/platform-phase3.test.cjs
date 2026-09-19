@@ -50,6 +50,23 @@ test('every canonical page loads shared metadata and accessible site behavior', 
   assert.match(source, /mobile-nav-toggle/);
   assert.match(source, /localStorage/);
   assert.match(source, /heading\.id = labelledBy/);
+  assert.match(source, /description\.textContent = tool\.description\[language\]/);
+  assert.match(source, /link\.append\(name, description\)/);
+});
+
+test('related links render centralized names and descriptions', () => {
+  const makeElement = tagName => ({
+    tagName,
+    children: [],
+    append(...children) { this.children.push(...children); },
+  });
+  const documentStub = { createElement: makeElement };
+  const link = site.createRelatedLink(TOOLS.find(tool => tool.id === 'json'), 'zh', documentStub);
+  assert.equal(link.href, '/zh/json/');
+  assert.equal(link.children[0].tagName, 'strong');
+  assert.equal(link.children[0].textContent, 'JSON 格式化');
+  assert.equal(link.children[1].tagName, 'span');
+  assert.equal(link.children[1].textContent, '格式化、压缩、验证并浏览 JSON。');
 });
 
 test('homepages expose favorite and recent tool regions', () => {

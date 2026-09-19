@@ -25,10 +25,10 @@ const TOOL_CATEGORIES = {
 };
 
 const RELATED_TOOLS = {
-  json: ['base64', 'hash', 'text', 'uuid'], image: ['qr', 'color', 'base64'], qr: ['image', 'color', 'base64'],
-  encode: ['json', 'hash', 'text'], timestamp: ['uuid', 'json', 'calculator'], uuid: ['timestamp', 'hash', 'json'],
-  hash: ['password', 'uuid', 'base64'], color: ['image', 'qr', 'unit'], text: ['json', 'base64', 'password'],
-  unit: ['calculator', 'timestamp', 'color'], calculator: ['unit', 'timestamp', 'text'], password: ['hash', 'uuid', 'text'],
+  json: ['text', 'encode', 'hash'], image: ['color', 'qr', 'base64'], qr: ['password', 'image', 'encode'],
+  encode: ['text', 'json', 'hash'], timestamp: ['encode', 'uuid', 'calculator'], uuid: ['hash', 'password', 'timestamp'],
+  hash: ['encode', 'password', 'text'], color: ['image', 'qr', 'text'], text: ['encode', 'json', 'hash'],
+  unit: ['calculator', 'timestamp', 'color'], calculator: ['unit', 'timestamp', 'text'], password: ['hash', 'qr', 'uuid'],
   base64: ['url-encoder', 'json', 'hash'], 'url-encoder': ['base64', 'json', 'text'],
 };
 

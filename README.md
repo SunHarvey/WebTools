@@ -122,14 +122,16 @@ http://127.0.0.1:8000/
 
 ## SEO构件维护
 
-规范页面的结构化数据、`sitemap.xml`和严格CSP哈希由仓库脚本维护：
+规范页面的结构化数据、`sitemap.xml`、首页与Related Tools静态标记，以及严格CSP哈希由仓库脚本维护：
 
 ```bash
+npm run generate:directory
 npm run generate:seo
+npm run check:directory
 npm run check:seo
 ```
 
-`generate:seo`从页面当前可见标题和描述生成JSON-LD，并按每个页面最近一次Git提交日期生成确定性的ISO `lastmod`；如果页面尚未提交，则使用当前构建日期。随后脚本会同步`_headers`中的JSON-LD SHA-256哈希。修改规范页面元数据或内容后应重新生成，并在提交前运行验证。脚本不访问网络。
+`shared/tools-data.js`是工具名称、描述、分类、常用状态和Related Tools关系的单一数据源。`generate:directory`把这些数据同步到英文和中文静态HTML，使无JavaScript访问和搜索引擎仍能读取完整链接；`check:directory`会阻止生成标记漂移。`generate:seo`会先同步目录，再从页面当前可见标题和描述生成JSON-LD，并按每个页面最近一次Git提交日期生成确定性的ISO `lastmod`；如果页面尚未提交，则使用当前构建日期。随后脚本会同步`_headers`中的JSON-LD SHA-256哈希。修改规范页面元数据、工具目录或内容后应重新生成，并在提交前运行验证。脚本不访问网络。
 
 线上仍需配置Cloudflare Single Redirect，将`http://utilcover.com/*`和`https://utilcover.com/*`永久重定向到`https://www.utilcover.com/$1`。该主机级规则无法通过静态HTML安全实现；不要用客户端JavaScript或meta refresh替代。
 
@@ -139,11 +141,15 @@ npm run check:seo
 
 ```bash
 npm test
+npm run check:directory
 npm run check:seo
 npm run check:js
+npm run check:browser
 ```
 
-测试覆盖密码之外的所有工具核心转换逻辑，并保留现有计算器回归测试。
+`check:browser`使用本机Chrome、Chromium或Edge的DevTools pipe执行持久浏览器验收：检查首页、JSON、Image、QR、Timestamp和UUID的英文/中文移动页面，并验证JSON、Password、Image和Hash交互不会产生加载后的HTTP请求。可通过`BROWSER_BIN=/path/to/browser`指定浏览器。该脚本使用Node.js核心模块，不要求Playwright或第三方WebSocket依赖，并会在成功或失败后清理浏览器进程、临时配置目录和本地测试服务器。
+
+测试覆盖各工具的核心转换逻辑、目录与SEO构件一致性、隐私网络约束，并保留现有计算器回归测试。
 
 ## 浏览器要求
 

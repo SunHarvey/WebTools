@@ -93,11 +93,7 @@
       <details><summary>校验和匹配就代表文件安全吗？</summary><p>不是。匹配表示指定算法下摘要相同，是完整性核对的证据，但无法排除碰撞，也不等于恶意内容扫描。如果攻击者可以同时替换文件和校验和，单纯比较仍无法认证来源。</p></details>
       <details><summary>计算过程会上传或保存内容吗？</summary><p>计算在当前浏览器中通过 Web Crypto 执行。本工具不会为输入文本、所选文件或结果新增网络请求、跟踪或存储。不过，浏览器扩展和设备本身的环境并不属于页面能够控制的范围。</p></details>
     </div></div>
-    <nav class="related-tools" data-related-tools="hash" aria-label="相关工具"><h2>相关工具</h2><div class="related-links">
-      <a href="/zh/encode/"><strong>Base64 与 URL 编解码</strong><span>需要传输编码而不是完整性摘要时，可转换 UTF-8 文本。</span></a>
-      <a href="/zh/password/"><strong>随机密码生成器</strong><span>生成随机凭据，不要把快速校验和误当作密码保护方案。</span></a>
-      <a href="/zh/text/"><strong>文本统计与整理</strong><span>生成指纹之前检查换行和文本变换，避免无意改变输入。</span></a>
-    </div></nav>
+    <nav class="related-tools" data-related-tools="hash" aria-label="相关工具"><h2>相关工具</h2><div class="related-links"><a href="/zh/encode/"><strong>Base64 与网址编解码</strong><span>进行 Base64 与网址组件编解码。</span></a><a href="/zh/password/"><strong>密码生成器</strong><span>使用 Web Crypto 生成安全密码。</span></a><a href="/zh/text/"><strong>文本工具箱</strong><span>统计、清理、排序和转换文本。</span></a></div></nav>
   </section>
 </main>
 
