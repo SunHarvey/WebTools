@@ -42,6 +42,13 @@
   letter-spacing: -0.02em;
 }
 
+.calculator-display.expression {
+  overflow-x: auto;
+  font-size: clamp(1.55rem, 6vw, 2.5rem);
+  letter-spacing: -0.025em;
+  text-overflow: clip;
+}
+
 .calculator-keys {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

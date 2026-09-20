@@ -26,10 +26,31 @@ test('performs basic arithmetic from keyboard input', () => {
   }
 });
 
+test('keeps the completed equation visible with its result', () => {
+  const calculator = new CalculatorEngine();
+  enter(calculator, '7+8=');
+  assert.equal(calculator.displayValue, '15');
+  assert.equal(calculator.displayText, '7 + 8 = 15');
+
+  calculator.handleKey('2');
+  assert.equal(calculator.displayText, '2');
+});
+
+test('shows visual multiplication and division symbols in equations', () => {
+  const multiply = new CalculatorEngine();
+  enter(multiply, '6*4=');
+  assert.equal(multiply.displayText, '6 × 4 = 24');
+
+  const divide = new CalculatorEngine();
+  enter(divide, '8/2=');
+  assert.equal(divide.displayText, '8 ÷ 2 = 4');
+});
+
 test('chains operations like a basic phone calculator', () => {
   const calculator = new CalculatorEngine();
   enter(calculator, '5+3*2=');
   assert.equal(calculator.displayValue, '16');
+  assert.equal(calculator.displayText, '8 × 2 = 16');
 });
 
 test('rounds floating point noise for ordinary decimal calculations', () => {
@@ -84,6 +105,8 @@ test('calculator page exposes complete mouse controls without inline handlers', 
   const script = fs.readFileSync(require('node:path').join(__dirname, '..', 'calculator.js'), 'utf8');
 
   assert.equal((html.match(/<button type="button" class="key/g) || []).length, 19);
+  assert.match(html, /id="calculatorDisplay"[^>]*dir="ltr"/);
+  assert.match(fs.readFileSync(require('node:path').join(__dirname, '..', 'calculator.css'), 'utf8'), /\.calculator-display\.expression\s*\{/);
   for (const operator of ['+', '-', '*', '/']) {
     assert.ok(html.includes(`data-operator="${operator}"`));
   }
@@ -95,6 +118,8 @@ test('calculator page exposes complete mouse controls without inline handlers', 
   assert.equal(script.includes('new Function'), false);
   assert.equal(script.includes('innerHTML'), false);
   assert.ok(script.includes("document.addEventListener('keydown'"));
+  assert.ok(script.includes('engine.displayText'));
+  assert.ok(script.includes('display.scrollLeft = display.scrollWidth'));
 });
 
 test('limits displayed numeric input without blocking operations', () => {

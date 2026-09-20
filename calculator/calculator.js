@@ -12,7 +12,9 @@ class CalculatorEngine {
         this.onChange = onChange;
         this.displayValue = '0';
         this.firstOperand = null;
+        this.firstOperandText = null;
         this.pendingOperator = null;
+        this.completedEquation = null;
         this.waitingForOperand = false;
         this.hasError = false;
     }
@@ -26,7 +28,9 @@ class CalculatorEngine {
     clear() {
         this.displayValue = '0';
         this.firstOperand = null;
+        this.firstOperandText = null;
         this.pendingOperator = null;
+        this.completedEquation = null;
         this.waitingForOperand = false;
         this.hasError = false;
         this.notify();
@@ -35,6 +39,7 @@ class CalculatorEngine {
     inputDigit(digit) {
         if (!/^\d$/.test(digit)) return;
         if (this.hasError) this.clear();
+        if (this.completedEquation) this.completedEquation = null;
 
         if (this.waitingForOperand || this.displayValue === '0' || this.displayValue === '-0') {
             const negative = this.displayValue === '-0';
@@ -50,6 +55,7 @@ class CalculatorEngine {
 
     inputDecimal() {
         if (this.hasError) this.clear();
+        if (this.completedEquation) this.completedEquation = null;
         if (this.waitingForOperand) {
             this.displayValue = '0.';
             this.waitingForOperand = false;
@@ -61,6 +67,7 @@ class CalculatorEngine {
 
     toggleSign() {
         if (this.hasError) return;
+        if (this.completedEquation) this.completedEquation = null;
         if (this.waitingForOperand && this.pendingOperator !== null) {
             this.displayValue = '-0';
             this.waitingForOperand = false;
@@ -89,6 +96,7 @@ class CalculatorEngine {
     chooseOperator(operator) {
         if (!['+', '-', '*', '/'].includes(operator) || this.hasError) return;
 
+        this.completedEquation = null;
         if (this.pendingOperator && this.waitingForOperand) {
             this.pendingOperator = operator;
             this.notify();
@@ -98,6 +106,7 @@ class CalculatorEngine {
         const inputValue = Number(this.displayValue);
         if (this.firstOperand === null) {
             this.firstOperand = inputValue;
+            this.firstOperandText = this.displayValue;
         } else if (this.pendingOperator) {
             const result = this.performCalculation(
                 this.firstOperand,
@@ -107,6 +116,7 @@ class CalculatorEngine {
             if (result === null) return;
             this.displayValue = this.formatNumber(result);
             this.firstOperand = result;
+            this.firstOperandText = this.displayValue;
         }
 
         this.pendingOperator = operator;
@@ -117,16 +127,21 @@ class CalculatorEngine {
     calculate() {
         if (this.hasError || this.pendingOperator === null || this.firstOperand === null) return;
 
-        const secondOperand = Number(this.displayValue);
+        const leftText = this.firstOperandText ?? this.formatNumber(this.firstOperand);
+        const rightText = this.displayValue;
+        const operator = this.pendingOperator;
+        const secondOperand = Number(rightText);
         const result = this.performCalculation(
             this.firstOperand,
             secondOperand,
-            this.pendingOperator
+            operator
         );
         if (result === null) return;
 
         this.displayValue = this.formatNumber(result);
+        this.completedEquation = `${leftText} ${this.operatorSymbol(operator)} ${rightText} = ${this.displayValue}`;
         this.firstOperand = null;
+        this.firstOperandText = null;
         this.pendingOperator = null;
         this.waitingForOperand = true;
         this.notify();
@@ -152,6 +167,20 @@ class CalculatorEngine {
         return result;
     }
 
+    operatorSymbol(operator) {
+        return ({ '*': '×', '/': '÷', '-': '−', '+': '+' })[operator] || operator;
+    }
+
+    get displayText() {
+        if (this.completedEquation) return this.completedEquation;
+        if (this.pendingOperator !== null && this.firstOperand !== null) {
+            const left = this.firstOperandText ?? this.formatNumber(this.firstOperand);
+            const operation = `${left} ${this.operatorSymbol(this.pendingOperator)}`;
+            return this.waitingForOperand ? operation : `${operation} ${this.displayValue}`;
+        }
+        return this.displayValue;
+    }
+
     formatNumber(value) {
         const rounded = Number.parseFloat(value.toPrecision(12));
         const plain = String(rounded);
@@ -163,7 +192,9 @@ class CalculatorEngine {
     setError() {
         this.displayValue = 'Error';
         this.firstOperand = null;
+        this.firstOperandText = null;
         this.pendingOperator = null;
+        this.completedEquation = null;
         this.waitingForOperand = true;
         this.hasError = true;
         this.notify();
@@ -205,8 +236,10 @@ function attachCalculator() {
     const operatorButtons = [...document.querySelectorAll('[data-operator]')];
 
     const render = engine => {
-        display.textContent = engine.hasError ? calculatorMessage('error', language) : engine.displayValue;
+        display.textContent = engine.hasError ? calculatorMessage('error', language) : engine.displayText;
         display.classList.toggle('error', engine.hasError);
+        display.classList.toggle('expression', !engine.hasError && engine.displayText !== engine.displayValue);
+        display.scrollLeft = display.scrollWidth;
         operatorButtons.forEach(button => {
             button.classList.toggle(
                 'active',
