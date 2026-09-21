@@ -30,6 +30,11 @@ test('browser acceptance exercises all privacy-critical tools', () => {
   ]);
 });
 
+test('browser acceptance centers generated passwords in both locales', () => {
+  const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
+  assert.deepEqual(acceptance.PASSWORD_RESULT_ROUTES, ['/password/', '/zh/password/']);
+});
+
 test('package exposes the durable browser acceptance command', () => {
   const packageJson = require(path.join(root, 'package.json'));
   assert.equal(packageJson.scripts['check:browser'], 'node scripts/browser-acceptance.cjs');

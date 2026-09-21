@@ -18,6 +18,7 @@ const MOBILE_ROUTES = [
   '/timestamp/', '/zh/timestamp/',
   '/uuid/', '/zh/uuid/',
 ];
+const PASSWORD_RESULT_ROUTES = ['/password/', '/zh/password/'];
 
 const PRIVACY_FLOWS = {
   '/json/': `
@@ -369,6 +370,83 @@ async function runAcceptance() {
     }
     await client.send('Emulation.clearDeviceMetricsOverride');
 
+    const passwordResults = [];
+    const passwordViewports = [
+      { name: 'desktop', width: 1280, height: 800, mobile: false },
+      { name: 'mobile', width: 390, height: 844, mobile: true },
+    ];
+    for (const viewport of passwordViewports) {
+      await client.send('Emulation.setDeviceMetricsOverride', {
+        width: viewport.width, height: viewport.height, deviceScaleFactor: 1, mobile: viewport.mobile,
+      });
+      for (const route of PASSWORD_RESULT_ROUTES) {
+        await navigate(route);
+        const result = await evaluate(client, `
+          document.querySelector('#generateButton').click();
+          await new Promise(resolve => setTimeout(resolve, 800));
+          const card = document.querySelector('#resultsCard');
+          const bounds = card.getBoundingClientRect();
+          return {
+            count: document.querySelector('#passwordList').children.length,
+            shown: card.classList.contains('show'),
+            cardCenter: bounds.top + (bounds.height / 2),
+            viewportCenter: innerHeight / 2,
+            pageWidth: document.documentElement.scrollWidth,
+            viewportWidth: document.documentElement.clientWidth,
+          };
+        `);
+        assert.ok(result.count > 0, `${route} generated no passwords at ${viewport.name} width`);
+        assert.equal(result.shown, true, `${route} did not reveal the password results at ${viewport.name} width`);
+        assert.ok(Math.abs(result.cardCenter - result.viewportCenter) <= 2,
+          `${route} did not center its generated passwords at ${viewport.name} width (${result.cardCenter}px versus ${result.viewportCenter}px)`);
+        assert.ok(result.pageWidth <= result.viewportWidth + 1, `${route} overflows horizontally after generation at ${viewport.name} width`);
+        passwordResults.push({ route, viewport: viewport.name, ...result });
+      }
+    }
+
+    await client.send('Emulation.setEmulatedMedia', {
+      media: '',
+      features: [{ name: 'prefers-reduced-motion', value: 'reduce' }],
+    });
+    await client.send('Emulation.setDeviceMetricsOverride', {
+      width: 390, height: 844, deviceScaleFactor: 1, mobile: true,
+    });
+    await navigate('/password/');
+    const reducedMotionResult = await evaluate(client, `
+      document.querySelector('#generateButton').click();
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const card = document.querySelector('#resultsCard');
+      const bounds = card.getBoundingClientRect();
+      return {
+        reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+        cardCenter: bounds.top + (bounds.height / 2),
+        viewportCenter: innerHeight / 2,
+      };
+    `);
+    assert.equal(reducedMotionResult.reducedMotion, true, 'Reduced-motion emulation did not apply');
+    assert.ok(Math.abs(reducedMotionResult.cardCenter - reducedMotionResult.viewportCenter) <= 2,
+      'Password results still animate instead of centering immediately when reduced motion is requested');
+
+    await navigate('/password/');
+    const invalidGenerationResult = await evaluate(client, `
+      window.alert = () => {};
+      scrollTo(0, 200);
+      const before = scrollY;
+      document.querySelector('#passwordLength').value = '0';
+      document.querySelector('#generateButton').click();
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      return {
+        before,
+        after: scrollY,
+        shown: document.querySelector('#resultsCard').classList.contains('show'),
+      };
+    `);
+    assert.equal(invalidGenerationResult.shown, false, 'Invalid password input revealed the results');
+    assert.equal(invalidGenerationResult.after, invalidGenerationResult.before,
+      'Invalid password input initiated scrolling');
+
+    await client.send('Emulation.setEmulatedMedia', { media: '', features: [] });
+    await client.send('Emulation.clearDeviceMetricsOverride');
     const privacy = [];
     for (const [route, flow] of Object.entries(PRIVACY_FLOWS)) {
       await navigate(route);
@@ -395,6 +473,7 @@ async function runAcceptance() {
     const report = {
       browser: executable,
       mobileRoutes: mobile,
+      passwordResults,
       privacyFlows: privacy,
       status: 'passed',
     };
@@ -423,7 +502,7 @@ async function runAcceptance() {
 }
 
 module.exports = {
-  CDP_TIMEOUT_MS, MOBILE_ROUTES, PRIVACY_FLOWS, CdpClient,
+  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, PRIVACY_FLOWS, CdpClient,
   runAcceptance, startStaticServer, stopBrowser, stopServer, browserBinary,
 };
 

@@ -180,6 +180,13 @@ function displayPasswords(passwords) {
     }
 
     resultsCard.classList.add('show');
+    requestAnimationFrame(() => {
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        resultsCard.scrollIntoView({
+            behavior: reduceMotion ? 'auto' : 'smooth',
+            block: 'center'
+        });
+    });
 }
 
 function updatePasswordStrength(password) {
