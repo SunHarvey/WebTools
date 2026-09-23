@@ -1,0 +1,147 @@
+.jwt-page .page-shell {
+  width: min(1120px, calc(100% - 32px));
+}
+
+.jwt-input {
+  min-height: 150px;
+  word-break: break-all;
+}
+
+.jwt-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.jwt-summary-item {
+  min-width: 0;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: rgba(4, 12, 24, 0.55);
+}
+
+.jwt-summary-item span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.jwt-summary-item strong {
+  display: block;
+  overflow-wrap: anywhere;
+  color: var(--text);
+}
+
+#jwtState[data-state="active"] { color: var(--success); }
+#jwtState[data-state="expired"],
+#jwtState[data-state="not-active"],
+#jwtState[data-state="invalid-claims"] { color: #fbbf24; }
+
+.jwt-workspace {
+  margin-top: 18px;
+}
+
+.jwt-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.jwt-panel-heading h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.jwt-panel-heading button {
+  padding: 7px 10px;
+  font-size: 0.78rem;
+}
+
+.jwt-output {
+  height: 280px;
+  min-height: 280px;
+  resize: vertical;
+  white-space: pre-wrap;
+}
+
+.jwt-signature-section,
+.jwt-claims-section {
+  margin-top: 18px;
+}
+
+.jwt-signature-section input {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.jwt-claims {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.jwt-claim {
+  min-width: 0;
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(2, 8, 18, 0.7);
+}
+
+.jwt-claim strong,
+.jwt-claim code,
+.jwt-claim-detail {
+  display: block;
+}
+
+.jwt-claim strong {
+  color: var(--primary);
+}
+
+.jwt-claim code {
+  margin-top: 5px;
+  overflow-wrap: anywhere;
+  color: var(--text);
+}
+
+.jwt-claim-detail {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.jwt-claim-detail.error {
+  color: #fbbf24;
+}
+
+.jwt-empty-claims {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+}
+
+.jwt-warning {
+  border-left: 3px solid #fbbf24;
+}
+
+@media (max-width: 720px) {
+  .jwt-summary,
+  .jwt-claims {
+    grid-template-columns: 1fr;
+  }
+
+  .jwt-output {
+    height: 230px;
+    min-height: 230px;
+  }
+}

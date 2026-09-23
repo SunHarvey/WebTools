@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>JWT 解码器与令牌检查工具 | UtilCover</title>
+  <meta name="description" content="在浏览器本地解码 JWT Header 和 Payload，检查过期时间等声明，无需上传令牌。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/jwt/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/jwt/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/jwt/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/jwt/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/jwt/jwt.css">
+  <meta property="og:title" content="JWT 解码器与令牌检查工具 | UtilCover">
+  <meta property="og:description" content="在浏览器本地解码 JWT 结构并检查常见声明。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/zh/jwt/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/zh/jwt/#application",
+      "name": "JWT 解码器与令牌检查工具",
+      "url": "https://www.utilcover.com/zh/jwt/",
+      "description": "在浏览器本地解码 JWT Header 和 Payload，检查过期时间等声明，无需上传令牌。",
+      "inLanguage": "zh-CN",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/zh/jwt/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "工具",
+          "item": "https://www.utilcover.com/zh/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "JWT 解码器与令牌检查工具",
+          "item": "https://www.utilcover.com/zh/jwt/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page jwt-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="platform-nav nav-links"><a href="/zh/#popular-tools">工具</a><a href="/zh/#categories">分类</a><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><button class="search-trigger" type="button" aria-label="搜索工具">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/jwt/?lang=en">英文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>JWT 解码器与令牌检查工具</h1><p>在本地解码 JSON Web Token，检查 Header、Payload 和时间声明。</p></section>
+  <section class="tool-card">
+    <p class="local-processing-note">令牌只在当前浏览器中处理，本工具不会上传或保存输入内容。</p>
+    <div class="field"><label for="jwtInput">JWT 输入</label><textarea id="jwtInput" class="jwt-input" spellcheck="false" autocomplete="off" placeholder="粘贴 JWT 或 Bearer Token"></textarea></div>
+    <div class="actions"><button id="decodeJwt" type="button">解码 JWT</button><button id="clearJwt" class="secondary" type="button">清除</button></div>
+    <div class="jwt-summary" aria-label="JWT 摘要">
+      <div class="jwt-summary-item"><span>算法</span><strong id="jwtAlgorithm">—</strong></div>
+      <div class="jwt-summary-item"><span>时间状态</span><strong id="jwtState">—</strong></div>
+      <div class="jwt-summary-item"><span>签名验证</span><strong>未执行</strong></div>
+    </div>
+    <div id="jwtStatus" class="status" role="status" aria-live="polite">就绪</div>
+    <div class="grid-2 jwt-workspace">
+      <section><div class="jwt-panel-heading"><h2>Header</h2><button class="secondary" type="button" data-jwt-copy="jwtHeader">复制</button></div><textarea id="jwtHeader" class="output jwt-output" readonly spellcheck="false" aria-label="解码后的 JWT Header"></textarea></section>
+      <section><div class="jwt-panel-heading"><h2>Payload</h2><button class="secondary" type="button" data-jwt-copy="jwtPayload">复制</button></div><textarea id="jwtPayload" class="output jwt-output" readonly spellcheck="false" aria-label="解码后的 JWT Payload"></textarea></section>
+    </div>
+    <section class="jwt-signature-section"><div class="jwt-panel-heading"><h2>签名段</h2><button class="secondary" type="button" data-jwt-copy="jwtSignature">复制</button></div><input id="jwtSignature" class="output" type="text" readonly spellcheck="false" aria-label="JWT 签名段"></section>
+    <section class="jwt-claims-section"><div class="jwt-panel-heading"><h2>常见声明</h2></div><div id="jwtClaims" class="jwt-claims"><p class="jwt-empty-claims">解码令牌后可查看声明。</p></div></section>
+  </section>
+  <aside class="info-card jwt-warning"><strong>重要提示：</strong>解码并不代表签名已经验证，也不能证明令牌真实可信。不要根据本页面的解码结果授予访问权限。验证必须使用预期算法、可信密钥，并执行符合具体应用的声明检查。</aside>
+  <section class="tool-guide">
+    <div class="guide-intro"><h2>无需发送令牌即可检查 JWT 结构</h2><p>JWT 通常由 Base64URL 编码的 JSON Header、Payload 和签名段组成。本页面只在浏览器中解码可读 JSON，并解释常见时间声明；不会联系签发方、下载密钥或验证签名。</p></div>
+    <div class="guide-section how-to"><h2>JWT 解码方法</h2><ol class="steps">
+      <li><strong>粘贴紧凑格式令牌</strong>输入由三个部分组成的 JWT。开头可以带有 <code>Bearer</code> 前缀，解析前会自动移除。输入上限为 64 KiB，以限制浏览器资源占用。</li>
+      <li><strong>检查 Header 和 Payload</strong>点击“解码 JWT”后，两段 JSON 会格式化显示。请根据产生令牌的系统核对算法、签发方、受众和主体。</li>
+      <li><strong>谨慎理解时间声明</strong>工具会把 <code>exp</code>、<code>nbf</code> 和 <code>iat</code> NumericDate 转换为 ISO 时间和本地时间。在其他位置完成加密验证之前，这些值仍是不可信输入。</li>
+    </ol></div>
+    <div class="guide-section examples"><h2>常见检查场景</h2><div class="example-grid">
+      <article><h3>排查 API 会话过期</h3><p>把 <code>exp</code> 与当前时间比较，并通过 <code>iat</code> 了解签发时间。仍需在应用中检查设备时钟差异和刷新令牌流程。</p></article>
+      <article><h3>核对签发方和受众</h3><p>排查配置时查看 <code>iss</code> 和 <code>aud</code>。看到预期字符串有助于调试，但不能认证这些内容确实来自可信签发方。</p></article>
+      <article><h3>检查本地日志中的令牌</h3><p>不必把令牌粘贴到外部服务即可解码。令牌可能包含个人信息或访问凭据；应从日志中删除，并在发生暴露时及时撤销。</p></article>
+    </div></div>
+    <div class="guide-section limitations"><h2>安全边界与限制</h2><ul>
+      <li>本工具支持三段式 JWT/JWS 紧凑格式，不会解密五段式 JWE。</li>
+      <li>页面只显示签名段，不执行验证，也不接收密钥、证书或远程 JWKS 地址。</li>
+      <li>Header 和 Payload 必须解码为 UTF-8 JSON 对象。错误的 Base64URL、无效 UTF-8、数组、null 和超限输入都会被拒绝。</li>
+      <li>时间状态只按照当前设备时钟提供辅助判断，不处理签发方允许的时钟偏差、受众规则、撤销、nonce 或授权策略。</li>
+      <li>解码后不会写入浏览器存储，也不会新增网络请求。浏览器扩展、剪贴板历史和设备环境不属于页面能够控制的范围。</li>
+    </ul></div>
+    <div class="guide-section"><h2>JWT 解码常见问题</h2><div class="faq-list">
+      <details><summary>任何人都能读取 JWT Payload 吗？</summary><p>普通签名 JWT 的 Payload 是编码而不是加密，因此持有令牌的人通常都能解码其中的 JSON。除非另有加密设计保护，否则不要把秘密写入 Payload。</p></details>
+      <details><summary>能正常解码就代表令牌有效吗？</summary><p>不是。任何人都可以构造可读的 Base64URL 内容。真实性取决于使用可信密钥验证签名，并核对算法、签发方、受众、时间和应用策略。</p></details>
+      <details><summary>为什么提示令牌尚未生效？</summary><p><code>nbf</code> 声明晚于当前设备时间。请检查设备时钟、签发方时钟以及验证端允许的时间偏差。</p></details>
+      <details><summary>粘贴的令牌会上传或保存吗？</summary><p>不会。解析和显示只在当前浏览器中执行，本工具不会发送令牌、写入浏览器存储或创建历史记录。</p></details>
+    </div></div>
+    <nav class="related-tools" data-related-tools="jwt" aria-label="相关工具"><h2>相关工具</h2><div class="related-links"><a href="/zh/json/"><strong>JSON 格式化</strong><span>格式化、压缩、验证并浏览 JSON。</span></a><a href="/zh/base64/"><strong>Base64 编解码器</strong><span>将 UTF-8 文本进行 Base64 编解码。</span></a><a href="/zh/timestamp/"><strong>时间戳转换器</strong><span>跨时区转换 Unix 时间戳。</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="页脚导航"><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><a href="/zh/contact/">联系</a><a href="/zh/licenses/">开源许可</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · 私密、快速的浏览器本地工具</p></footer>
+<script src="/jwt/jwt-tool.js"></script>
+<script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

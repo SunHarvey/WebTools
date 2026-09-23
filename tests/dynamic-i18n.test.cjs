@@ -51,6 +51,7 @@ for (const [name, modulePath, exportName, key] of [
   ['timestamp', '../timestamp/timestamp-tool.js', 'timestampMessage', 'converted'],
   ['UUID', '../uuid/uuid-tool.js', 'uuidMessage', 'copied'],
   ['hash', '../hash/hash-tool.js', 'hashMessage', 'calculating'],
+  ['JWT', '../jwt/jwt-tool.js', 'jwtMessage', 'unknownAlgorithm'],
   ['QR', '../qr/qr-tool.js', 'qrMessage', 'failed'],
 ]) {
   test(`${name} dynamic statuses resolve to one language`, () => {

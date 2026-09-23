@@ -6,7 +6,7 @@ const { execFileSync } = require('node:child_process');
 
 const root = path.join(__dirname, '..');
 const origin = 'https://www.utilcover.com';
-const tools = ['password', 'calculator', 'json', 'text', 'encode', 'base64', 'url-encoder', 'timestamp', 'uuid', 'hash', 'qr', 'unit', 'color', 'image'];
+const tools = ['password', 'calculator', 'json', 'text', 'encode', 'base64', 'url-encoder', 'timestamp', 'uuid', 'hash', 'jwt', 'qr', 'unit', 'color', 'image'];
 const contentPages = ['privacy', 'about', 'licenses', 'contact'];
 const indexedPages = [...tools, ...contentPages];
 const routes = ['/', ...indexedPages.map(page => `/${page}/`), '/zh/', ...indexedPages.map(page => `/zh/${page}/`)];
@@ -40,7 +40,7 @@ function workingTreeChanged(file) {
 
 function lastModified(file, { isDirty = workingTreeChanged, now = () => new Date(), gitDate = committedDate } = {}) {
   if (isDirty(file)) return now().toISOString().slice(0, 10);
-  return gitDate(file);
+  return gitDate(file) || now().toISOString().slice(0, 10);
 }
 
 function generate() {

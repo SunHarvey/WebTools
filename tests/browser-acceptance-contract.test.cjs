@@ -20,19 +20,25 @@ test('browser acceptance covers every required EN and ZH mobile route', () => {
     '/qr/', '/zh/qr/',
     '/timestamp/', '/zh/timestamp/',
     '/uuid/', '/zh/uuid/',
+    '/jwt/', '/zh/jwt/',
   ]);
 });
 
 test('browser acceptance exercises all privacy-critical tools', () => {
   const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
   assert.deepEqual(Object.keys(acceptance.PRIVACY_FLOWS), [
-    '/json/', '/password/', '/image/', '/hash/',
+    '/json/', '/password/', '/image/', '/hash/', '/jwt/',
   ]);
 });
 
 test('browser acceptance centers generated passwords in both locales', () => {
   const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
   assert.deepEqual(acceptance.PASSWORD_RESULT_ROUTES, ['/password/', '/zh/password/']);
+});
+
+test('browser acceptance verifies JWT routes create no storage history', () => {
+  const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
+  assert.deepEqual(acceptance.JWT_STORAGE_ROUTES, ['/jwt/', '/zh/jwt/']);
 });
 
 test('package exposes the durable browser acceptance command', () => {

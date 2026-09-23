@@ -41,6 +41,10 @@ function recordRecent(storage, id, limit = 7) {
   return writeStoredIds(storage, RECENT_KEY, next);
 }
 
+function shouldRecordRecent(tool) {
+  return Boolean(tool) && tool.recordRecent !== false;
+}
+
 function toolHref(tool, language) { return `${language === 'zh' ? '/zh' : ''}/${tool.id}/`; }
 
 function createRelatedLink(tool, language, doc = document) {
@@ -191,9 +195,10 @@ function attachSite() {
     if (event.key === 'Escape' && search.dialog.open) search.dialog.close();
   });
   const match = location.pathname.match(/^\/(?:zh\/)?([^/]+)\/$/);
-  if (storage && match && globalThis.UTILCOVER_TOOLS?.some(tool => tool.id === match[1])) recordRecent(storage, match[1]);
+  const currentTool = match ? globalThis.UTILCOVER_TOOLS?.find(tool => tool.id === match[1]) : null;
+  if (storage && shouldRecordRecent(currentTool)) recordRecent(storage, currentTool.id);
   renderSavedTools(storage);
 }
 
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', attachSite);
-if (typeof module !== 'undefined' && module.exports) module.exports = { renderRelatedTools, createRelatedLink, searchTools, readStoredIds, toggleFavorite, recordRecent, getStorage };
+if (typeof module !== 'undefined' && module.exports) module.exports = { renderRelatedTools, createRelatedLink, searchTools, readStoredIds, toggleFavorite, recordRecent, shouldRecordRecent, getStorage };

@@ -146,6 +146,24 @@ test('password pages explain secure random generation and honest controls in eac
   }
 });
 
+test('JWT pages explain local decoding without claiming signature verification', () => {
+  assertGuide('jwt/index.html', 'en', ['/json/', '/base64/', '/timestamp/']);
+  assertGuide('zh/jwt/index.html', 'zh', ['/zh/json/', '/zh/base64/', '/zh/timestamp/']);
+  assertMetadata('jwt/index.html', /JWT Decoder.*Token Inspector/i, /decode JWT.*locally/i);
+  assertMetadata('zh/jwt/index.html', /JWT 解码器.*令牌检查/, /本地解码 JWT/i);
+  for (const file of ['jwt/index.html', 'zh/jwt/index.html']) {
+    const text = guideFor(file).text;
+    assert.match(text, /(?:three-segment|三段式)/i);
+    assert.match(text, /JWE/);
+    assert.match(text, /(?:does not verify|not verified|不执行验证|并不代表签名已经验证)/i);
+    assert.match(text, /64 KiB/);
+    assert.match(text, /JWKS/);
+    assert.match(text, /exp/);
+    assert.match(text, /nbf/);
+    assert.match(text, /iat/);
+  }
+});
+
 test('text pages document counting and line transformations truthfully in each locale', () => {
   assertGuide('text/index.html', 'en', ['/encode/', '/json/', '/hash/']);
   assertGuide('zh/text/index.html', 'zh', ['/zh/encode/', '/zh/json/', '/zh/hash/']);

@@ -8,6 +8,7 @@ const TOOLS = [
   { id: 'timestamp', icon: '🕒', category: 'developer', popular: true, name: { en: 'Timestamp Converter', zh: '时间戳转换器' }, description: { en: 'Convert Unix timestamps across timezones.', zh: '跨时区转换 Unix 时间戳。' }, keywords: ['timestamp', 'unix', 'timezone', 'date'] },
   { id: 'uuid', icon: '#', category: 'developer', popular: true, name: { en: 'UUID Generator', zh: 'UUID 生成器' }, description: { en: 'Generate secure UUID v4 and v7 values.', zh: '安全生成 UUID v4 与 v7。' }, keywords: ['uuid', 'guid', 'v4', 'v7'] },
   { id: 'hash', icon: '⌁', category: 'developer', popular: false, name: { en: 'SHA Hash Tool', zh: 'SHA 哈希工具' }, description: { en: 'Hash text and files with Web Crypto.', zh: '使用 Web Crypto 计算文本和文件哈希。' }, keywords: ['hash', 'sha', 'digest'] },
+  { id: 'jwt', icon: 'JWT', category: 'security', popular: false, recordRecent: false, name: { en: 'JWT Decoder', zh: 'JWT 解码器' }, description: { en: 'Decode tokens and inspect claims locally.', zh: '在本地解码令牌并检查声明。' }, keywords: ['jwt', 'token', 'claims', 'bearer', 'decode'] },
   { id: 'color', icon: '◉', category: 'design', popular: false, name: { en: 'Color & Contrast', zh: '颜色与对比度' }, description: { en: 'Convert colors and check WCAG contrast.', zh: '转换颜色并检查 WCAG 对比度。' }, keywords: ['color', 'contrast', 'hex', 'rgb', 'hsl'] },
   { id: 'text', icon: 'Aa', category: 'productivity', popular: false, name: { en: 'Text Toolkit', zh: '文本工具箱' }, description: { en: 'Count, clean, sort and transform text.', zh: '统计、清理、排序和转换文本。' }, keywords: ['text', 'count', 'sort', 'deduplicate'] },
   { id: 'unit', icon: '⇆', category: 'productivity', popular: false, name: { en: 'Unit Converter', zh: '单位转换器' }, description: { en: 'Convert common measurement units.', zh: '转换常用度量单位。' }, keywords: ['unit', 'convert', 'length', 'mass'] },
@@ -30,6 +31,7 @@ const RELATED_TOOLS = {
   hash: ['encode', 'password', 'text'], color: ['image', 'qr', 'text'], text: ['encode', 'json', 'hash'],
   unit: ['calculator', 'timestamp', 'color'], calculator: ['unit', 'timestamp', 'text'], password: ['hash', 'qr', 'uuid'],
   base64: ['url-encoder', 'json', 'hash'], 'url-encoder': ['base64', 'json', 'text'],
+  jwt: ['json', 'base64', 'timestamp'],
 };
 
 function toolPath(tool, language = 'en') { return `${language === 'zh' ? '/zh' : ''}/${tool.id}/`; }

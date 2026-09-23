@@ -31,6 +31,13 @@ test('favorites toggle and recent tools persist locally with safe bounds', () =>
   assert.deepEqual(site.readStoredIds(storage, 'utilcover.recent'), ['color', 'hash', 'uuid', 'timestamp', 'qr']);
 });
 
+test('sensitive tools can opt out of automatic recent-tool storage', () => {
+  const { findTool } = require('../shared/tools-data.js');
+  assert.equal(findTool('jwt').recordRecent, false);
+  assert.equal(site.shouldRecordRecent(findTool('jwt')), false);
+  assert.equal(site.shouldRecordRecent(findTool('json')), true);
+});
+
 test('site behavior survives a blocked localStorage getter', () => {
   const blocked = {};
   Object.defineProperty(blocked, 'localStorage', { get() { throw new Error('blocked'); } });

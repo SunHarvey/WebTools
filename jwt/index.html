@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>JWT Decoder &amp; Token Inspector | UtilCover</title>
+  <meta name="description" content="Decode JWT header and payload data locally, inspect expiration and other claims, and review token structure without uploading the token.">
+  <link rel="canonical" href="https://www.utilcover.com/jwt/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/jwt/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/jwt/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/jwt/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/jwt/jwt.css">
+  <meta property="og:title" content="JWT Decoder &amp; Token Inspector | UtilCover">
+  <meta property="og:description" content="Decode JWT structure and inspect common claims locally in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/jwt/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/jwt/#application",
+      "name": "JWT Decoder & Token Inspector",
+      "url": "https://www.utilcover.com/jwt/",
+      "description": "Decode JWT header and payload data locally, inspect expiration and other claims, and review token structure without uploading the token.",
+      "inLanguage": "en",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/jwt/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tools",
+          "item": "https://www.utilcover.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "JWT Decoder & Token Inspector",
+          "item": "https://www.utilcover.com/jwt/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page jwt-page">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/jwt/">中文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>JWT Decoder &amp; Token Inspector</h1><p>Decode a JSON Web Token and inspect its header, payload and time claims locally.</p></section>
+  <section class="tool-card">
+    <p class="local-processing-note">Token input stays in this browser and is never uploaded or saved by this tool.</p>
+    <div class="field"><label for="jwtInput">JWT input</label><textarea id="jwtInput" class="jwt-input" spellcheck="false" autocomplete="off" placeholder="Paste a JWT or Bearer token"></textarea></div>
+    <div class="actions"><button id="decodeJwt" type="button">Decode JWT</button><button id="clearJwt" class="secondary" type="button">Clear</button></div>
+    <div class="jwt-summary" aria-label="JWT summary">
+      <div class="jwt-summary-item"><span>Algorithm</span><strong id="jwtAlgorithm">—</strong></div>
+      <div class="jwt-summary-item"><span>Time status</span><strong id="jwtState">—</strong></div>
+      <div class="jwt-summary-item"><span>Signature verification</span><strong>Not performed</strong></div>
+    </div>
+    <div id="jwtStatus" class="status" role="status" aria-live="polite">Ready</div>
+    <div class="grid-2 jwt-workspace">
+      <section><div class="jwt-panel-heading"><h2>Header</h2><button class="secondary" type="button" data-jwt-copy="jwtHeader">Copy</button></div><textarea id="jwtHeader" class="output jwt-output" readonly spellcheck="false" aria-label="Decoded JWT header"></textarea></section>
+      <section><div class="jwt-panel-heading"><h2>Payload</h2><button class="secondary" type="button" data-jwt-copy="jwtPayload">Copy</button></div><textarea id="jwtPayload" class="output jwt-output" readonly spellcheck="false" aria-label="Decoded JWT payload"></textarea></section>
+    </div>
+    <section class="jwt-signature-section"><div class="jwt-panel-heading"><h2>Signature segment</h2><button class="secondary" type="button" data-jwt-copy="jwtSignature">Copy</button></div><input id="jwtSignature" class="output" type="text" readonly spellcheck="false" aria-label="JWT signature segment"></section>
+    <section class="jwt-claims-section"><div class="jwt-panel-heading"><h2>Common claims</h2></div><div id="jwtClaims" class="jwt-claims"><p class="jwt-empty-claims">Decode a token to inspect its claims.</p></div></section>
+  </section>
+  <aside class="info-card jwt-warning"><strong>Important:</strong> Decoding does not verify a JWT signature or prove that the token is authentic. Do not grant access based on this page. Verification requires the expected algorithm, a trusted key and application-specific claim checks.</aside>
+  <section class="tool-guide">
+    <div class="guide-intro"><h2>Inspect JWT structure without sending the token away</h2><p>A JWT commonly stores a Base64URL-encoded JSON header and payload beside a signature segment. This page decodes the readable JSON and explains common time claims entirely in the browser. It does not contact an issuer, download keys or validate a signature.</p></div>
+    <div class="guide-section how-to"><h2>How to decode a JWT</h2><ol class="steps">
+      <li><strong>Paste the compact token</strong>Enter a three-segment JWT. An optional <code>Bearer</code> prefix is removed before parsing. The input is limited to 64 KiB to keep browser processing bounded.</li>
+      <li><strong>Review header and payload</strong>Select “Decode JWT” to format both JSON objects. Check the declared algorithm, issuer, audience and subject against the system that produced the token.</li>
+      <li><strong>Interpret time claims carefully</strong>The inspector converts <code>exp</code>, <code>nbf</code> and <code>iat</code> NumericDate values into ISO and local time. These values are untrusted until the token has been cryptographically verified elsewhere.</li>
+    </ol></div>
+    <div class="guide-section examples"><h2>Practical inspection examples</h2><div class="example-grid">
+      <article><h3>Debug an expired API session</h3><p>Compare <code>exp</code> with the current time and inspect <code>iat</code> to understand when the token was issued. Clock differences and refresh-token behavior still need to be checked in the application.</p></article>
+      <article><h3>Confirm issuer and audience values</h3><p>Read <code>iss</code> and <code>aud</code> while troubleshooting configuration. Seeing the expected strings is useful for debugging but does not authenticate them.</p></article>
+      <article><h3>Inspect a token from local logs</h3><p>Decode a token without pasting it into an external service. Tokens may contain personal data or credentials, so remove them from logs and revoke exposed tokens when appropriate.</p></article>
+    </div></div>
+    <div class="guide-section limitations"><h2>Security boundaries and limitations</h2><ul>
+      <li>This tool supports three-segment compact JWT/JWS input. It does not decrypt five-segment JWE tokens.</li>
+      <li>The signature segment is displayed as text but is not verified. The page does not accept secrets, public keys, certificates or remote JWKS URLs.</li>
+      <li>Header and payload must each decode to a UTF-8 JSON object. Malformed Base64URL, invalid UTF-8, arrays, null values and oversized input are rejected.</li>
+      <li>Time status is a convenience check using the current device clock. It does not apply issuer-specific clock skew, audience rules, revocation, nonce checks or authorization policy.</li>
+      <li>The page creates no storage entry and makes no network request after decoding. Browser extensions, clipboard history and the surrounding device remain outside the page's control.</li>
+    </ul></div>
+    <div class="guide-section"><h2>JWT decoding questions</h2><div class="faq-list">
+      <details><summary>Can anyone read a JWT payload?</summary><p>A normal signed JWT payload is encoded rather than encrypted, so anyone holding the token can usually decode its JSON. Do not place secrets in a payload unless a separate encryption design protects them.</p></details>
+      <details><summary>Does a readable payload mean the token is valid?</summary><p>No. Any party can construct readable Base64URL segments. Authenticity depends on signature verification with a trusted key plus checks for algorithm, issuer, audience, time and application policy.</p></details>
+      <details><summary>Why is my token reported as not active?</summary><p>The <code>nbf</code> claim is later than the current device time. Confirm the device clock, issuer clock and the verifier's permitted clock tolerance.</p></details>
+      <details><summary>Is the pasted token uploaded or saved?</summary><p>No. Parsing and display happen in the current browser. The tool does not send the token, store it in browser storage or add it to a history list.</p></details>
+    </div></div>
+    <nav class="related-tools" data-related-tools="jwt" aria-label="Related tools"><h2>Related tools</h2><div class="related-links"><a href="/json/"><strong>JSON Formatter</strong><span>Format, minify, validate and explore JSON.</span></a><a href="/base64/"><strong>Base64 Encoder</strong><span>Encode and decode UTF-8 text as Base64.</span></a><a href="/timestamp/"><strong>Timestamp Converter</strong><span>Convert Unix timestamps across timezones.</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/licenses/">Licenses</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · Private, fast, client-side utilities</p></footer>
+<script src="/jwt/jwt-tool.js"></script>
+<script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

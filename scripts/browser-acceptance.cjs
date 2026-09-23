@@ -17,8 +17,10 @@ const MOBILE_ROUTES = [
   '/qr/', '/zh/qr/',
   '/timestamp/', '/zh/timestamp/',
   '/uuid/', '/zh/uuid/',
+  '/jwt/', '/zh/jwt/',
 ];
 const PASSWORD_RESULT_ROUTES = ['/password/', '/zh/password/'];
+const JWT_STORAGE_ROUTES = ['/jwt/', '/zh/jwt/'];
 
 const PRIVACY_FLOWS = {
   '/json/': `
@@ -53,6 +55,22 @@ const PRIVACY_FLOWS = {
     document.querySelector('#hashTextButton').click();
     await new Promise(resolve => setTimeout(resolve, 100));
     return { output: document.querySelector('#hashOutput').value, status: document.querySelector('#hashStatus').textContent };
+  `,
+  '/jwt/': `
+    const encodePart = value => btoa(unescape(encodeURIComponent(JSON.stringify(value))))
+      .replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/g, '');
+    document.querySelector('#jwtInput').value = [
+      encodePart({ alg: 'HS256', typ: 'JWT' }),
+      encodePart({ sub: 'browser-check', exp: 4102444800 }),
+      'c2lnbmF0dXJl',
+    ].join('.');
+    document.querySelector('#decodeJwt').click();
+    await new Promise(resolve => setTimeout(resolve, 50));
+    return {
+      header: document.querySelector('#jwtHeader').value,
+      payload: document.querySelector('#jwtPayload').value,
+      status: document.querySelector('#jwtStatus').textContent,
+    };
   `,
 };
 
@@ -370,6 +388,22 @@ async function runAcceptance() {
     }
     await client.send('Emulation.clearDeviceMetricsOverride');
 
+    const jwtStorage = [];
+    for (const route of JWT_STORAGE_ROUTES) {
+      await navigate('/');
+      await evaluate(client, 'localStorage.clear(); return true;');
+      await navigate(route);
+      const result = await evaluate(client, `
+        return {
+          keys: Object.keys(localStorage),
+          recent: localStorage.getItem('utilcover.recent'),
+        };
+      `);
+      assert.deepEqual(result.keys, [], `${route} created a localStorage entry`);
+      assert.equal(result.recent, null, `${route} recorded JWT in recent-tool history`);
+      jwtStorage.push({ route, ...result });
+    }
+
     const passwordResults = [];
     const passwordViewports = [
       { name: 'desktop', width: 1280, height: 800, mobile: false },
@@ -458,6 +492,10 @@ async function runAcceptance() {
         assert.match(result.source, /^blob:/, 'Image privacy flow did not use a local Blob URL');
       }
       if (route === '/hash/') assert.match(result.output, /^[0-9a-f]{64}$/i, 'Hash privacy flow produced no SHA-256 digest');
+      if (route === '/jwt/') {
+        assert.match(result.header, /"alg": "HS256"/, 'JWT privacy flow decoded no header');
+        assert.match(result.payload, /"sub": "browser-check"/, 'JWT privacy flow decoded no payload');
+      }
       await wait(100);
       const networkRequests = requests.filter(url => /^https?:\/\//i.test(url));
       const unexpected = networkRequests.filter(url => {
@@ -473,6 +511,7 @@ async function runAcceptance() {
     const report = {
       browser: executable,
       mobileRoutes: mobile,
+      jwtStorage,
       passwordResults,
       privacyFlows: privacy,
       status: 'passed',
@@ -502,7 +541,7 @@ async function runAcceptance() {
 }
 
 module.exports = {
-  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, PRIVACY_FLOWS, CdpClient,
+  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, PRIVACY_FLOWS, CdpClient,
   runAcceptance, startStaticServer, stopBrowser, stopServer, browserBinary,
 };
 

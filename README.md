@@ -18,6 +18,7 @@
 | Unix时间戳转换 | [`/timestamp/`](timestamp/) | 秒/毫秒/微秒/纳秒、Intl时区、本地时间、UTC、ISO 8601 |
 | UUID生成器 | [`/uuid/`](uuid/) | Web Crypto、UUID v4/v7、最多1000个、复制与TXT下载 |
 | SHA哈希计算器 | [`/hash/`](hash/) | 文本/文件SHA-256、SHA-384、SHA-512与哈希比较 |
+| JWT解码器 | [`/jwt/`](jwt/) | 本地解码Header/Payload、检查时间声明，不验证签名 |
 | 二维码生成器 | [`/qr/`](qr/) | 文本、URL、Wi-Fi二维码，本地PNG导出 |
 | 单位换算器 | [`/unit/`](unit/) | 长度、质量、温度、面积、体积、数据大小 |
 | 颜色与对比度 | [`/color/`](color/) | HEX/RGB/HSL互转、WCAG对比度 |
@@ -41,6 +42,7 @@
 - 密码和UUID使用`crypto.getRandomValues()`
 - SHA哈希使用`crypto.subtle.digest()`
 - JSON工具使用`JSON.parse()`，不使用`eval()`
+- JWT工具严格解析Base64URL与UTF-8 JSON对象，不上传、保存或验证签名
 - Base64工具通过`TextEncoder`/`TextDecoder`正确处理Unicode
 - 文件哈希限制为32 MiB，因为Web Crypto需要在内存中处理完整缓冲区
 - 二维码使用仓库内固定版本的`qrcode-generator 1.4.4`，不加载CDN或远程API
@@ -70,6 +72,7 @@ WebTools/
 ├── timestamp/                  # Unix时间戳转换
 ├── uuid/                       # UUID v4/v7生成
 ├── hash/                       # SHA文本与文件哈希
+├── jwt/                        # JWT本地解码与声明检查
 ├── qr/                         # 文本、URL和Wi-Fi二维码
 ├── unit/                       # 六类单位换算
 ├── color/                      # 颜色格式与WCAG对比度

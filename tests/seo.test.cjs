@@ -8,7 +8,7 @@ const path = require('node:path');
 const root = path.join(__dirname, '..');
 const read = relativePath => fs.readFileSync(path.join(root, relativePath), 'utf8');
 
-const toolRoutes = ['password', 'calculator', 'json', 'text', 'encode', 'base64', 'url-encoder', 'timestamp', 'uuid', 'hash', 'qr', 'unit', 'color', 'image'];
+const toolRoutes = ['password', 'calculator', 'json', 'text', 'encode', 'base64', 'url-encoder', 'timestamp', 'uuid', 'hash', 'jwt', 'qr', 'unit', 'color', 'image'];
 const contentRoutes = ['privacy', 'about', 'licenses', 'contact'];
 const indexedRoutes = [...toolRoutes, ...contentRoutes];
 const canonicalPages = [
@@ -141,6 +141,7 @@ test('sitemap lastmod uses the build date for dirty pages and Git history for cl
 
   assert.equal(lastModified('index.html', { isDirty: () => true, now, gitDate }), '2026-09-01');
   assert.equal(lastModified('index.html', { isDirty: () => false, now, gitDate }), '2026-08-25');
+  assert.equal(lastModified('new-page.html', { isDirty: () => false, now, gitDate: () => '' }), '2026-09-01');
 });
 
 test('sitemap contains every canonical URL with deterministic ISO lastmod dates', () => {
