@@ -25,6 +25,10 @@
   ! Content-Security-Policy
   Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-g+cHQDYnGuzcmiwW/IiBVKkWZqCIlEAsoWK3DUs6xVI='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
 
+/text-diff/*
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-PjZRkioDbNcXsfNKfbYD/aIxQt2pbmZurCrwRcW/170='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
+
 /encode/*
   ! Content-Security-Policy
   Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-dISO2o9NdElf2QVNtt3A2JUEjFFJfWtehChT1mFg3fE='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
@@ -104,6 +108,10 @@
 /zh/text/*
   ! Content-Security-Policy
   Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-kp0u3TZRrCeTjnERZBLKWaqrrXrvmIr7IVno4iqgxSI='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
+
+/zh/text-diff/*
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-LsuXdce1UjC/KpC9paqr1vyCt7o+H5ptXoYXJtNqzMo='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
 
 /zh/encode/*
   ! Content-Security-Policy

@@ -6,7 +6,7 @@ const { execFileSync } = require('node:child_process');
 
 const root = path.join(__dirname, '..');
 const origin = 'https://www.utilcover.com';
-const tools = ['password', 'calculator', 'json', 'text', 'encode', 'base64', 'url-encoder', 'timestamp', 'uuid', 'hash', 'jwt', 'qr', 'unit', 'color', 'image'];
+const tools = ['password', 'calculator', 'json', 'text', 'text-diff', 'encode', 'base64', 'url-encoder', 'timestamp', 'uuid', 'hash', 'jwt', 'qr', 'unit', 'color', 'image'];
 const contentPages = ['privacy', 'about', 'licenses', 'contact'];
 const indexedPages = [...tools, ...contentPages];
 const routes = ['/', ...indexedPages.map(page => `/${page}/`), '/zh/', ...indexedPages.map(page => `/zh/${page}/`)];

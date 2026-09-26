@@ -5,7 +5,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/" />
-    <lastmod>2026-09-23</lastmod>
+    <lastmod>2026-09-25</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/password/</loc>
@@ -33,7 +33,14 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/text/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/text/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/text/" />
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
+  </url>
+  <url>
+    <loc>https://www.utilcover.com/text-diff/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/text-diff/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/text-diff/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/text-diff/" />
+    <lastmod>2026-09-25</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/encode/</loc>
@@ -82,7 +89,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/jwt/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/jwt/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/jwt/" />
-    <lastmod>2026-09-23</lastmod>
+    <lastmod>2026-09-24</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/qr/</loc>
@@ -145,7 +152,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/" />
-    <lastmod>2026-09-23</lastmod>
+    <lastmod>2026-09-25</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/password/</loc>
@@ -173,7 +180,14 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/text/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/text/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/text/" />
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-25</lastmod>
+  </url>
+  <url>
+    <loc>https://www.utilcover.com/zh/text-diff/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/text-diff/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/text-diff/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/text-diff/" />
+    <lastmod>2026-09-25</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/encode/</loc>
@@ -222,7 +236,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/jwt/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/jwt/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/jwt/" />
-    <lastmod>2026-09-23</lastmod>
+    <lastmod>2026-09-24</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/qr/</loc>

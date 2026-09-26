@@ -8,7 +8,7 @@ const path = require('node:path');
 const root = path.join(__dirname, '..');
 const read = relativePath => fs.readFileSync(path.join(root, relativePath), 'utf8');
 
-const toolRoutes = ['password', 'calculator', 'json', 'text', 'encode', 'base64', 'url-encoder', 'timestamp', 'uuid', 'hash', 'jwt', 'qr', 'unit', 'color', 'image'];
+const toolRoutes = ['password', 'calculator', 'json', 'text', 'text-diff', 'encode', 'base64', 'url-encoder', 'timestamp', 'uuid', 'hash', 'jwt', 'qr', 'unit', 'color', 'image'];
 const contentRoutes = ['privacy', 'about', 'licenses', 'contact'];
 const indexedRoutes = [...toolRoutes, ...contentRoutes];
 const canonicalPages = [

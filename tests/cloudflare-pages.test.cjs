@@ -131,7 +131,7 @@ test('keeps the language switch last in shared navigation', () => {
 });
 
 test('removes nonessential utility-category labels from all visible page heroes', () => {
-  const toolPages = ['json', 'text', 'encode', 'timestamp', 'uuid', 'hash', 'jwt', 'qr', 'unit', 'color', 'image'];
+  const toolPages = ['json', 'text', 'text-diff', 'encode', 'timestamp', 'uuid', 'hash', 'jwt', 'qr', 'unit', 'color', 'image'];
   for (const tool of toolPages) assert.doesNotMatch(read(`${tool}/index.html`), /class="eyebrow"/, `${tool} still has a category label`);
   for (const file of ['index.html', 'tools/index.html', 'zh/index.html', 'zh/tools/index.html']) {
     assert.doesNotMatch(read(file), /class="eyebrow"/, `${file} still has a category label`);
@@ -154,7 +154,7 @@ test('uses the shared UtilCover layout for password and calculator pages', () =>
 });
 
 test('keeps generic local-processing claims off individual tool heroes', () => {
-  const toolPages = ['password/index.html', 'password/index-zh.html', 'index-zh.html', 'calculator/index.html', 'json/index.html', 'text/index.html', 'encode/index.html', 'timestamp/index.html', 'uuid/index.html', 'hash/index.html', 'jwt/index.html', 'qr/index.html', 'unit/index.html', 'color/index.html', 'image/index.html'];
+  const toolPages = ['password/index.html', 'password/index-zh.html', 'index-zh.html', 'calculator/index.html', 'json/index.html', 'text/index.html', 'text-diff/index.html', 'encode/index.html', 'timestamp/index.html', 'uuid/index.html', 'hash/index.html', 'jwt/index.html', 'qr/index.html', 'unit/index.html', 'color/index.html', 'image/index.html'];
   for (const file of toolPages) {
     const html = read(file);
     const hero = html.match(/<section class="hero">([\s\S]*?)<\/section>/)?.[1] || '';
@@ -200,7 +200,7 @@ test('shows the localized privacy statement beside the logo on every shared-navi
 });
 
 test('places concise privacy notes beside sensitive inputs only', () => {
-  const sensitivePages = ['password/index.html', 'json/index.html', 'text/index.html', 'encode/index.html', 'hash/index.html', 'jwt/index.html', 'image/index.html'];
+  const sensitivePages = ['password/index.html', 'json/index.html', 'text/index.html', 'text-diff/index.html', 'encode/index.html', 'hash/index.html', 'jwt/index.html', 'image/index.html'];
   for (const file of sensitivePages) assert.match(read(file), /class="local-processing-note"/, `${file} lacks a contextual local-processing note`);
   for (const file of ['qr/index.html', 'zh/qr/index.html']) {
     assert.doesNotMatch(read(file), /class="local-processing-note"/, `${file} repeats a non-interactive privacy banner above its controls`);

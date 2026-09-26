@@ -165,8 +165,8 @@ test('JWT pages explain local decoding without claiming signature verification',
 });
 
 test('text pages document counting and line transformations truthfully in each locale', () => {
-  assertGuide('text/index.html', 'en', ['/encode/', '/json/', '/hash/']);
-  assertGuide('zh/text/index.html', 'zh', ['/zh/encode/', '/zh/json/', '/zh/hash/']);
+  assertGuide('text/index.html', 'en', ['/text-diff/', '/json/', '/encode/']);
+  assertGuide('zh/text/index.html', 'zh', ['/zh/text-diff/', '/zh/json/', '/zh/encode/']);
   assertMetadata('text/index.html', /Word.*Character Counter.*Text Cleaner/i, /count.*(?:word|character).*(?:duplicate|blank|sort|trim|case)/i);
   assertMetadata('zh/text/index.html', /字数.*字符.*(?:计数|统计).*(?:文本清理|整理)/, /统计.*(?:字数|字符).*(?:重复行|空白行|排序|清理|大小写)/);
   for (const file of ['text/index.html', 'zh/text/index.html']) {
@@ -199,6 +199,22 @@ test('text pages document counting and line transformations truthfully in each l
   assert.match(chinese, /localeCompare.*numeric.*sensitivity.*base/);
   assert.match(chinese, /直接改写.*文本框/);
   assert.match(chinese, /标题格式.*简化.*语言环境/);
+});
+
+test('Text Diff pages explain bounded local line comparison in each locale', () => {
+  assertGuide('text-diff/index.html', 'en', ['/text/', '/json/', '/hash/']);
+  assertGuide('zh/text-diff/index.html', 'zh', ['/zh/text/', '/zh/json/', '/zh/hash/']);
+  assertMetadata('text-diff/index.html', /Text Diff Checker.*Comparison Tool/i, /compare.*line.*(?:addition|deletion|case|whitespace)/i);
+  assertMetadata('zh/text-diff/index.html', /文本差异比较器.*内容对比工具/, /逐行比较.*(?:新增|删除).*(?:大小写|空白)/);
+  for (const file of ['text-diff/index.html', 'zh/text-diff/index.html']) {
+    const text = guideFor(file).text;
+    assert.match(text, /200,000/);
+    assert.match(text, /3,000/);
+    assert.match(text, /(?:complete lines|完整的行)/i);
+    assert.match(text, /(?:longest-common-subsequence|最长公共子序列)/i);
+    assert.match(text, /(?:does not upload|不会上传|不.*发送)/i);
+    assert.doesNotMatch(text, /word-level highlighting|单词级高亮/i);
+  }
 });
 
 test('encode pages explain UTF-8 Base64 and URL component conversion honestly in each locale', () => {

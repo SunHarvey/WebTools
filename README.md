@@ -12,6 +12,7 @@
 | 网页计算器 | [`/calculator/`](calculator/) | 鼠标与键盘、四则运算、连续计算 |
 | JSON格式化与校验 | [`/json/`](json/) | 格式化、压缩、行列错误定位、语法高亮与树视图 |
 | 文本统计与整理 | [`/text/`](text/) | 字符/单词/中文/行数统计、去重、排序、大小写 |
+| 文本差异比较器 | [`/text-diff/`](text-diff/) | 逐行比较、新增/删除高亮、忽略空白或大小写、差异导航 |
 | Base64与URL编解码 | [`/encode/`](encode/) | Unicode安全Base64、URL组件编解码 |
 | Base64编解码器 | [`/base64/`](base64/) | 面向Base64搜索意图的完整独立入口 |
 | URL编解码器 | [`/url-encoder/`](url-encoder/) | 面向URL组件编解码的完整独立入口 |
@@ -66,6 +67,7 @@ WebTools/
 ├── calculator/                 # 网页计算器
 ├── json/                       # JSON格式化与校验
 ├── text/                       # 文本统计与整理
+├── text-diff/                  # 文本逐行差异比较
 ├── encode/                     # Base64与URL编解码
 ├── base64/                     # 独立Base64入口
 ├── url-encoder/                # 独立URL组件编解码入口

@@ -11,6 +11,7 @@ const TOOLS = [
   { id: 'jwt', icon: 'JWT', category: 'security', popular: false, recordRecent: false, name: { en: 'JWT Decoder', zh: 'JWT 解码器' }, description: { en: 'Decode tokens and inspect claims locally.', zh: '在本地解码令牌并检查声明。' }, keywords: ['jwt', 'token', 'claims', 'bearer', 'decode'] },
   { id: 'color', icon: '◉', category: 'design', popular: false, name: { en: 'Color & Contrast', zh: '颜色与对比度' }, description: { en: 'Convert colors and check WCAG contrast.', zh: '转换颜色并检查 WCAG 对比度。' }, keywords: ['color', 'contrast', 'hex', 'rgb', 'hsl'] },
   { id: 'text', icon: 'Aa', category: 'productivity', popular: false, name: { en: 'Text Toolkit', zh: '文本工具箱' }, description: { en: 'Count, clean, sort and transform text.', zh: '统计、清理、排序和转换文本。' }, keywords: ['text', 'count', 'sort', 'deduplicate'] },
+  { id: 'text-diff', icon: '±', category: 'productivity', popular: false, recordRecent: false, name: { en: 'Text Diff Checker', zh: '文本差异比较器' }, description: { en: 'Compare text line by line locally.', zh: '在本地逐行比较文本差异。' }, keywords: ['text', 'diff', 'compare', 'difference', 'changes'] },
   { id: 'unit', icon: '⇆', category: 'productivity', popular: false, name: { en: 'Unit Converter', zh: '单位转换器' }, description: { en: 'Convert common measurement units.', zh: '转换常用度量单位。' }, keywords: ['unit', 'convert', 'length', 'mass'] },
   { id: 'calculator', icon: '🧮', category: 'productivity', popular: false, name: { en: 'Calculator', zh: '计算器' }, description: { en: 'Keyboard-friendly everyday arithmetic.', zh: '支持键盘操作的日常算术。' }, keywords: ['calculator', 'math', 'arithmetic'] },
   { id: 'password', icon: '🔐', category: 'security', popular: true, name: { en: 'Password Generator', zh: '密码生成器' }, description: { en: 'Generate secure passwords with Web Crypto.', zh: '使用 Web Crypto 生成安全密码。' }, keywords: ['password', 'secure', 'random'] },
@@ -28,10 +29,11 @@ const TOOL_CATEGORIES = {
 const RELATED_TOOLS = {
   json: ['text', 'encode', 'hash'], image: ['color', 'qr', 'base64'], qr: ['password', 'image', 'encode'],
   encode: ['text', 'json', 'hash'], timestamp: ['encode', 'uuid', 'calculator'], uuid: ['hash', 'password', 'timestamp'],
-  hash: ['encode', 'password', 'text'], color: ['image', 'qr', 'text'], text: ['encode', 'json', 'hash'],
+  hash: ['encode', 'password', 'text'], color: ['image', 'qr', 'text'], text: ['text-diff', 'json', 'encode'],
   unit: ['calculator', 'timestamp', 'color'], calculator: ['unit', 'timestamp', 'text'], password: ['hash', 'qr', 'uuid'],
   base64: ['url-encoder', 'json', 'hash'], 'url-encoder': ['base64', 'json', 'text'],
   jwt: ['json', 'base64', 'timestamp'],
+  'text-diff': ['text', 'json', 'hash'],
 };
 
 function toolPath(tool, language = 'en') { return `${language === 'zh' ? '/zh' : ''}/${tool.id}/`; }

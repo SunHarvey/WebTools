@@ -1,0 +1,213 @@
+.text-diff-page .page-shell {
+  width: min(1240px, calc(100% - 32px));
+}
+
+.diff-input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.diff-input-grid textarea {
+  min-height: 260px;
+  resize: vertical;
+  white-space: pre;
+  overflow: auto;
+}
+
+.diff-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  margin: 14px 0;
+}
+
+.diff-options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.diff-options input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+}
+
+.diff-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.diff-summary-item {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(4, 12, 24, 0.55);
+}
+
+.diff-summary-item strong,
+.diff-summary-item span {
+  display: block;
+}
+
+.diff-summary-item strong {
+  font-size: 1.25rem;
+}
+
+.diff-summary-item span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.diff-result-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.diff-result-heading h2 {
+  margin: 0;
+  font-size: 1.08rem;
+}
+
+.diff-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.diff-navigation button {
+  padding: 8px 11px;
+  font-size: 0.8rem;
+}
+
+.diff-output {
+  margin-top: 10px;
+  max-height: 620px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: rgba(2, 8, 18, 0.82);
+}
+
+.diff-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.diff-row:last-child {
+  border-bottom: 0;
+}
+
+.diff-cell {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  min-width: 0;
+}
+
+.diff-cell + .diff-cell {
+  border-left: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.diff-line-number {
+  padding: 7px 9px;
+  color: #64748b;
+  background: rgba(15, 23, 42, 0.58);
+  text-align: right;
+  user-select: none;
+}
+
+.diff-cell code {
+  display: block;
+  min-height: 1.4em;
+  padding: 7px 10px;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  color: var(--text);
+}
+
+.diff-delete .diff-left {
+  background: rgba(239, 68, 68, 0.16);
+}
+
+.diff-insert .diff-right {
+  background: rgba(34, 197, 94, 0.16);
+}
+
+.diff-delete .diff-right,
+.diff-insert .diff-left {
+  background: rgba(15, 23, 42, 0.32);
+}
+
+.diff-row[data-change-index]:target,
+.diff-row.diff-current {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.diff-empty {
+  margin: 0;
+  padding: 28px 18px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.diff-limit-note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 760px) {
+  .diff-input-grid,
+  .diff-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .diff-input-grid textarea {
+    min-height: 210px;
+  }
+
+  .diff-result-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .diff-output {
+    max-height: 560px;
+  }
+
+  .diff-row {
+    grid-template-columns: 1fr;
+  }
+
+  .diff-cell + .diff-cell {
+    border-top: 1px solid rgba(148, 163, 184, 0.18);
+    border-left: 0;
+  }
+
+  .diff-cell::before {
+    grid-column: 1 / -1;
+    padding: 4px 10px;
+    color: var(--muted);
+    background: rgba(15, 23, 42, 0.72);
+    font-size: 0.7rem;
+    font-family: system-ui, sans-serif;
+  }
+
+  .diff-left::before { content: "LEFT"; }
+  .diff-right::before { content: "RIGHT"; }
+
+  html[lang^="zh"] .diff-left::before { content: "左侧"; }
+  html[lang^="zh"] .diff-right::before { content: "右侧"; }
+}

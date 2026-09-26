@@ -21,13 +21,14 @@ test('browser acceptance covers every required EN and ZH mobile route', () => {
     '/timestamp/', '/zh/timestamp/',
     '/uuid/', '/zh/uuid/',
     '/jwt/', '/zh/jwt/',
+    '/text-diff/', '/zh/text-diff/',
   ]);
 });
 
 test('browser acceptance exercises all privacy-critical tools', () => {
   const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
   assert.deepEqual(Object.keys(acceptance.PRIVACY_FLOWS), [
-    '/json/', '/password/', '/image/', '/hash/', '/jwt/',
+    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/',
   ]);
 });
 
@@ -39,6 +40,14 @@ test('browser acceptance centers generated passwords in both locales', () => {
 test('browser acceptance verifies JWT routes create no storage history', () => {
   const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
   assert.deepEqual(acceptance.JWT_STORAGE_ROUTES, ['/jwt/', '/zh/jwt/']);
+});
+
+test('browser acceptance compares text on both localized storage-free routes', () => {
+  const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
+  assert.deepEqual(acceptance.TEXT_DIFF_ROUTES, ['/text-diff/', '/zh/text-diff/']);
+  const source = fs.readFileSync(path.join(root, 'scripts/browser-acceptance.cjs'), 'utf8');
+  assert.match(source, /history\.back\(\)/);
+  assert.match(source, /restored sensitive text from browser history/);
 });
 
 test('package exposes the durable browser acceptance command', () => {

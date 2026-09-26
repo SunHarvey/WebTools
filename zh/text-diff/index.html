@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>文本差异比较器与内容对比工具 | UtilCover</title>
+  <meta name="description" content="在浏览器本地逐行比较两段文本，高亮新增和删除内容，并可忽略大小写或空白差异，不上传文本。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/text-diff/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/text-diff/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/text-diff/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/text-diff/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/text-diff/text-diff.css">
+  <meta property="og:title" content="文本差异比较器与内容对比工具 | UtilCover">
+  <meta property="og:description" content="在浏览器本地逐行比较文本，查看新增、删除和未改变的内容。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/zh/text-diff/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/zh/text-diff/#application",
+      "name": "文本差异比较器",
+      "url": "https://www.utilcover.com/zh/text-diff/",
+      "description": "在浏览器本地逐行比较两段文本，高亮新增和删除内容，并可忽略大小写或空白差异，不上传文本。",
+      "inLanguage": "zh-CN",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/zh/text-diff/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "工具",
+          "item": "https://www.utilcover.com/zh/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "文本差异比较器",
+          "item": "https://www.utilcover.com/zh/text-diff/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page text-diff-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="platform-nav nav-links"><a href="/zh/#popular-tools">工具</a><a href="/zh/#categories">分类</a><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><button class="search-trigger" type="button" aria-label="搜索工具">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/text-diff/?lang=en">English</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>文本差异比较器</h1><p>逐行比较两个版本，高亮新增、删除和未改变的内容。</p></section>
+  <section class="tool-card">
+    <p class="local-processing-note">两段文本仅在当前浏览器中处理，本工具不会上传或保存内容。</p>
+    <div class="diff-input-grid">
+      <div class="field"><label for="leftText">原始文本</label><textarea id="leftText" maxlength="200000" spellcheck="false" autocomplete="off" placeholder="粘贴原始文本"></textarea></div>
+      <div class="field"><label for="rightText">修改后文本</label><textarea id="rightText" maxlength="200000" spellcheck="false" autocomplete="off" placeholder="粘贴修改后的文本"></textarea></div>
+    </div>
+    <div class="diff-options" aria-label="比较选项">
+      <label><input id="ignoreWhitespace" type="checkbox"> 忽略空白差异</label>
+      <label><input id="ignoreCase" type="checkbox"> 忽略字母大小写</label>
+    </div>
+    <div class="actions"><button id="compareText" type="button">比较文本</button><button id="swapText" class="secondary" type="button">交换两侧</button><button id="clearDiff" class="danger" type="button">清空</button></div>
+    <p class="diff-limit-note">每侧最多处理 200,000 个字符；两侧合计最多 3,000 行，并限制比较计算量。</p>
+    <div class="diff-summary" aria-label="差异摘要">
+      <div class="diff-summary-item"><strong data-diff-summary="added">0</strong><span>新增行</span></div>
+      <div class="diff-summary-item"><strong data-diff-summary="deleted">0</strong><span>删除行</span></div>
+      <div class="diff-summary-item"><strong data-diff-summary="unchanged">0</strong><span>未改变行</span></div>
+      <div class="diff-summary-item"><strong data-diff-summary="changes">0</strong><span>差异区块</span></div>
+    </div>
+    <div id="diffStatus" class="status" role="status" aria-live="polite">就绪</div>
+    <div class="diff-result-heading"><h2>比较结果</h2><div class="diff-navigation"><button id="previousDifference" class="secondary" type="button">上一项差异</button><button id="nextDifference" class="secondary" type="button">下一项差异</button><button id="copyDiff" class="secondary" type="button" disabled>复制差异</button></div></div>
+    <div class="diff-output" data-diff-output aria-label="逐行文本差异"><p class="diff-empty">比较两段文本后在这里查看差异。</p></div>
+  </section>
+  <section class="tool-guide">
+    <div class="guide-intro"><h2>无需上传即可检查文本改动</h2><p>此工具会对齐相同的行，并在双栏结果中标记删除和新增的行。适合比较配置文件、日志、代码片段、数据列表和修改前后的文案。全部比较过程都在当前浏览器中完成。</p></div>
+    <div class="guide-section how-to"><h2>如何比较两段文本</h2><ol class="steps">
+      <li><strong>粘贴两个版本</strong>把较早的文本放在左侧，把修改后的文本放在右侧。</li>
+      <li><strong>选择比较规则</strong>可以忽略连续空白、行首行尾空格、字母大小写，或同时启用两个选项。</li>
+      <li><strong>检查每个差异区块</strong>左侧高亮删除行，右侧高亮新增行。使用导航按钮在分开的差异区域之间移动。</li>
+      <li><strong>复制纯文本差异</strong>复制结果会用两个空格表示未改变行、减号表示删除行、加号表示新增行。</li>
+    </ol></div>
+    <div class="guide-section examples"><h2>常见比较场景</h2><div class="example-grid">
+      <article><h3>检查配置变更</h3><p>在应用更新前比较两份环境模板、服务器配置或部署清单。复制和分享结果前，仍应先删除其中的密钥和敏感值。</p></article>
+      <article><h3>比较日志或结果列表</h3><p>查看两次命令输出之间增加或消失的行。如果缩进没有实际意义，可以启用忽略空白。</p></article>
+      <article><h3>审阅修改后的文案</h3><p>比较文档或产品文案的两个版本，在不把草稿发送到远程服务的情况下逐项查看修改区域。</p></article>
+    </div></div>
+    <div class="guide-section limitations"><h2>比较规则与限制</h2><ul>
+      <li>算法比较完整的行，不会在单行内部继续高亮具体单词或字符。</li>
+      <li>忽略空白时，每一行会先去除两端空白，并把连续空白视为一个空格进行匹配；结果仍显示原始行。</li>
+      <li>忽略大小写使用 Unicode 小写转换，适合一般文本匹配，但不等同于特定语言的专业排序规则。</li>
+      <li>存在重复相同行时可能有多种有效对齐方式，本工具会确定性地选择其中一种最长公共子序列对齐。</li>
+      <li>每个输入限制为 200,000 个字符；两侧合计最多 3,000 行，超过安全行组合计算量的比较会被拒绝。文本不会写入浏览器存储、浏览器历史或最近工具列表。</li>
+    </ul></div>
+    <div class="guide-section"><h2>文本差异常见问题</h2><div class="faq-list">
+      <details><summary>工具会上传两段文本吗？</summary><p>不会。比较由当前浏览器中的 JavaScript 完成，不会发送包含粘贴内容的请求。</p></details>
+      <details><summary>什么是差异区块？</summary><p>它是一组连续的删除行或新增行。遇到未改变的行后，当前区块结束，导航会移动到下一个分开的差异区域。</p></details>
+      <details><summary>可以比较源代码吗？</summary><p>可以，但只会将其视为纯文本。工具不会解析编程语言语法、自动忽略注释或理解变量重命名。</p></details>
+      <details><summary>为什么修改一行会显示为删除一行再新增一行？</summary><p>逐行差异会把替换表示为删除旧行并新增新行，使复制后的结果保持清晰且容易在其他工具中使用。</p></details>
+    </div></div>
+    <nav class="related-tools" data-related-tools="text-diff" aria-label="相关工具"><h2>相关工具</h2><div class="related-links"><a href="/zh/text/"><strong>文本工具箱</strong><span>统计、清理、排序和转换文本。</span></a><a href="/zh/json/"><strong>JSON 格式化</strong><span>格式化、压缩、验证并浏览 JSON。</span></a><a href="/zh/hash/"><strong>SHA 哈希工具</strong><span>使用 Web Crypto 计算文本和文件哈希。</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="页脚导航"><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><a href="/zh/contact/">联系</a><a href="/zh/licenses/">开源许可</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · 私密、快速的浏览器本地工具</p></footer>
+<script src="/text-diff/text-diff-tool.js"></script>
+<script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

@@ -162,7 +162,7 @@ test('Information pages use page schemas without WebApplication fields', () => {
 
 test('Every HTML page has centralized localized footer navigation', () => {
   const htmlFiles = fs.readdirSync(root, { recursive: true }).filter(file => file.endsWith('.html'));
-  assert.equal(htmlFiles.length, 46);
+  assert.equal(htmlFiles.length, 48);
   for (const file of htmlFiles) {
     const html = read(file);
     assert.match(html, /class="footer-nav"/, file);

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>Text Diff Checker &amp; Comparison Tool | UtilCover</title>
+  <meta name="description" content="Compare two texts line by line, highlight additions and deletions, and ignore case or whitespace locally without uploading your content.">
+  <link rel="canonical" href="https://www.utilcover.com/text-diff/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/text-diff/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/text-diff/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/text-diff/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/text-diff/text-diff.css">
+  <meta property="og:title" content="Text Diff Checker &amp; Comparison Tool | UtilCover">
+  <meta property="og:description" content="Compare text line by line and review additions and deletions locally in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/text-diff/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/text-diff/#application",
+      "name": "Text Diff Checker",
+      "url": "https://www.utilcover.com/text-diff/",
+      "description": "Compare two texts line by line, highlight additions and deletions, and ignore case or whitespace locally without uploading your content.",
+      "inLanguage": "en",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/text-diff/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tools",
+          "item": "https://www.utilcover.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Text Diff Checker",
+          "item": "https://www.utilcover.com/text-diff/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page text-diff-page">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/text-diff/">中文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>Text Diff Checker</h1><p>Compare two versions line by line and highlight additions, deletions and unchanged content.</p></section>
+  <section class="tool-card">
+    <p class="local-processing-note">Both texts stay in this browser. They are never uploaded or saved by this tool.</p>
+    <div class="diff-input-grid">
+      <div class="field"><label for="leftText">Original text</label><textarea id="leftText" maxlength="200000" spellcheck="false" autocomplete="off" placeholder="Paste the original text"></textarea></div>
+      <div class="field"><label for="rightText">Changed text</label><textarea id="rightText" maxlength="200000" spellcheck="false" autocomplete="off" placeholder="Paste the changed text"></textarea></div>
+    </div>
+    <div class="diff-options" aria-label="Comparison options">
+      <label><input id="ignoreWhitespace" type="checkbox"> Ignore whitespace differences</label>
+      <label><input id="ignoreCase" type="checkbox"> Ignore letter case</label>
+    </div>
+    <div class="actions"><button id="compareText" type="button">Compare text</button><button id="swapText" class="secondary" type="button">Swap sides</button><button id="clearDiff" class="danger" type="button">Clear</button></div>
+    <p class="diff-limit-note">Each side is limited to 200,000 characters, with at most 3,000 total lines across both sides and a bounded comparison-work budget.</p>
+    <div class="diff-summary" aria-label="Difference summary">
+      <div class="diff-summary-item"><strong data-diff-summary="added">0</strong><span>Added lines</span></div>
+      <div class="diff-summary-item"><strong data-diff-summary="deleted">0</strong><span>Deleted lines</span></div>
+      <div class="diff-summary-item"><strong data-diff-summary="unchanged">0</strong><span>Unchanged lines</span></div>
+      <div class="diff-summary-item"><strong data-diff-summary="changes">0</strong><span>Change blocks</span></div>
+    </div>
+    <div id="diffStatus" class="status" role="status" aria-live="polite">Ready</div>
+    <div class="diff-result-heading"><h2>Comparison result</h2><div class="diff-navigation"><button id="previousDifference" class="secondary" type="button">Previous difference</button><button id="nextDifference" class="secondary" type="button">Next difference</button><button id="copyDiff" class="secondary" type="button" disabled>Copy diff</button></div></div>
+    <div class="diff-output" data-diff-output aria-label="Line-by-line text differences"><p class="diff-empty">Compare two texts to see their differences.</p></div>
+  </section>
+  <section class="tool-guide">
+    <div class="guide-intro"><h2>Review text changes without uploading either version</h2><p>This checker aligns matching lines and marks removed and added lines in a side-by-side result. It is useful for configuration files, logs, copied code, data lists and edited writing. Comparison happens entirely in the current browser.</p></div>
+    <div class="guide-section how-to"><h2>How to compare two texts</h2><ol class="steps">
+      <li><strong>Paste both versions</strong>Put the earlier text on the left and the changed text on the right.</li>
+      <li><strong>Choose comparison rules</strong>Optionally ignore repeated whitespace and leading or trailing spaces, ignore letter case, or apply both rules.</li>
+      <li><strong>Review each change block</strong>Deleted lines are highlighted on the left and added lines on the right. Use the navigation buttons to move between groups of changes.</li>
+      <li><strong>Copy a plain-text diff</strong>The copied result prefixes unchanged lines with two spaces, removed lines with a minus sign and added lines with a plus sign.</li>
+    </ol></div>
+    <div class="guide-section examples"><h2>Common comparison tasks</h2><div class="example-grid">
+      <article><h3>Check configuration changes</h3><p>Compare two environment templates, server configurations or deployment manifests before applying an update. Secrets should still be removed before sharing copied output.</p></article>
+      <article><h3>Compare logs or result lists</h3><p>Find lines that appeared or disappeared between two command outputs. Ignore whitespace when indentation is not meaningful.</p></article>
+      <article><h3>Review an edited draft</h3><p>Compare two versions of documentation or product copy and navigate through each changed section without sending the draft to a remote service.</p></article>
+    </div></div>
+    <div class="guide-section limitations"><h2>Comparison rules and limitations</h2><ul>
+      <li>The algorithm compares complete lines. It does not highlight individual changed words or characters inside a line.</li>
+      <li>When whitespace is ignored, each line is trimmed and consecutive whitespace is treated as one space for matching; the original line remains visible.</li>
+      <li>Case-insensitive comparison uses Unicode lowercase conversion. It is intended for practical text matching, not locale-specific linguistic collation.</li>
+      <li>Repeated identical lines can have more than one valid alignment. The tool chooses one deterministic longest-common-subsequence alignment.</li>
+      <li>Each input is bounded to 200,000 characters. Both sides may contain at most 3,000 total lines, and comparisons that exceed the safe line-pair work budget are rejected. Text is not stored in browser storage, browser history or the recent-tool list.</li>
+    </ul></div>
+    <div class="guide-section"><h2>Text diff questions</h2><div class="faq-list">
+      <details><summary>Does this upload either text?</summary><p>No. This tool does not upload either text. The comparison runs in JavaScript in the current browser and makes no request with the pasted content.</p></details>
+      <details><summary>What does a change block mean?</summary><p>It is one continuous group of removed or added lines. An unchanged line ends the current group, so navigation moves between separated regions.</p></details>
+      <details><summary>Can it compare source code?</summary><p>Yes, as plain text. It does not parse programming-language syntax, ignore comments automatically or understand renamed symbols.</p></details>
+      <details><summary>Why does a changed line appear as one deletion and one addition?</summary><p>Line-based diff represents replacement as the old line being removed and a new line being added. This keeps the copied output portable and unambiguous.</p></details>
+    </div></div>
+    <nav class="related-tools" data-related-tools="text-diff" aria-label="Related tools"><h2>Related tools</h2><div class="related-links"><a href="/text/"><strong>Text Toolkit</strong><span>Count, clean, sort and transform text.</span></a><a href="/json/"><strong>JSON Formatter</strong><span>Format, minify, validate and explore JSON.</span></a><a href="/hash/"><strong>SHA Hash Tool</strong><span>Hash text and files with Web Crypto.</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/licenses/">Licenses</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · Private, fast, client-side utilities</p></footer>
+<script src="/text-diff/text-diff-tool.js"></script>
+<script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>
