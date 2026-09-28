@@ -22,13 +22,14 @@ test('browser acceptance covers every required EN and ZH mobile route', () => {
     '/uuid/', '/zh/uuid/',
     '/jwt/', '/zh/jwt/',
     '/text-diff/', '/zh/text-diff/',
+    '/regex/', '/zh/regex/',
   ]);
 });
 
 test('browser acceptance exercises all privacy-critical tools', () => {
   const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
   assert.deepEqual(Object.keys(acceptance.PRIVACY_FLOWS), [
-    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/',
+    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/',
   ]);
 });
 
@@ -48,6 +49,19 @@ test('browser acceptance compares text on both localized storage-free routes', (
   const source = fs.readFileSync(path.join(root, 'scripts/browser-acceptance.cjs'), 'utf8');
   assert.match(source, /history\.back\(\)/);
   assert.match(source, /restored sensitive text from browser history/);
+});
+
+test('browser acceptance exercises worker-bounded Regex Tester routes', () => {
+  const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
+  assert.deepEqual(acceptance.REGEX_ROUTES, ['/regex/', '/zh/regex/']);
+  const source = fs.readFileSync(path.join(root, 'scripts/browser-acceptance.cjs'), 'utf8');
+  assert.match(source, /\(a\+\)\+\$/);
+  assert.match(source, /Pattern stopped after 500 ms/);
+  assert.match(source, /REGEX_MOBILE_WIDTH = 320/);
+  assert.match(source, /midpointTicks/);
+  assert.match(source, /params\.request\.method/);
+  assert.match(source, /renderedDetailRows/);
+  assert.match(source, /MAX_RENDERED_DETAILS/);
 });
 
 test('package exposes the durable browser acceptance command', () => {

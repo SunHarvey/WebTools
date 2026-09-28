@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>Regex Tester &amp; JavaScript Regular Expression Tool | UtilCover</title>
+  <meta name="description" content="Test JavaScript regular expressions locally, inspect matches and capture groups, highlight results, and preview replacements without uploading text.">
+  <link rel="canonical" href="https://www.utilcover.com/regex/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/regex/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/regex/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/regex/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/regex/regex.css">
+  <meta property="og:title" content="Regex Tester &amp; JavaScript Regular Expression Tool | UtilCover">
+  <meta property="og:description" content="Test JavaScript regex patterns, capture groups and replacements locally in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/regex/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/regex/#application",
+      "name": "Regex Tester",
+      "url": "https://www.utilcover.com/regex/",
+      "description": "Test JavaScript regular expressions locally, inspect matches and capture groups, highlight results, and preview replacements without uploading text.",
+      "inLanguage": "en",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/regex/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tools",
+          "item": "https://www.utilcover.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Regex Tester",
+          "item": "https://www.utilcover.com/regex/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page regex-page">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/regex/">中文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>Regex Tester</h1><p>Test JavaScript regular expressions, inspect capture groups and preview replacements locally.</p></section>
+  <section class="tool-card">
+    <p class="local-processing-note">Your pattern, test text and replacement stay in this browser. They are never uploaded or saved by this tool.</p>
+    <div class="regex-pattern-row">
+      <div class="field"><label for="patternInput">Regular expression</label><input id="patternInput" type="text" maxlength="2000" spellcheck="false" autocomplete="off" placeholder="(?&lt;word&gt;[A-Za-z]+)"></div>
+      <div class="regex-flags" aria-label="Regular expression flags">
+        <label><input data-regex-flag type="checkbox" value="g" checked> g</label><label><input data-regex-flag type="checkbox" value="i"> i</label><label><input data-regex-flag type="checkbox" value="m"> m</label><label><input data-regex-flag type="checkbox" value="s"> s</label><label><input data-regex-flag type="checkbox" value="u"> u</label><label><input data-regex-flag type="checkbox" value="y"> y</label>
+      </div>
+    </div>
+    <div class="regex-input-grid">
+      <div class="field"><label for="testText">Test text</label><textarea id="testText" maxlength="200000" spellcheck="false" autocomplete="off" placeholder="Paste text to test"></textarea></div>
+      <div class="field"><label for="replacementInput">Replacement</label><textarea id="replacementInput" maxlength="2000" spellcheck="false" autocomplete="off" placeholder="$1 or $&amp;"></textarea></div>
+    </div>
+    <div class="actions"><button id="runRegex" type="button">Test regex</button><button id="regexExample" class="secondary" type="button">Load example</button><button id="clearRegex" class="danger" type="button">Clear</button></div>
+    <p class="regex-limit-note">Patterns are limited to 2,000 characters, test text to 200,000 characters and results to 1,000 matches. Evaluation runs in a disposable Worker and stops after 500 ms.</p>
+    <div id="regexStatus" class="status" role="status" aria-live="polite">Ready</div>
+    <div class="regex-summary"><p><strong data-regex-count>0</strong> matches</p><div class="regex-navigation"><button id="previousMatch" class="secondary" type="button" disabled>Previous match</button><button id="nextMatch" class="secondary" type="button" disabled>Next match</button></div></div>
+    <div id="regexResults" class="regex-result-grid">
+      <section class="regex-panel"><h2>Highlighted text</h2><pre class="regex-highlighted" data-regex-highlighted aria-label="Highlighted regex matches"></pre></section>
+      <section class="regex-panel"><h2>Match details</h2><div class="regex-match-list" data-regex-matches aria-label="Regex match details"></div></section>
+    </div>
+    <section class="regex-panel regex-replacement-field"><h2>Replacement preview</h2><pre class="regex-replacement-output" data-regex-replacement></pre></section>
+    <div class="regex-copy-row"><button id="copyMatches" class="secondary" type="button" disabled>Copy match results</button><button id="copyReplacement" class="secondary" type="button" disabled>Copy replacement result</button></div>
+  </section>
+  <section class="tool-guide">
+    <div class="guide-intro"><h2>Test regular expressions without sending your text away</h2><p>This tool runs JavaScript regular expressions against text in a disposable browser Worker. It highlights matches, lists numbered and named capture groups, and shows the result of a replacement string. Patterns, logs, source snippets and replacement output remain in the current tab and are cleared when the page is left.</p></div>
+    <div class="guide-section how-to"><h2>How to test a JavaScript regex</h2><ol class="steps">
+      <li><strong>Enter the pattern without slash delimiters</strong>Type the source such as <code>\b[A-Z]{2,}\b</code>. Do not wrap it in <code>/.../</code>.</li>
+      <li><strong>Select the required flags</strong>Use global, ignore-case, multiline, dot-all, Unicode or sticky behavior only when the target JavaScript environment uses the same flags.</li>
+      <li><strong>Add test text and a replacement</strong>The replacement follows JavaScript <code>String.replace</code> syntax, including <code>$&amp;</code>, numbered groups and named groups.</li>
+      <li><strong>Review matches safely</strong>Navigate between highlighted results, inspect capture values and copy the bounded replacement preview.</li>
+    </ol></div>
+    <div class="guide-section examples"><h2>Common regex testing tasks</h2><div class="example-grid">
+      <article><h3>Extract structured values</h3><p>Test a pattern for identifiers, dates, email-like strings or log fields. Capture groups make it easier to confirm which part of each match would be reused later.</p></article>
+      <article><h3>Validate a migration or search rule</h3><p>Paste representative configuration, code or content samples before using a pattern in an editor or script. Include non-matching examples so accidental overmatching is visible.</p></article>
+      <article><h3>Preview a replacement</h3><p>Check numbered groups such as <code>$1</code>, the whole match token <code>$&amp;</code>, or named groups such as <code>$&lt;name&gt;</code> before changing the original file elsewhere.</p></article>
+    </div></div>
+    <div class="guide-section limitations"><h2>JavaScript regex rules and safety limits</h2><ul>
+      <li>The engine is the browser's JavaScript <code>RegExp</code> implementation. PCRE, .NET, Python and RE2 syntax can differ and are not emulated.</li>
+      <li>The supported flags are <code>g</code>, <code>i</code>, <code>m</code>, <code>s</code>, <code>u</code> and <code>y</code>. Only <code>g</code> continues through multiple matches; <code>y</code> controls sticky anchoring and can be combined with <code>g</code>.</li>
+      <li>Some patterns have catastrophic backtracking. Evaluation therefore runs in a fresh Worker that is terminated after 500 ms instead of blocking the page indefinitely.</li>
+      <li>Input is bounded to 2,000 pattern characters, 200,000 test-text characters and 2,000 replacement characters. At most 1,000 matches and 50 capture groups are accepted, while aggregate match/capture data and replacement output each have a 500,000-character limit.</li>
+      <li>The page highlights up to 200 matches and stops the detail list at 1,000 rows to keep the DOM responsive. The total match count can still include up to 1,000 accepted matches. Empty matches are displayed with a visible marker.</li>
+      <li>No input is written to localStorage, sessionStorage, cookies, browser history or the recent-tool list. Leaving the page clears inputs, results and Worker state.</li>
+    </ul></div>
+    <div class="guide-section"><h2>Regex tester questions</h2><div class="faq-list">
+      <details><summary>Does this upload my pattern or text?</summary><p>No. The page does not upload or send your pattern, test text or replacement to an API. The dedicated Worker is loaded from the same site and processes values inside the browser.</p></details>
+      <details><summary>Why was my pattern stopped?</summary><p>A pattern that does not finish within 500 ms is terminated to protect the tab. Simplify nested quantifiers, reduce ambiguous alternatives or test the expression on smaller representative input.</p></details>
+      <details><summary>Why is only one match shown?</summary><p>Enable the global <code>g</code> flag when you want JavaScript to continue after the first match. Sticky <code>y</code> matching is different because each match must start exactly at the current index.</p></details>
+      <details><summary>Is this a validator for email addresses or URLs?</summary><p>It can test a pattern against examples, but a regex alone is rarely a complete standards validator. Use the parser or validation rules of the system that will consume the value.</p></details>
+    </div></div>
+    <nav class="related-tools" data-related-tools="regex" aria-label="Related tools"><h2>Related tools</h2><div class="related-links"><a href="/text/"><strong>Text Toolkit</strong><span>Count, clean, sort and transform text.</span></a><a href="/text-diff/"><strong>Text Diff Checker</strong><span>Compare text line by line locally.</span></a><a href="/json/"><strong>JSON Formatter</strong><span>Format, minify, validate and explore JSON.</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/licenses/">Licenses</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · Private, fast, client-side utilities</p></footer>
+<script src="/regex/regex-engine.js"></script><script src="/regex/regex-tool.js"></script>
+<script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

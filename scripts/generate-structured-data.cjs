@@ -73,9 +73,10 @@ function updatePage(route) {
   return source.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1];
 }
 
-function csp(hash = '') {
+function csp(hash = '', allowWorker = false) {
   const scriptSource = hash ? `script-src 'self' ${hash};` : "script-src 'self';";
-  return `default-src 'self'; ${scriptSource} script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests`;
+  const workerSource = allowWorker ? "worker-src 'self';" : "worker-src 'none';";
+  return `default-src 'self'; ${scriptSource} script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; ${workerSource} frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests`;
 }
 
 function headerPattern(route) {
@@ -96,7 +97,7 @@ function renderHeaders(routeSources) {
     return [
       headerPattern(route),
       '  ! Content-Security-Policy',
-      `  Content-Security-Policy: ${csp(hash)}`
+      `  Content-Security-Policy: ${csp(hash, route === '/regex/' || route === '/zh/regex/')}`
     ].join('\n');
   }).join('\n\n');
   const previewHeaders = [

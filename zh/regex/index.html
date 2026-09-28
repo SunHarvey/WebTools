@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>正则表达式测试器与 JavaScript Regex 工具 | UtilCover</title>
+  <meta name="description" content="在浏览器本地测试 JavaScript 正则表达式，高亮匹配项、检查捕获组并预览替换结果，不上传测试文本。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/regex/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/regex/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/regex/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/regex/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/regex/regex.css">
+  <meta property="og:title" content="正则表达式测试器与 JavaScript Regex 工具 | UtilCover">
+  <meta property="og:description" content="在浏览器本地测试 JavaScript 正则表达式、捕获组和替换结果。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/zh/regex/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/zh/regex/#application",
+      "name": "正则表达式测试器",
+      "url": "https://www.utilcover.com/zh/regex/",
+      "description": "在浏览器本地测试 JavaScript 正则表达式，高亮匹配项、检查捕获组并预览替换结果，不上传测试文本。",
+      "inLanguage": "zh-CN",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/zh/regex/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "工具",
+          "item": "https://www.utilcover.com/zh/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "正则表达式测试器",
+          "item": "https://www.utilcover.com/zh/regex/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page regex-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="platform-nav nav-links"><a href="/zh/#popular-tools">工具</a><a href="/zh/#categories">分类</a><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><button class="search-trigger" type="button" aria-label="搜索工具">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/regex/?lang=en">English</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>正则表达式测试器</h1><p>在本地测试 JavaScript 正则表达式，检查捕获组并预览替换结果。</p></section>
+  <section class="tool-card">
+    <p class="local-processing-note">正则表达式、测试文本和替换内容仅在当前浏览器中处理，本工具不会上传或保存这些数据。</p>
+    <div class="regex-pattern-row">
+      <div class="field"><label for="patternInput">正则表达式</label><input id="patternInput" type="text" maxlength="2000" spellcheck="false" autocomplete="off" placeholder="(?&lt;word&gt;[A-Za-z]+)"></div>
+      <div class="regex-flags" aria-label="正则表达式标志">
+        <label><input data-regex-flag type="checkbox" value="g" checked> g</label><label><input data-regex-flag type="checkbox" value="i"> i</label><label><input data-regex-flag type="checkbox" value="m"> m</label><label><input data-regex-flag type="checkbox" value="s"> s</label><label><input data-regex-flag type="checkbox" value="u"> u</label><label><input data-regex-flag type="checkbox" value="y"> y</label>
+      </div>
+    </div>
+    <div class="regex-input-grid">
+      <div class="field"><label for="testText">测试文本</label><textarea id="testText" maxlength="200000" spellcheck="false" autocomplete="off" placeholder="粘贴需要测试的文本"></textarea></div>
+      <div class="field"><label for="replacementInput">替换内容</label><textarea id="replacementInput" maxlength="2000" spellcheck="false" autocomplete="off" placeholder="$1 或 $&amp;"></textarea></div>
+    </div>
+    <div class="actions"><button id="runRegex" type="button">测试正则</button><button id="regexExample" class="secondary" type="button">载入示例</button><button id="clearRegex" class="danger" type="button">清空</button></div>
+    <p class="regex-limit-note">表达式最多 2,000 个字符，测试文本最多 200,000 个字符，结果最多 1,000 个匹配项。计算在一次性 Worker 中执行，并在 500 毫秒后停止。</p>
+    <div id="regexStatus" class="status" role="status" aria-live="polite">就绪</div>
+    <div class="regex-summary"><p><strong data-regex-count>0</strong> 个匹配项</p><div class="regex-navigation"><button id="previousMatch" class="secondary" type="button" disabled>上一个匹配</button><button id="nextMatch" class="secondary" type="button" disabled>下一个匹配</button></div></div>
+    <div id="regexResults" class="regex-result-grid">
+      <section class="regex-panel"><h2>匹配高亮</h2><pre class="regex-highlighted" data-regex-highlighted aria-label="正则表达式匹配高亮"></pre></section>
+      <section class="regex-panel"><h2>匹配详情</h2><div class="regex-match-list" data-regex-matches aria-label="正则表达式匹配详情"></div></section>
+    </div>
+    <section class="regex-panel regex-replacement-field"><h2>替换预览</h2><pre class="regex-replacement-output" data-regex-replacement></pre></section>
+    <div class="regex-copy-row"><button id="copyMatches" class="secondary" type="button" disabled>复制匹配结果</button><button id="copyReplacement" class="secondary" type="button" disabled>复制替换结果</button></div>
+  </section>
+  <section class="tool-guide">
+    <div class="guide-intro"><h2>无需上传文本即可测试正则表达式</h2><p>此工具使用浏览器内置的 JavaScript RegExp 引擎，在一次性的独立 Worker 中运行表达式。它会高亮匹配内容、列出编号捕获组和命名捕获组，并按照 JavaScript 的替换规则生成预览。正则、日志、代码片段、业务文本和替换结果都只保留在当前标签页中，离开页面时会清除。</p></div>
+    <div class="guide-section how-to"><h2>如何测试 JavaScript 正则表达式</h2><ol class="steps">
+      <li><strong>输入不带斜杠分隔符的表达式</strong>例如输入 <code>\b[A-Z]{2,}\b</code>，不要再写成 <code>/.../</code>。</li>
+      <li><strong>选择需要的标志</strong>根据实际运行环境选择全局、忽略大小写、多行、点号匹配换行、Unicode 或粘滞匹配。</li>
+      <li><strong>加入测试文本和替换内容</strong>替换语法与 JavaScript <code>String.replace</code> 一致，可使用完整匹配、编号组和命名组。</li>
+      <li><strong>检查匹配与替换结果</strong>通过导航按钮逐项查看高亮，核对捕获组，然后按需复制有明确上限的替换预览。</li>
+    </ol></div>
+    <div class="guide-section examples"><h2>常见正则测试场景</h2><div class="example-grid">
+      <article><h3>提取结构化字段</h3><p>测试标识符、日期、类似邮箱的字符串或日志字段。通过捕获组可以确认每一段匹配内容之后会如何被脚本或编辑器使用。</p></article>
+      <article><h3>检查搜索和迁移规则</h3><p>在编辑器、命令行脚本或迁移任务中正式使用前，先粘贴具有代表性的配置、代码和文案。除了应该匹配的内容，也应加入不应匹配的反例，以便发现范围过宽的问题。</p></article>
+      <article><h3>预览批量替换</h3><p>提前检查 <code>$1</code> 等编号捕获组、表示完整匹配的 <code>$&amp;</code>，以及 <code>$&lt;name&gt;</code> 形式的命名捕获组，确认无误后再到原文件中执行修改。</p></article>
+    </div></div>
+    <div class="guide-section limitations"><h2>JavaScript 正则规则与安全限制</h2><ul>
+      <li>工具使用当前浏览器的 JavaScript <code>RegExp</code> 实现，不会模拟 PCRE、.NET、Python 或 RE2。不同引擎的语法、转义和断言能力可能不同。</li>
+      <li>支持 <code>g</code>、<code>i</code>、<code>m</code>、<code>s</code>、<code>u</code> 和 <code>y</code> 标志。只有 <code>g</code> 会继续查找多个匹配；<code>y</code> 控制粘连起点，也可以与 <code>g</code> 组合。</li>
+      <li>某些表达式会发生灾难性回溯。为了避免整个页面长时间无响应，每次计算都会启动新的 Worker，超过 500 毫秒后立即终止，而不是继续占用主线程。</li>
+      <li>表达式限制为 2,000 个字符，测试文本限制为 200,000 个字符，替换内容限制为 2,000 个字符。最多接受 1,000 个匹配项和 50 个捕获组；匹配与捕获组数据总量、替换结果分别限制为 500,000 个字符。</li>
+      <li>为了控制页面节点数量，页面最多高亮 200 个匹配项，并在详情达到 1,000 行时停止渲染；匹配总数仍可统计最多 1,000 个已接受匹配。零长度匹配会用可见符号标识。</li>
+      <li>输入不会写入 localStorage、sessionStorage、Cookie、浏览器历史或最近工具列表。离开页面时会清空输入、输出、导航状态和 Worker 内存。</li>
+      <li>高亮和详情均通过安全文本节点显示，不会把测试内容当作 HTML 执行。复制操作只会在用户主动点击复制按钮时发生。</li>
+    </ul></div>
+    <div class="guide-section"><h2>正则表达式测试常见问题</h2><div class="faq-list">
+      <details><summary>工具会上传表达式或测试文本吗？</summary><p>不会。页面不会把正则、测试文本或替换内容发送到远程 API。独立 Worker 也从同一站点加载，全部计算都发生在浏览器内部。</p></details>
+      <details><summary>为什么表达式被强制停止？</summary><p>如果 500 毫秒内仍未完成，Worker 会被终止以保护当前标签页。可以减少嵌套量词、缩小含糊的备选分支，或使用更小但仍有代表性的输入进行测试。</p></details>
+      <details><summary>为什么只显示一个匹配项？</summary><p>需要查找多个结果时应启用全局 <code>g</code> 标志。粘滞 <code>y</code> 标志并不等同于全局搜索，因为下一次匹配必须正好从当前索引开始。</p></details>
+      <details><summary>可以用它完整验证邮箱或网址吗？</summary><p>它可以帮助测试表达式和样本，但单个正则通常不能覆盖复杂标准的全部规则。正式验证时应优先使用最终系统对应的解析器或业务校验逻辑。</p></details>
+    </div></div>
+    <nav class="related-tools" data-related-tools="regex" aria-label="相关工具"><h2>相关工具</h2><div class="related-links"><a href="/zh/text/"><strong>文本工具箱</strong><span>统计、清理、排序和转换文本。</span></a><a href="/zh/text-diff/"><strong>文本差异比较器</strong><span>在本地逐行比较文本差异。</span></a><a href="/zh/json/"><strong>JSON 格式化</strong><span>格式化、压缩、验证并浏览 JSON。</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="页脚导航"><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><a href="/zh/contact/">联系</a><a href="/zh/licenses/">开源许可</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · 私密、快速的浏览器本地工具</p></footer>
+<script src="/regex/regex-engine.js"></script><script src="/regex/regex-tool.js"></script>
+<script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

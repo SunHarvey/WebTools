@@ -10,6 +10,8 @@ const { spawn } = require('node:child_process');
 const ROOT = path.resolve(__dirname, '..');
 const REAL_ROOT = fs.realpathSync(ROOT);
 const CDP_TIMEOUT_MS = 10_000;
+const REGEX_MOBILE_WIDTH = 320;
+const MAX_RENDERED_DETAILS = 1_000;
 const MOBILE_ROUTES = [
   '/', '/zh/',
   '/json/', '/zh/json/',
@@ -19,10 +21,12 @@ const MOBILE_ROUTES = [
   '/uuid/', '/zh/uuid/',
   '/jwt/', '/zh/jwt/',
   '/text-diff/', '/zh/text-diff/',
+  '/regex/', '/zh/regex/',
 ];
 const PASSWORD_RESULT_ROUTES = ['/password/', '/zh/password/'];
 const JWT_STORAGE_ROUTES = ['/jwt/', '/zh/jwt/'];
 const TEXT_DIFF_ROUTES = ['/text-diff/', '/zh/text-diff/'];
+const REGEX_ROUTES = ['/regex/', '/zh/regex/'];
 
 const PRIVACY_FLOWS = {
   '/json/': `
@@ -100,6 +104,38 @@ const PRIVACY_FLOWS = {
       status: document.querySelector('#diffStatus').textContent,
     };
   `,
+  '/regex/': `
+    document.querySelector('#patternInput').value = '(?<word>[A-Za-z]+)-(\\\\d+)';
+    document.querySelector('#testText').value = 'item-42 and next-7';
+    document.querySelector('#replacementInput').value = '$<word>:$2';
+    document.querySelectorAll('[data-regex-flag]').forEach(input => { input.checked = input.value === 'g'; });
+    document.querySelector('#runRegex').click();
+    for (let attempt = 0; attempt < 40 && document.querySelector('#regexStatus').dataset.state === 'working'; attempt += 1) {
+      await new Promise(resolve => setTimeout(resolve, 25));
+    }
+    return {
+      count: document.querySelector('[data-regex-count]').textContent,
+      replacement: document.querySelector('[data-regex-replacement]').textContent,
+      marks: document.querySelectorAll('.regex-match').length,
+      status: document.querySelector('#regexStatus').textContent,
+    };
+  `,
+  '/zh/regex/': `
+    document.querySelector('#patternInput').value = '(?<word>[A-Za-z]+)-(\\\\d+)';
+    document.querySelector('#testText').value = 'item-42 and next-7';
+    document.querySelector('#replacementInput').value = '$<word>:$2';
+    document.querySelectorAll('[data-regex-flag]').forEach(input => { input.checked = input.value === 'g'; });
+    document.querySelector('#runRegex').click();
+    for (let attempt = 0; attempt < 40 && document.querySelector('#regexStatus').dataset.state === 'working'; attempt += 1) {
+      await new Promise(resolve => setTimeout(resolve, 25));
+    }
+    return {
+      count: document.querySelector('[data-regex-count]').textContent,
+      replacement: document.querySelector('[data-regex-replacement]').textContent,
+      marks: document.querySelectorAll('.regex-match').length,
+      status: document.querySelector('#regexStatus').textContent,
+    };
+  `,
 };
 
 const MIME_TYPES = {
@@ -118,6 +154,22 @@ const MIME_TYPES = {
   '.webp': 'image/webp',
   '.xml': 'application/xml; charset=utf-8',
 };
+
+function contentSecurityPolicyFor(pathname) {
+  const blocks = fs.readFileSync(path.join(ROOT, '_headers'), 'utf8').split(/\n{2,}/u);
+  let policy = '';
+  for (const block of blocks) {
+    const lines = block.split('\n');
+    const pattern = lines[0]?.trim();
+    const matches = pattern === '/*'
+      || (pattern?.endsWith('*') && pathname.startsWith(pattern.slice(0, -1)))
+      || pattern === pathname;
+    if (!matches) continue;
+    const header = lines.find(line => /^\s*Content-Security-Policy:/iu.test(line));
+    if (header) policy = header.replace(/^\s*Content-Security-Policy:\s*/iu, '');
+  }
+  return policy;
+}
 
 function wait(milliseconds) {
   return new Promise(resolve => setTimeout(resolve, milliseconds));
@@ -148,10 +200,13 @@ function startStaticServer() {
       if (!isInsideRoot(filename)) { response.writeHead(403).end('Forbidden'); return; }
       fs.readFile(filename, (error, data) => {
         if (error) { response.writeHead(error.code === 'ENOENT' ? 404 : 500).end('Not found'); return; }
-        response.writeHead(200, {
+        const responseHeaders = {
           'Cache-Control': 'no-store',
           'Content-Type': MIME_TYPES[path.extname(filename).toLowerCase()] || 'application/octet-stream',
-        });
+        };
+        const policy = contentSecurityPolicyFor(pathname);
+        if (policy) responseHeaders['Content-Security-Policy'] = policy;
+        response.writeHead(200, responseHeaders);
         response.end(data);
       });
     });
@@ -372,7 +427,11 @@ async function runAcceptance() {
     await client.attachToPage();
     const requests = [];
     const exceptions = [];
-    client.on('Network.requestWillBeSent', params => requests.push(params.request.url));
+    client.on('Network.requestWillBeSent', params => requests.push({
+      url: params.request.url,
+      method: params.request.method,
+      postData: params.request.postData || '',
+    }));
     client.on('Runtime.exceptionThrown', params => exceptions.push(params.exceptionDetails.exception?.description || params.exceptionDetails.text));
     await Promise.all([
       client.send('Page.enable'), client.send('Runtime.enable'), client.send('Network.enable'),
@@ -413,6 +472,21 @@ async function runAcceptance() {
       assert.ok(result.scrollWidth <= result.viewport + 1, `${route} overflows horizontally: ${result.scrollWidth}px > ${result.viewport}px`);
       assert.equal(result.toggleVisible, true, `${route} mobile navigation toggle is not visible`);
       mobile.push({ route, viewport: result.viewport, scrollWidth: result.scrollWidth });
+    }
+    await client.send('Emulation.clearDeviceMetricsOverride');
+
+    const regexMobile = [];
+    await client.send('Emulation.setDeviceMetricsOverride', {
+      width: REGEX_MOBILE_WIDTH, height: 700, deviceScaleFactor: 1, mobile: true,
+    });
+    for (const route of REGEX_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `
+        const root = document.documentElement;
+        return { viewport: root.clientWidth, scrollWidth: root.scrollWidth };
+      `);
+      assert.ok(result.scrollWidth <= result.viewport + 1, `${route} overflows at ${REGEX_MOBILE_WIDTH}px: ${result.scrollWidth}px > ${result.viewport}px`);
+      regexMobile.push({ route, ...result });
     }
     await client.send('Emulation.clearDeviceMetricsOverride');
 
@@ -511,7 +585,7 @@ async function runAcceptance() {
     await client.send('Emulation.clearDeviceMetricsOverride');
     const privacy = [];
     for (const [route, flow] of Object.entries(PRIVACY_FLOWS)) {
-      if (TEXT_DIFF_ROUTES.includes(route)) {
+      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route)) {
         await navigate('/');
         await evaluate(client, `
           localStorage.clear();
@@ -552,16 +626,156 @@ async function runAcceptance() {
         assert.deepEqual(storage.session, [], `${route} created a sessionStorage entry`);
         assert.equal(storage.cookies, '', `${route} created a cookie`);
       }
+      if (REGEX_ROUTES.includes(route)) {
+        assert.equal(result.count, '2', `${route} reported the wrong regex match count`);
+        assert.equal(result.replacement, 'item:42 and next:7', `${route} produced the wrong replacement preview`);
+        assert.equal(result.marks, 2, `${route} rendered the wrong number of match highlights`);
+        const storage = await evaluate(client, `
+          return {
+            local: Object.keys(localStorage),
+            session: Object.keys(sessionStorage),
+            cookies: document.cookie,
+          };
+        `);
+        assert.deepEqual(storage.local, [], `${route} created a localStorage entry`);
+        assert.deepEqual(storage.session, [], `${route} created a sessionStorage entry`);
+        assert.equal(storage.cookies, '', `${route} created a cookie`);
+      }
       await wait(100);
-      const networkRequests = requests.filter(url => /^https?:\/\//i.test(url));
-      const unexpected = networkRequests.filter(url => {
-        try { return new URL(url).origin !== `http://127.0.0.1:${sitePort}`; }
+      const networkRequests = requests.filter(request => /^https?:\/\//i.test(request.url));
+      const permittedRegexAssets = REGEX_ROUTES.includes(route)
+        ? networkRequests.filter(request => {
+            const url = new URL(request.url);
+            return request.method === 'GET'
+              && request.postData === ''
+              && url.origin === `http://127.0.0.1:${sitePort}`
+              && url.search === ''
+              && ['/regex/regex-worker.js', '/regex/regex-engine.js'].includes(url.pathname);
+          })
+        : [];
+      const disallowedRequests = networkRequests.filter(request => !permittedRegexAssets.includes(request));
+      const unexpected = networkRequests.filter(request => {
+        try { return new URL(request.url).origin !== `http://127.0.0.1:${sitePort}`; }
         catch { return false; }
       });
       assert.deepEqual(exceptions, [], `${route} interaction raised a browser exception`);
-      assert.deepEqual(unexpected, [], `${route} sent data to an external origin: ${unexpected.join(', ')}`);
-      assert.equal(networkRequests.length, 0, `${route} made a post-load network request: ${networkRequests.join(', ')}`);
+      assert.deepEqual(unexpected, [], `${route} sent data to an external origin: ${unexpected.map(request => request.url).join(', ')}`);
+      assert.equal(disallowedRequests.length, 0, `${route} made a post-load network request: ${disallowedRequests.map(request => `${request.method} ${request.url}`).join(', ')}`);
       privacy.push({ route, networkRequests: networkRequests.length, result });
+    }
+
+    const regexBehavior = [];
+    for (const route of REGEX_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `
+        const run = async () => {
+          document.querySelector('#patternInput').value = '[A-Z]+';
+          document.querySelector('#testText').value = 'ONE two THREE four FIVE';
+          document.querySelector('#replacementInput').value = '[$&]';
+          document.querySelectorAll('[data-regex-flag]').forEach(input => { input.checked = input.value === 'g'; });
+          document.querySelector('#runRegex').click();
+          for (let attempt = 0; attempt < 40 && document.querySelector('#regexStatus').dataset.state === 'working'; attempt += 1) {
+            await new Promise(resolve => setTimeout(resolve, 25));
+          }
+        };
+        const snapshot = () => {
+          const current = document.querySelector('.regex-current');
+          return {
+            status: document.querySelector('#regexStatus').textContent,
+            index: current?.dataset.matchIndex,
+            ariaCurrentCount: document.querySelectorAll('[aria-current="true"]').length,
+            focused: document.activeElement === current,
+          };
+        };
+        await run();
+        document.querySelector('#nextMatch').click();
+        const initialNext = snapshot();
+        document.querySelector('#nextMatch').click();
+        const secondNext = snapshot();
+        const staleFirst = document.querySelectorAll('[data-match-index="0"].regex-current').length;
+        await run();
+        document.querySelector('#previousMatch').click();
+        const initialPrevious = snapshot();
+        document.querySelector('#nextMatch').click();
+        const wrapped = snapshot();
+        return { initialNext, secondNext, staleFirst, initialPrevious, wrapped };
+      `);
+      assert.equal(result.initialNext.index, '0', `${route} initial Next did not select the first regex match`);
+      assert.equal(result.initialNext.ariaCurrentCount, 1, `${route} initial Next did not keep aria-current unique`);
+      assert.equal(result.initialNext.focused, true, `${route} initial Next did not focus the match`);
+      assert.equal(result.secondNext.index, '1', `${route} second Next did not select the second regex match`);
+      assert.equal(result.staleFirst, 0, `${route} left the first regex match selected`);
+      assert.equal(result.initialPrevious.index, '2', `${route} initial Previous did not select the last regex match`);
+      assert.equal(result.wrapped.index, '0', `${route} regex navigation did not wrap`);
+      regexBehavior.push({ route, ...result });
+    }
+
+    const regexTimeouts = [];
+    for (const route of REGEX_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `
+        document.querySelector('#patternInput').value = '(a+)+$';
+        document.querySelector('#testText').value = 'a'.repeat(100000) + '!';
+        document.querySelectorAll('[data-regex-flag]').forEach(input => { input.checked = false; });
+        let ticks = 0;
+        const ticker = setInterval(() => { ticks += 1; }, 20);
+        document.querySelector('#runRegex').click();
+        await new Promise(resolve => setTimeout(resolve, 250));
+        const midpointTicks = ticks;
+        const midpointState = document.querySelector('#regexStatus').dataset.state;
+        await new Promise(resolve => setTimeout(resolve, 550));
+        clearInterval(ticker);
+        return {
+          status: document.querySelector('#regexStatus').textContent,
+          marks: document.querySelectorAll('.regex-match').length,
+          ticks,
+          midpointTicks,
+          midpointState,
+        };
+      `);
+      assert.ok(result.midpointTicks >= 5, `${route} main thread did not remain responsive while the regex worker was running`);
+      assert.equal(result.midpointState, 'working', `${route} regex timeout probe completed before the midpoint`);
+      assert.ok(result.ticks >= 20, `${route} main thread timers stalled during regex timeout`);
+      assert.equal(result.marks, 0, `${route} rendered a result after regex timeout`);
+      if (route.startsWith('/zh/')) assert.match(result.status, /运行 500 毫秒后已停止/);
+      else assert.match(result.status, /Pattern stopped after 500 ms/);
+      regexTimeouts.push({ route, ...result });
+    }
+
+    const regexRenderBounds = [];
+    for (const route of REGEX_ROUTES) {
+      await navigate(route);
+      await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+      let result;
+      try {
+        result = await evaluate(client, `
+          const pattern = Array.from({ length: 50 }, (_, index) => '(?<g' + index + '>a)').join('');
+          document.querySelector('#patternInput').value = pattern;
+          document.querySelector('#testText').value = 'a'.repeat(50 * 1000);
+          document.querySelector('#replacementInput').value = '';
+          document.querySelectorAll('[data-regex-flag]').forEach(input => { input.checked = input.value === 'g'; });
+          const started = performance.now();
+          document.querySelector('#runRegex').click();
+          for (let attempt = 0; attempt < 160 && document.querySelector('#regexStatus').dataset.state === 'working'; attempt += 1) {
+            await new Promise(resolve => setTimeout(resolve, 25));
+          }
+          return {
+            elapsed: performance.now() - started,
+            statusState: document.querySelector('#regexStatus').dataset.state,
+            count: document.querySelector('[data-regex-count]').textContent,
+            renderedDetailRows: document.querySelectorAll('.regex-detail-row').length,
+            renderedResultNodes: document.querySelectorAll('[data-regex-matches] *').length,
+          };
+        `);
+      } finally {
+        await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+      }
+      assert.equal(result.statusState, 'success', `${route} maximum accepted capture result did not complete`);
+      assert.equal(result.count, '1000', `${route} maximum accepted capture result reported the wrong match count`);
+      assert.ok(result.renderedDetailRows <= MAX_RENDERED_DETAILS, `${route} exceeded the rendered detail-row budget`);
+      assert.ok(result.renderedResultNodes <= 3_300, `${route} created too many result DOM nodes`);
+      assert.ok(result.elapsed < 3_000, `${route} maximum accepted capture result rendered too slowly under CPU throttling`);
+      regexRenderBounds.push({ route, ...result });
     }
 
     const textDiffNavigation = [];
@@ -652,7 +866,7 @@ async function runAcceptance() {
       let restored = false;
       for (let attempt = 0; attempt < 40; attempt += 1) {
         await wait(50);
-        restored = await evaluate(client, `return location.pathname === '${route}';`);
+        restored = await evaluate(client, `return location.pathname === '${route}' && Boolean(document.querySelector('#leftText'));`);
         if (restored) break;
       }
       assert.equal(restored, true, `${route} did not return through browser history`);
@@ -675,12 +889,61 @@ async function runAcceptance() {
       textDiffHistory.push({ route, ...result });
     }
 
+    const regexHistory = [];
+    for (const route of REGEX_ROUTES) {
+      await navigate(route);
+      await evaluate(client, `
+        document.querySelector('#patternInput').value = 'history-secret-(\\\\d+)';
+        document.querySelector('#testText').value = 'history-secret-42';
+        document.querySelector('#replacementInput').value = 'history-secret-$1';
+        document.querySelectorAll('[data-regex-flag]').forEach(input => { input.checked = input.value === 'i'; });
+        document.querySelector('#runRegex').click();
+        await new Promise(resolve => setTimeout(resolve, 100));
+        return true;
+      `);
+      await navigate('/about/');
+      await evaluate(client, 'history.back(); return true;');
+      let restored = false;
+      for (let attempt = 0; attempt < 40; attempt += 1) {
+        await wait(50);
+        restored = await evaluate(client, `return location.pathname === '${route}' && Boolean(document.querySelector('#patternInput'));`);
+        if (restored) break;
+      }
+      assert.equal(restored, true, `${route} did not return through browser history`);
+      const result = await evaluate(client, `
+        return {
+          pattern: document.querySelector('#patternInput').value,
+          text: document.querySelector('#testText').value,
+          replacement: document.querySelector('#replacementInput').value,
+          selectedFlags: [...document.querySelectorAll('[data-regex-flag]:checked')].map(input => input.value),
+          marks: document.querySelectorAll('.regex-match').length,
+          output: document.querySelector('#regexResults').textContent,
+          copyMatchesDisabled: document.querySelector('#copyMatches').disabled,
+          copyReplacementDisabled: document.querySelector('#copyReplacement').disabled,
+        };
+      `);
+      assert.equal(result.pattern, '', `${route} restored a sensitive regex pattern from browser history`);
+      assert.equal(result.text, '', `${route} restored sensitive test text from browser history`);
+      assert.equal(result.replacement, '', `${route} restored a sensitive replacement from browser history`);
+      assert.deepEqual(result.selectedFlags, ['g'], `${route} restored regex flag state from browser history`);
+      assert.equal(result.marks, 0, `${route} restored rendered matches from browser history`);
+      assert.doesNotMatch(result.output, /history-secret/, `${route} restored sensitive regex output from browser history`);
+      assert.equal(result.copyMatchesDisabled, true, `${route} restored copied match state from browser history`);
+      assert.equal(result.copyReplacementDisabled, true, `${route} restored copied replacement state from browser history`);
+      regexHistory.push({ route, ...result });
+    }
+
     const report = {
       browser: executable,
       mobileRoutes: mobile,
+      regexMobile,
       jwtStorage,
       textDiffNavigation,
       textDiffHistory,
+      regexBehavior,
+      regexTimeouts,
+      regexRenderBounds,
+      regexHistory,
       passwordResults,
       privacyFlows: privacy,
       status: 'passed',
@@ -710,7 +973,7 @@ async function runAcceptance() {
 }
 
 module.exports = {
-  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, PRIVACY_FLOWS, CdpClient,
+  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, PRIVACY_FLOWS, CdpClient,
   runAcceptance, startStaticServer, stopBrowser, stopServer, browserBinary,
 };
 

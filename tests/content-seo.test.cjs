@@ -217,6 +217,24 @@ test('Text Diff pages explain bounded local line comparison in each locale', () 
   }
 });
 
+test('Regex Tester pages explain bounded local JavaScript matching in each locale', () => {
+  assertGuide('regex/index.html', 'en', ['/text/', '/text-diff/', '/json/']);
+  assertGuide('zh/regex/index.html', 'zh', ['/zh/text/', '/zh/text-diff/', '/zh/json/']);
+  assertMetadata('regex/index.html', /Regex Tester.*JavaScript Regular Expression Tool/i, /test JavaScript regular expressions locally.*capture groups.*replacements/i);
+  assertMetadata('zh/regex/index.html', /正则表达式测试器.*JavaScript Regex 工具/, /本地测试 JavaScript 正则表达式.*捕获组.*替换结果/);
+  for (const file of ['regex/index.html', 'zh/regex/index.html']) {
+    const text = guideFor(file).text;
+    assert.match(text, /500 (?:ms|毫秒)/i);
+    assert.match(text, /200,000/);
+    assert.match(text, /1,000/);
+    assert.match(text, /Worker/i);
+    assert.match(text, /(?:catastrophic backtracking|灾难性回溯)/i);
+    assert.match(text, /JavaScript.*RegExp/i);
+    assert.match(text, /(?:does not upload|不会.*上传|不会上传)/i);
+    assert.doesNotMatch(text, /PCRE is supported|支持 PCRE/i);
+  }
+});
+
 test('encode pages explain UTF-8 Base64 and URL component conversion honestly in each locale', () => {
   assertGuide('encode/index.html', 'en', ['/text/', '/json/', '/hash/']);
   assertGuide('zh/encode/index.html', 'zh', ['/zh/text/', '/zh/json/', '/zh/hash/']);

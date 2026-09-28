@@ -5,7 +5,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/" />
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-28</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/password/</loc>
@@ -33,14 +33,21 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/text/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/text/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/text/" />
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-26</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/text-diff/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/text-diff/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/text-diff/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/text-diff/" />
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-26</lastmod>
+  </url>
+  <url>
+    <loc>https://www.utilcover.com/regex/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/regex/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/regex/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/regex/" />
+    <lastmod>2026-09-28</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/encode/</loc>
@@ -152,7 +159,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/" />
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-28</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/password/</loc>
@@ -180,14 +187,21 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/text/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/text/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/text/" />
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-26</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/text-diff/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/text-diff/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/text-diff/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/text-diff/" />
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-26</lastmod>
+  </url>
+  <url>
+    <loc>https://www.utilcover.com/zh/regex/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/regex/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/regex/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/regex/" />
+    <lastmod>2026-09-28</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/encode/</loc>
