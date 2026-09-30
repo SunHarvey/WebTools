@@ -11,6 +11,7 @@ const ROOT = path.resolve(__dirname, '..');
 const REAL_ROOT = fs.realpathSync(ROOT);
 const CDP_TIMEOUT_MS = 10_000;
 const REGEX_MOBILE_WIDTH = 320;
+const CRON_MOBILE_WIDTH = 320;
 const MAX_RENDERED_DETAILS = 1_000;
 const MOBILE_ROUTES = [
   '/', '/zh/',
@@ -22,11 +23,13 @@ const MOBILE_ROUTES = [
   '/jwt/', '/zh/jwt/',
   '/text-diff/', '/zh/text-diff/',
   '/regex/', '/zh/regex/',
+  '/cron/', '/zh/cron/',
 ];
 const PASSWORD_RESULT_ROUTES = ['/password/', '/zh/password/'];
 const JWT_STORAGE_ROUTES = ['/jwt/', '/zh/jwt/'];
 const TEXT_DIFF_ROUTES = ['/text-diff/', '/zh/text-diff/'];
 const REGEX_ROUTES = ['/regex/', '/zh/regex/'];
+const CRON_ROUTES = ['/cron/', '/zh/cron/'];
 
 const PRIVACY_FLOWS = {
   '/json/': `
@@ -134,6 +137,34 @@ const PRIVACY_FLOWS = {
       replacement: document.querySelector('[data-regex-replacement]').textContent,
       marks: document.querySelectorAll('.regex-match').length,
       status: document.querySelector('#regexStatus').textContent,
+    };
+  `,
+  '/cron/': `
+    document.querySelector('#cronExpression').value = '*/15 * * * *';
+    document.querySelector('#cronTimezone').value = 'UTC';
+    document.querySelector('#runCron').click();
+    return {
+      status: document.querySelector('#cronStatus').dataset.state,
+      message: document.querySelector('#cronStatus').textContent,
+      rows: document.querySelectorAll('#cronFieldsBody tr').length,
+      next: document.querySelectorAll('#cronNextList li').length,
+      minuteSyntax: document.querySelector('#cronFieldsBody tr:first-child')?.children[1].textContent,
+      minuteValues: document.querySelector('#cronFieldsBody tr:first-child')?.children[2].textContent,
+      firstTime: document.querySelector('#cronNextList li')?.textContent,
+    };
+  `,
+  '/zh/cron/': `
+    document.querySelector('#cronExpression').value = '*/15 * * * *';
+    document.querySelector('#cronTimezone').value = 'UTC';
+    document.querySelector('#runCron').click();
+    return {
+      status: document.querySelector('#cronStatus').dataset.state,
+      message: document.querySelector('#cronStatus').textContent,
+      rows: document.querySelectorAll('#cronFieldsBody tr').length,
+      next: document.querySelectorAll('#cronNextList li').length,
+      minuteSyntax: document.querySelector('#cronFieldsBody tr:first-child')?.children[1].textContent,
+      minuteValues: document.querySelector('#cronFieldsBody tr:first-child')?.children[2].textContent,
+      firstTime: document.querySelector('#cronNextList li')?.textContent,
     };
   `,
 };
@@ -490,6 +521,18 @@ async function runAcceptance() {
     }
     await client.send('Emulation.clearDeviceMetricsOverride');
 
+    const cronMobile = [];
+    await client.send('Emulation.setDeviceMetricsOverride', {
+      width: CRON_MOBILE_WIDTH, height: 700, deviceScaleFactor: 1, mobile: true,
+    });
+    for (const route of CRON_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `return { viewport: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth };`);
+      assert.ok(result.scrollWidth <= result.viewport + 1, `${route} overflows at ${CRON_MOBILE_WIDTH}px: ${result.scrollWidth}px > ${result.viewport}px`);
+      cronMobile.push({ route, ...result });
+    }
+    await client.send('Emulation.clearDeviceMetricsOverride');
+
     const jwtStorage = [];
     for (const route of JWT_STORAGE_ROUTES) {
       await navigate('/');
@@ -585,7 +628,7 @@ async function runAcceptance() {
     await client.send('Emulation.clearDeviceMetricsOverride');
     const privacy = [];
     for (const [route, flow] of Object.entries(PRIVACY_FLOWS)) {
-      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route)) {
+      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route)) {
         await navigate('/');
         await evaluate(client, `
           localStorage.clear();
@@ -640,6 +683,21 @@ async function runAcceptance() {
         assert.deepEqual(storage.local, [], `${route} created a localStorage entry`);
         assert.deepEqual(storage.session, [], `${route} created a sessionStorage entry`);
         assert.equal(storage.cookies, '', `${route} created a cookie`);
+      }
+      if (CRON_ROUTES.includes(route)) {
+        assert.equal(result.status, 'success', `${route} did not parse a valid schedule: ${result.message}`);
+        assert.equal(result.rows, 5, `${route} did not render five field explanations`);
+        assert.equal(result.next, 5, `${route} did not calculate five upcoming times`);
+        assert.equal(result.minuteSyntax, '*/15', `${route} did not preserve the minute syntax`);
+        assert.equal(result.minuteValues, '0, 15, 30, 45', `${route} did not render the selected minute values`);
+        assert.match(result.firstTime, /\d{4}-\d{2}-\d{2}T.*Z$/u, `${route} did not show an ISO UTC occurrence`);
+        const storage = await evaluate(client, `return { local: Object.keys(localStorage), session: Object.keys(sessionStorage), cookies: document.cookie };`);
+        assert.deepEqual(storage.local, [], `${route} created a localStorage entry`);
+        assert.deepEqual(storage.session, [], `${route} created a sessionStorage entry`);
+        assert.equal(storage.cookies, '', `${route} created a cookie`);
+        await evaluate(client, `document.querySelector('#clearCron').click(); return true;`);
+        const cleared = await evaluate(client, `return { expression: document.querySelector('#cronExpression').value, rows: document.querySelectorAll('#cronFieldsBody tr').length, next: document.querySelectorAll('#cronNextList li').length };`);
+        assert.deepEqual(cleared, { expression: '', rows: 0, next: 0 }, `${route} did not clear the expression and results`);
       }
       await wait(100);
       const networkRequests = requests.filter(request => /^https?:\/\//i.test(request.url));
@@ -933,10 +991,61 @@ async function runAcceptance() {
       regexHistory.push({ route, ...result });
     }
 
+    const cronHistory = [];
+    for (const route of CRON_ROUTES) {
+      await navigate(route);
+      await evaluate(client, `
+        document.querySelector('#cronExpression').value = '*/5 * * * *';
+        document.querySelector('#cronTimezone').value = 'UTC';
+        document.querySelector('#runCron').click();
+        return true;
+      `);
+      await navigate('/about/');
+      await evaluate(client, 'history.back(); return true;');
+      let restored = false;
+      for (let attempt = 0; attempt < 40; attempt += 1) {
+        await wait(50);
+        restored = await evaluate(client, `return location.pathname === '${route}' && Boolean(document.querySelector('#cronExpression'));`);
+        if (restored) break;
+      }
+      assert.equal(restored, true, `${route} did not return through browser history`);
+      const result = await evaluate(client, `return {
+        expression: document.querySelector('#cronExpression').value,
+        fieldRows: document.querySelectorAll('#cronFieldsBody tr').length,
+        nextTimes: document.querySelectorAll('#cronNextList li').length,
+        status: document.querySelector('#cronStatus').dataset.state,
+      };`);
+      assert.deepEqual(result, { expression: '', fieldRows: 0, nextTimes: 0, status: 'ready' }, `${route} restored Cron input or results from browser history`);
+      cronHistory.push({ route, ...result });
+    }
+
+    const cronPerformance = [];
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+    for (const route of CRON_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `
+        document.querySelector('#cronExpression').value = '* * * * *';
+        document.querySelector('#cronTimezone').value = 'UTC';
+        const started = performance.now();
+        document.querySelector('#runCron').click();
+        return {
+          elapsed: performance.now() - started,
+          status: document.querySelector('#cronStatus').dataset.state,
+          times: document.querySelectorAll('#cronNextList li').length,
+        };
+      `);
+      assert.equal(result.status, 'success', `${route} failed its maximum-frequency schedule probe`);
+      assert.equal(result.times, 5, `${route} did not return five maximum-frequency occurrences`);
+      assert.ok(result.elapsed < 3_000, `${route} maximum-frequency computation took ${result.elapsed} ms under 4x CPU throttling`);
+      cronPerformance.push({ route, ...result });
+    }
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+
     const report = {
       browser: executable,
       mobileRoutes: mobile,
       regexMobile,
+      cronMobile,
       jwtStorage,
       textDiffNavigation,
       textDiffHistory,
@@ -944,6 +1053,8 @@ async function runAcceptance() {
       regexTimeouts,
       regexRenderBounds,
       regexHistory,
+      cronHistory,
+      cronPerformance,
       passwordResults,
       privacyFlows: privacy,
       status: 'passed',
@@ -973,7 +1084,7 @@ async function runAcceptance() {
 }
 
 module.exports = {
-  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, PRIVACY_FLOWS, CdpClient,
+  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, PRIVACY_FLOWS, CdpClient,
   runAcceptance, startStaticServer, stopBrowser, stopServer, browserBinary,
 };
 

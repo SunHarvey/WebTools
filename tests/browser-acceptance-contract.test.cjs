@@ -23,13 +23,14 @@ test('browser acceptance covers every required EN and ZH mobile route', () => {
     '/jwt/', '/zh/jwt/',
     '/text-diff/', '/zh/text-diff/',
     '/regex/', '/zh/regex/',
+    '/cron/', '/zh/cron/',
   ]);
 });
 
 test('browser acceptance exercises all privacy-critical tools', () => {
   const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
   assert.deepEqual(Object.keys(acceptance.PRIVACY_FLOWS), [
-    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/',
+    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/',
   ]);
 });
 
@@ -62,6 +63,18 @@ test('browser acceptance exercises worker-bounded Regex Tester routes', () => {
   assert.match(source, /params\.request\.method/);
   assert.match(source, /renderedDetailRows/);
   assert.match(source, /MAX_RENDERED_DETAILS/);
+});
+
+test('browser acceptance verifies localized Cron scheduling, clearing, and storage privacy', () => {
+  const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
+  assert.deepEqual(acceptance.CRON_ROUTES, ['/cron/', '/zh/cron/']);
+  for (const route of acceptance.CRON_ROUTES) assert.ok(acceptance.PRIVACY_FLOWS[route]);
+  const source = fs.readFileSync(path.join(root, 'scripts/browser-acceptance.cjs'), 'utf8');
+  assert.match(source, /did not calculate five upcoming times/);
+  assert.match(source, /did not clear the expression and results/);
+  assert.match(source, /CRON_MOBILE_WIDTH = 320/);
+  assert.match(source, /Emulation\.setCPUThrottlingRate', \{ rate: 4 \}/);
+  assert.match(source, /maximum-frequency schedule probe/);
 });
 
 test('package exposes the durable browser acceptance command', () => {

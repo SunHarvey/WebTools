@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>Cron Expression Parser &amp; Next Run Calculator | UtilCover</title>
+  <meta name="description" content="Parse standard five-field numeric cron expressions, inspect each field, and preview the next five run times in an IANA timezone. Runs locally in your browser.">
+  <link rel="canonical" href="https://www.utilcover.com/cron/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/cron/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/cron/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/cron/">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/cron/cron.css">
+  <meta property="og:title" content="Cron Expression Parser &amp; Next Run Calculator | UtilCover">
+  <meta property="og:description" content="Parse five-field cron schedules and preview upcoming run times locally in your selected timezone.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/cron/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/cron/#application",
+      "name": "Cron Expression Parser",
+      "url": "https://www.utilcover.com/cron/",
+      "description": "Parse standard five-field numeric cron expressions, inspect each field, and preview the next five run times in an IANA timezone. Runs locally in your browser.",
+      "inLanguage": "en",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/cron/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tools",
+          "item": "https://www.utilcover.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Cron Expression Parser",
+          "item": "https://www.utilcover.com/cron/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/cron/">中文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>Cron Expression Parser</h1><p>Understand a five-field schedule and preview its next five run times in your chosen timezone.</p></section>
+  <section class="tool-card cron-card" aria-label="Cron expression parser">
+    <p class="local-processing-note">Your expression stays in this browser. It is not uploaded or saved.</p>
+    <div class="field"><label for="cronExpression">Five-field cron expression</label><input id="cronExpression" type="text" maxlength="200" autocomplete="off" spellcheck="false" placeholder="*/5 * * * *" aria-describedby="cronSyntax"><small id="cronSyntax">Minute · hour · day of month · month · day of week</small></div>
+    <div class="cron-examples" aria-label="Examples"><span>Examples:</span><button type="button" data-cron-example="*/5 * * * *">Every 5 minutes</button><button type="button" data-cron-example="0 9 * * 1-5">Weekdays at 09:00</button><button type="button" data-cron-example="30 8 1 * *">First day of month</button></div>
+    <div class="cron-controls"><div class="field"><label for="cronTimezone">Timezone (IANA)</label><input id="cronTimezone" list="cronTimezoneOptions" value="UTC" maxlength="80" autocomplete="off"><datalist id="cronTimezoneOptions"><option value="UTC"><option value="Asia/Singapore"><option value="America/New_York"><option value="America/Los_Angeles"><option value="Europe/London"><option value="Europe/Paris"><option value="Asia/Tokyo"><option value="Australia/Sydney"></datalist><small>Use a timezone such as <code>America/New_York</code> or <code>Asia/Singapore</code>.</small></div><div class="actions"><button id="runCron" type="button">Parse &amp; preview</button><button id="clearCron" class="secondary" type="button">Clear</button></div></div>
+    <div id="cronStatus" class="status" role="status" aria-live="polite" data-state="ready">Enter a five-field cron expression to see its schedule.</div>
+    <section class="cron-output" aria-labelledby="cron-fields-title"><h2 id="cron-fields-title">Field breakdown</h2><div class="cron-table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Syntax</th><th scope="col">Selected values</th><th scope="col">Allowed range</th></tr></thead><tbody id="cronFieldsBody"></tbody></table></div></section>
+    <section class="cron-output" aria-labelledby="cron-next-title"><h2 id="cron-next-title">Next five run times</h2><ol id="cronNextList" class="cron-next-list"></ol></section>
+  </section>
+  <section class="tool-guide" aria-labelledby="cron-guide-title">
+    <div class="guide-intro"><h2 id="cron-guide-title">Read and check a cron schedule</h2><p>A cron expression is a compact schedule made from minute, hour, day-of-month, month, and day-of-week fields. This parser explains numeric five-field expressions and calculates upcoming wall-clock times with your browser’s IANA timezone data.</p></div>
+    <div class="guide-section how-to"><h2>How to use the cron parser</h2><ol class="steps"><li><strong>Enter five fields in order.</strong><span>Separate minute, hour, day of month, month, and day of week with spaces.</span></li><li><strong>Choose the schedule timezone.</strong><span>Use an IANA zone name such as <code>UTC</code> or <code>America/New_York</code>. The preview follows that zone’s calendar and daylight-saving transitions.</span></li><li><strong>Parse and inspect the preview.</strong><span>Review each field and the next five matching times. The calculation uses the current browser time when you press the button.</span></li></ol></div>
+    <div class="guide-section examples"><h2>Common cron examples</h2><div class="example-grid"><article><h3>Every five minutes</h3><p><code>*/5 * * * *</code> selects every fifth minute, throughout every hour and day.</p></article><article><h3>Weekdays at 09:00</h3><p><code>0 9 * * 1-5</code> runs at 9:00 on Monday through Friday in the selected timezone.</p></article><article><h3>First day of each month</h3><p><code>30 8 1 * *</code> runs at 08:30 on calendar day 1.</p></article></div></div>
+    <div class="guide-section limitations"><h2>Supported syntax and timezone behavior</h2><p>This page accepts exactly five numeric fields with wildcards, comma-separated values, ascending ranges, and positive steps, for example <code>1,15</code>, <code>9-17</code>, <code>*/10</code>, and <code>1-20/2</code>. A slash step must follow a wildcard or range; a bare number such as <code>5/2</code> is not accepted. Minute is 0–59, hour 0–23, day of month 1–31, month 1–12, and day of week 0–7 (Sunday may be 0 or 7). When neither day field begins with <code>*</code>, a date qualifies if either field matches. If either field begins with <code>*</code>—including a stepped wildcard such as <code>*/2</code>—both day fields must match. This follows common Vixie/Cronie-style day-field behavior.</p><p>Month and weekday names, seconds, macros such as <code>@daily</code>, and scheduler-specific extensions such as <code>L</code>, <code>W</code>, and <code>#</code> are not supported. Different cron implementations have dialect-specific details; verify the expression against the scheduler that will run it.</p><p>For this preview, nonexistent wall-clock times inside a spring-forward gap are omitted, and a time repeated during a fall-back overlap produces both matching instants. Cron daemons may catch up skipped jobs or suppress duplicate runs according to their own policies, so this is a civil-time schedule preview—not a simulation of a specific daemon. Timezone rules come from the browser runtime, and the search is limited to six years ahead. Input and results remain in page memory only; this tool does not make network requests or store the expression.</p></div>
+    <div class="guide-section faq-list"><h2>Cron expression FAQ</h2><details><summary>What are the five cron fields?</summary><p>They are minute, hour, day of month, month, and day of week, in that order. This tool does not accept a seconds field.</p></details><details><summary>How do day of month and day of week work together?</summary><p>If neither day field begins with <code>*</code>, either field may match. If either begins with <code>*</code>, both must match; for example, <code>*/2</code> is not the same day-field marker as a bare <code>*</code>.</p></details><details><summary>Does this support every scheduler’s cron dialect?</summary><p>No. It supports a documented numeric five-field subset. Names, macros, and scheduler-specific extensions are rejected; check the target scheduler’s documentation before deploying a schedule.</p></details><details><summary>Is my cron expression uploaded?</summary><p>No. Parsing and timezone calculations run in your browser. The expression is not submitted to a server, sent to an external API, or written to browser storage.</p></details></div>
+    <nav class="related-tools" data-related-tools="cron" aria-label="Related tools"><h2>Related tools</h2><div class="related-links"><a href="/timestamp/"><strong>Timestamp Converter</strong><span>Convert Unix timestamps across timezones.</span></a><a href="/regex/"><strong>Regex Tester</strong><span>Test JavaScript regex patterns locally.</span></a><a href="/calculator/"><strong>Calculator</strong><span>Keyboard-friendly everyday arithmetic.</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/licenses/">Licenses</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · Private, fast, client-side utilities</p></footer>
+<script src="/cron/cron-engine.js"></script><script src="/cron/cron-tool.js"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

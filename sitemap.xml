@@ -5,7 +5,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/" />
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-09-30</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/password/</loc>
@@ -48,6 +48,13 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/regex/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/regex/" />
     <lastmod>2026-09-28</lastmod>
+  </url>
+  <url>
+    <loc>https://www.utilcover.com/cron/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/cron/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/cron/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/cron/" />
+    <lastmod>2026-09-30</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/encode/</loc>
@@ -159,7 +166,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/" />
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-09-30</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/password/</loc>
@@ -202,6 +209,13 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/regex/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/regex/" />
     <lastmod>2026-09-28</lastmod>
+  </url>
+  <url>
+    <loc>https://www.utilcover.com/zh/cron/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/cron/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/cron/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/cron/" />
+    <lastmod>2026-09-30</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/encode/</loc>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>Cron 表达式解析器与下次运行时间计算器 | UtilCover</title>
+  <meta name="description" content="解析标准五字段数字 Cron 表达式，查看字段说明，并按 IANA 时区预览接下来五次运行时间。所有计算均在浏览器本地完成。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/cron/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/cron/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/cron/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/cron/">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/cron/cron.css">
+  <meta property="og:title" content="Cron 表达式解析器与下次运行时间计算器 | UtilCover">
+  <meta property="og:description" content="解析五字段 Cron 计划，并按所选时区在浏览器本地预览后续运行时间。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/zh/cron/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/zh/cron/#application",
+      "name": "Cron 表达式解析器",
+      "url": "https://www.utilcover.com/zh/cron/",
+      "description": "解析标准五字段数字 Cron 表达式，查看字段说明，并按 IANA 时区预览接下来五次运行时间。所有计算均在浏览器本地完成。",
+      "inLanguage": "zh-CN",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/zh/cron/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "工具",
+          "item": "https://www.utilcover.com/zh/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Cron 表达式解析器",
+          "item": "https://www.utilcover.com/zh/cron/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="platform-nav nav-links"><a href="/zh/#popular-tools">工具</a><a href="/zh/#categories">分类</a><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><button class="search-trigger" type="button" aria-label="搜索工具">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/cron/">English</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>Cron 表达式解析器</h1><p>理解五字段 Cron 计划，并按所选时区预览接下来的五次运行时间。</p></section>
+  <section class="tool-card cron-card" aria-label="Cron 表达式解析器">
+    <p class="local-processing-note">表达式仅保留在当前浏览器中，不会上传或保存。</p>
+    <div class="field"><label for="cronExpression">五字段 Cron 表达式</label><input id="cronExpression" type="text" maxlength="200" autocomplete="off" spellcheck="false" placeholder="*/5 * * * *" aria-describedby="cronSyntax"><small id="cronSyntax">分钟 · 小时 · 日期 · 月份 · 星期</small></div>
+    <div class="cron-examples" aria-label="示例"><span>示例：</span><button type="button" data-cron-example="*/5 * * * *">每 5 分钟</button><button type="button" data-cron-example="0 9 * * 1-5">工作日 09:00</button><button type="button" data-cron-example="30 8 1 * *">每月第一天</button></div>
+    <div class="cron-controls"><div class="field"><label for="cronTimezone">时区（IANA）</label><input id="cronTimezone" list="cronTimezoneOptions" value="UTC" maxlength="80" autocomplete="off"><datalist id="cronTimezoneOptions"><option value="UTC"><option value="Asia/Singapore"><option value="America/New_York"><option value="America/Los_Angeles"><option value="Europe/London"><option value="Europe/Paris"><option value="Asia/Tokyo"><option value="Australia/Sydney"></datalist><small>可输入 <code>America/New_York</code> 或 <code>Asia/Singapore</code> 等时区名称。</small></div><div class="actions"><button id="runCron" type="button">解析并预览</button><button id="clearCron" class="secondary" type="button">清除</button></div></div>
+    <div id="cronStatus" class="status" role="status" aria-live="polite" data-state="ready">输入五字段 Cron 表达式以查看运行时间。</div>
+    <section class="cron-output" aria-labelledby="cron-fields-title"><h2 id="cron-fields-title">字段说明</h2><div class="cron-table-wrap"><table><thead><tr><th scope="col">字段</th><th scope="col">语法</th><th scope="col">选中值</th><th scope="col">允许范围</th></tr></thead><tbody id="cronFieldsBody"></tbody></table></div></section>
+    <section class="cron-output" aria-labelledby="cron-next-title"><h2 id="cron-next-title">接下来五次运行时间</h2><ol id="cronNextList" class="cron-next-list"></ol></section>
+  </section>
+  <section class="tool-guide" aria-labelledby="cron-guide-title">
+    <div class="guide-intro"><h2 id="cron-guide-title">解析和检查 Cron 计划</h2><p>Cron 表达式使用分钟、小时、日期、月份和星期五个字段简洁描述计划。本工具解释五字段数字表达式，并使用浏览器提供的 IANA 时区数据计算后续墙上时间。</p></div>
+    <div class="guide-section how-to"><h2>如何使用 Cron 解析器</h2><ol class="steps"><li><strong>按顺序输入五个字段。</strong><span>依次填写分钟、小时、日期、月份和星期，并用空格分隔。</span></li><li><strong>选择计划时区。</strong><span>使用 <code>UTC</code> 或 <code>America/New_York</code> 等 IANA 时区名称。预览会遵循该时区的日历和夏令时变化。</span></li><li><strong>解析并查看预览。</strong><span>检查各字段含义和接下来的五次匹配时间。点击按钮时，计算以浏览器当前时间为起点。</span></li></ol></div>
+    <div class="guide-section examples"><h2>常用 Cron 示例</h2><div class="example-grid"><article><h3>每五分钟</h3><p><code>*/5 * * * *</code> 表示每小时每隔五分钟运行一次。</p></article><article><h3>工作日 09:00</h3><p><code>0 9 * * 1-5</code> 表示在所选时区的周一至周五 9:00 运行。</p></article><article><h3>每月第一天</h3><p><code>30 8 1 * *</code> 表示每月 1 日 08:30 运行。</p></article></div></div>
+    <div class="guide-section limitations"><h2>支持的语法与时区行为</h2><p>本工具支持恰好五个数字字段，以及通配符、逗号分隔值、递增范围和正整数步长，例如 <code>1,15</code>、<code>9-17</code>、<code>*/10</code> 和 <code>1-20/2</code>。斜杠步长必须跟在通配符或范围之后；不接受 <code>5/2</code> 这样的单独数字步长。分钟范围为 0–59，小时为 0–23，日期为 1–31，月份为 1–12，星期为 0–7（周日可写 0 或 7）。当日期和星期两个字段都不以 <code>*</code> 开头时，任一字段匹配即符合；如果其中一个字段以 <code>*</code> 开头（包括 <code>*/2</code> 这样的步长通配符），则两个日期字段都必须匹配。这遵循常见的 Vixie/Cronie 风格日期字段规则。</p><p>不支持月份或星期名称、秒字段、<code>@daily</code> 等宏，以及 <code>L</code>、<code>W</code>、<code>#</code> 等特定调度器扩展。不同 Cron 实现可能存在方言差异；部署前请在目标调度器中验证表达式。</p><p>对于本工具的预览，春季向前调整时不存在的墙上时间会被省略；秋季回拨时重复出现的本地时间会列出两个对应时刻。Cron 守护进程可能依据自身策略补执行跳过的任务，或抑制重复运行，因此这只是民用时间计划预览，并非特定守护进程的执行模拟。时区规则由浏览器运行环境提供，搜索范围最多为未来六年。输入和结果只保留在页面内存中；本工具不会发起网络请求或保存表达式。</p></div>
+    <div class="guide-section faq-list"><h2>Cron 表达式常见问题</h2><details><summary>Cron 的五个字段是什么？</summary><p>依次为分钟、小时、日期、月份和星期。本工具不接受秒字段。</p></details><details><summary>日期和星期字段如何组合？</summary><p>如果日期和星期两个字段都不以 <code>*</code> 开头，任一字段匹配即可。如果其中一个字段以 <code>*</code> 开头，则两个字段都必须匹配；例如，<code>*/2</code> 与单独的 <code>*</code> 在日期字段规则中不同。</p></details><details><summary>是否支持所有调度器的 Cron 方言？</summary><p>不支持。本工具只支持本文说明的数字五字段子集，不接受名称、宏或调度器专用扩展。部署前请核对目标调度器文档。</p></details><details><summary>Cron 表达式会上传吗？</summary><p>不会。解析和时区计算均在浏览器本地运行。表达式不会提交到服务器、发送至外部 API，也不会写入浏览器存储。</p></details></div>
+    <nav class="related-tools" data-related-tools="cron" aria-label="相关工具"><h2>相关工具</h2><div class="related-links"><a href="/zh/timestamp/"><strong>时间戳转换器</strong><span>跨时区转换 Unix 时间戳。</span></a><a href="/zh/regex/"><strong>正则表达式测试器</strong><span>在本地测试 JavaScript 正则表达式。</span></a><a href="/zh/calculator/"><strong>计算器</strong><span>支持键盘操作的日常算术。</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="页脚导航"><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><a href="/zh/contact/">联系</a><a href="/zh/licenses/">开源许可</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · 私密、快速的浏览器本地工具</p></footer>
+<script src="/cron/cron-engine.js"></script><script src="/cron/cron-tool.js"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

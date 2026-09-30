@@ -10,6 +10,7 @@ const TOOLS = [
   { id: 'hash', icon: '⌁', category: 'developer', popular: false, name: { en: 'SHA Hash Tool', zh: 'SHA 哈希工具' }, description: { en: 'Hash text and files with Web Crypto.', zh: '使用 Web Crypto 计算文本和文件哈希。' }, keywords: ['hash', 'sha', 'digest'] },
   { id: 'jwt', icon: 'JWT', category: 'security', popular: false, recordRecent: false, name: { en: 'JWT Decoder', zh: 'JWT 解码器' }, description: { en: 'Decode tokens and inspect claims locally.', zh: '在本地解码令牌并检查声明。' }, keywords: ['jwt', 'token', 'claims', 'bearer', 'decode'] },
   { id: 'regex', icon: '.*', category: 'developer', popular: false, recordRecent: false, name: { en: 'Regex Tester', zh: '正则表达式测试器' }, description: { en: 'Test JavaScript regex patterns locally.', zh: '在本地测试 JavaScript 正则表达式。' }, keywords: ['regex', 'regexp', 'regular expression', 'match', 'replace'] },
+  { id: 'cron', icon: '◷', category: 'developer', popular: false, recordRecent: false, name: { en: 'Cron Expression Parser', zh: 'Cron 表达式解析器' }, description: { en: 'Parse five-field cron schedules locally.', zh: '在本地解析五字段 Cron 计划。' }, keywords: ['cron', 'schedule', 'scheduler', 'expression', 'timezone', 'next run'] },
   { id: 'color', icon: '◉', category: 'design', popular: false, name: { en: 'Color & Contrast', zh: '颜色与对比度' }, description: { en: 'Convert colors and check WCAG contrast.', zh: '转换颜色并检查 WCAG 对比度。' }, keywords: ['color', 'contrast', 'hex', 'rgb', 'hsl'] },
   { id: 'text', icon: 'Aa', category: 'productivity', popular: false, name: { en: 'Text Toolkit', zh: '文本工具箱' }, description: { en: 'Count, clean, sort and transform text.', zh: '统计、清理、排序和转换文本。' }, keywords: ['text', 'count', 'sort', 'deduplicate'] },
   { id: 'text-diff', icon: '±', category: 'productivity', popular: false, recordRecent: false, name: { en: 'Text Diff Checker', zh: '文本差异比较器' }, description: { en: 'Compare text line by line locally.', zh: '在本地逐行比较文本差异。' }, keywords: ['text', 'diff', 'compare', 'difference', 'changes'] },
@@ -36,6 +37,7 @@ const RELATED_TOOLS = {
   jwt: ['json', 'base64', 'timestamp'],
   'text-diff': ['text', 'json', 'hash'],
   regex: ['text', 'text-diff', 'json'],
+  cron: ['timestamp', 'regex', 'calculator'],
 };
 
 function toolPath(tool, language = 'en') { return `${language === 'zh' ? '/zh' : ''}/${tool.id}/`; }

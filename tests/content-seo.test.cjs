@@ -235,6 +235,24 @@ test('Regex Tester pages explain bounded local JavaScript matching in each local
   }
 });
 
+test('Cron pages document the numeric five-field subset and timezone edge cases', () => {
+  assertGuide('cron/index.html', 'en', ['/timestamp/', '/regex/']);
+  assertGuide('zh/cron/index.html', 'zh', ['/zh/timestamp/', '/zh/regex/']);
+  assertMetadata('cron/index.html', /Cron Expression Parser/i, /five-field.*cron.*timezone/i);
+  assertMetadata('zh/cron/index.html', /Cron.*表达式解析器/i, /五字段.*Cron.*时区/i);
+  for (const file of ['cron/index.html', 'zh/cron/index.html']) {
+    const guide = guideFor(file).text;
+    assert.match(guide, /1-5/);
+    assert.match(guide, /0 or 7|0–7|0或7|0–7/);
+    assert.match(guide, /either field matches|任一字段匹配即符合/);
+    assert.match(guide, /spring-forward gap|夏令时向前跳|春季向前调整/);
+    assert.match(guide, /fall-back overlap|夏令时回拨|秋季回拨/);
+    assert.match(guide, /not a simulation of a specific daemon|并非特定守护进程的执行模拟/);
+    assert.match(guide, /six years|未来六年/);
+    assert.match(guide, /does not make network requests|不会发起网络请求/);
+  }
+});
+
 test('encode pages explain UTF-8 Base64 and URL component conversion honestly in each locale', () => {
   assertGuide('encode/index.html', 'en', ['/text/', '/json/', '/hash/']);
   assertGuide('zh/encode/index.html', 'zh', ['/zh/text/', '/zh/json/', '/zh/hash/']);
