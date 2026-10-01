@@ -253,6 +253,27 @@ test('Cron pages document the numeric five-field subset and timezone edge cases'
   }
 });
 
+test('YAML pages document local YAML 1.2 formatting, JSON conversion and parser limits', () => {
+  assertGuide('yaml/index.html', 'en', ['/json/', '/text-diff/', '/encode/']);
+  assertGuide('zh/yaml/index.html', 'zh', ['/zh/json/', '/zh/text-diff/', '/zh/encode/']);
+  assertMetadata('yaml/index.html', /YAML Formatter.*Validator.*JSON Converter/i, /format.*validate.*YAML.*convert.*JSON.*locally/i);
+  assertMetadata('zh/yaml/index.html', /YAML.*格式化.*校验.*JSON.*转换/i, /本地.*格式化.*校验.*YAML.*JSON/i);
+  for (const file of ['yaml/index.html', 'zh/yaml/index.html']) {
+    const guide = guideFor(file).text;
+    assert.match(guide, /YAML 1\.2/);
+    assert.match(guide, /JSON-compatible schema|JSON 兼容型态|JSON 兼容值/);
+    assert.match(guide, /250,000/);
+    assert.match(guide, /20,000/);
+    assert.match(guide, /64/);
+    assert.match(guide, /100-level|100 level|100 层|100 层级/);
+    assert.match(guide, /single document|one document|单个文档/);
+    assert.match(guide, /comments.*(?:removed|lost)|注释.*(?:移除|丢失)/i);
+    assert.match(guide, /does not upload|not uploaded|不会.*上传/);
+    assert.match(guide, /js-yaml/);
+    assert.match(guide, /Infinity.*NaN/);
+  }
+});
+
 test('encode pages explain UTF-8 Base64 and URL component conversion honestly in each locale', () => {
   assertGuide('encode/index.html', 'en', ['/text/', '/json/', '/hash/']);
   assertGuide('zh/encode/index.html', 'zh', ['/zh/text/', '/zh/json/', '/zh/hash/']);

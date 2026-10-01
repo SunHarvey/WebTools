@@ -12,6 +12,7 @@ const REAL_ROOT = fs.realpathSync(ROOT);
 const CDP_TIMEOUT_MS = 10_000;
 const REGEX_MOBILE_WIDTH = 320;
 const CRON_MOBILE_WIDTH = 320;
+const YAML_MOBILE_WIDTH = 320;
 const MAX_RENDERED_DETAILS = 1_000;
 const MOBILE_ROUTES = [
   '/', '/zh/',
@@ -24,12 +25,14 @@ const MOBILE_ROUTES = [
   '/text-diff/', '/zh/text-diff/',
   '/regex/', '/zh/regex/',
   '/cron/', '/zh/cron/',
+  '/yaml/', '/zh/yaml/',
 ];
 const PASSWORD_RESULT_ROUTES = ['/password/', '/zh/password/'];
 const JWT_STORAGE_ROUTES = ['/jwt/', '/zh/jwt/'];
 const TEXT_DIFF_ROUTES = ['/text-diff/', '/zh/text-diff/'];
 const REGEX_ROUTES = ['/regex/', '/zh/regex/'];
 const CRON_ROUTES = ['/cron/', '/zh/cron/'];
+const YAML_ROUTES = ['/yaml/', '/zh/yaml/'];
 
 const PRIVACY_FLOWS = {
   '/json/': `
@@ -167,6 +170,26 @@ const PRIVACY_FLOWS = {
       firstTime: document.querySelector('#cronNextList li')?.textContent,
     };
   `,
+  '/yaml/': `
+    document.querySelector('#yamlInput').value = 'service: utilcover\\nenabled: true';
+    document.querySelector('#yamlMode').value = 'yaml-to-json';
+    document.querySelector('#runYaml').click();
+    return {
+      status: document.querySelector('#yamlStatus').dataset.state,
+      output: document.querySelector('#yamlOutput').value,
+      mode: document.querySelector('#yamlMode').value,
+    };
+  `,
+  '/zh/yaml/': `
+    document.querySelector('#yamlInput').value = 'service: utilcover\\nenabled: true';
+    document.querySelector('#yamlMode').value = 'yaml-to-json';
+    document.querySelector('#runYaml').click();
+    return {
+      status: document.querySelector('#yamlStatus').dataset.state,
+      output: document.querySelector('#yamlOutput').value,
+      mode: document.querySelector('#yamlMode').value,
+    };
+  `,
 };
 
 const MIME_TYPES = {
@@ -178,6 +201,7 @@ const MIME_TYPES = {
   '.jpeg': 'image/jpeg',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
   '.png': 'image/png',
   '.svg': 'image/svg+xml',
   '.txt': 'text/plain; charset=utf-8',
@@ -533,6 +557,18 @@ async function runAcceptance() {
     }
     await client.send('Emulation.clearDeviceMetricsOverride');
 
+    const yamlMobile = [];
+    await client.send('Emulation.setDeviceMetricsOverride', {
+      width: YAML_MOBILE_WIDTH, height: 700, deviceScaleFactor: 1, mobile: true,
+    });
+    for (const route of YAML_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `return { viewport: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth };`);
+      assert.ok(result.scrollWidth <= result.viewport + 1, `${route} overflows at ${YAML_MOBILE_WIDTH}px: ${result.scrollWidth}px > ${result.viewport}px`);
+      yamlMobile.push({ route, ...result });
+    }
+    await client.send('Emulation.clearDeviceMetricsOverride');
+
     const jwtStorage = [];
     for (const route of JWT_STORAGE_ROUTES) {
       await navigate('/');
@@ -628,7 +664,7 @@ async function runAcceptance() {
     await client.send('Emulation.clearDeviceMetricsOverride');
     const privacy = [];
     for (const [route, flow] of Object.entries(PRIVACY_FLOWS)) {
-      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route)) {
+      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route)) {
         await navigate('/');
         await evaluate(client, `
           localStorage.clear();
@@ -698,6 +734,73 @@ async function runAcceptance() {
         await evaluate(client, `document.querySelector('#clearCron').click(); return true;`);
         const cleared = await evaluate(client, `return { expression: document.querySelector('#cronExpression').value, rows: document.querySelectorAll('#cronFieldsBody tr').length, next: document.querySelectorAll('#cronNextList li').length };`);
         assert.deepEqual(cleared, { expression: '', rows: 0, next: 0 }, `${route} did not clear the expression and results`);
+      }
+      if (YAML_ROUTES.includes(route)) {
+        assert.equal(result.status, 'success', `${route} did not finish a valid YAML conversion`);
+        assert.deepEqual(JSON.parse(result.output), { service: 'utilcover', enabled: true }, `${route} did not convert YAML to JSON`);
+        const parseError = await evaluate(client, `
+          document.querySelector('#yamlInput').value = 'name: first' + String.fromCharCode(10) + 'name: second';
+          document.querySelector('#runYaml').click();
+          return {
+            state: document.querySelector('#yamlStatus').dataset.state,
+            message: document.querySelector('#yamlStatus').textContent,
+            output: document.querySelector('#yamlOutput').value,
+          };
+        `);
+        assert.equal(parseError.state, 'error', `${route} did not reject duplicate YAML keys`);
+        if (route.startsWith('/zh/')) {
+          assert.equal(parseError.message, 'YAML 格式无效（第 2 行，第 1 列）。请检查缩进、冒号、括号及映射键。', `${route} exposed raw English YAML parser details to Chinese users`);
+        } else {
+          assert.match(parseError.message, /Invalid YAML \(line 2, column 1\)/, `${route} did not report the YAML error location`);
+        }
+        assert.equal(parseError.output, '', `${route} left stale output after a parse error`);
+        const malformedError = await evaluate(client, `
+          document.querySelector('#yamlInput').value = 'value: [unclosed';
+          document.querySelector('#runYaml').click();
+          return {
+            state: document.querySelector('#yamlStatus').dataset.state,
+            message: document.querySelector('#yamlStatus').textContent,
+            output: document.querySelector('#yamlOutput').value,
+          };
+        `);
+        assert.equal(malformedError.state, 'error', `${route} did not reject malformed flow syntax`);
+        if (route.startsWith('/zh/')) {
+          assert.equal(malformedError.message, 'YAML 格式无效（第 1 行，第 17 列）。请检查缩进、冒号、括号及映射键。', `${route} exposed an untranslated YAML parser reason`);
+        } else {
+          assert.match(malformedError.message, /Invalid YAML \(line 1, column 17\)/, `${route} did not locate the malformed flow error`);
+        }
+        assert.equal(malformedError.output, '', `${route} left stale output after malformed YAML`);
+        const nonFiniteCases = await evaluate(client, `
+          return [
+            { mode: 'yaml-to-json', input: 'value: !!float .inf' },
+            { mode: 'json-to-yaml', input: '1e400' },
+          ].map(({ mode, input }) => {
+            document.querySelector('#yamlMode').value = mode;
+            document.querySelector('#yamlInput').value = input;
+            document.querySelector('#runYaml').click();
+            return {
+              state: document.querySelector('#yamlStatus').dataset.state,
+              message: document.querySelector('#yamlStatus').textContent,
+              output: document.querySelector('#yamlOutput').value,
+            };
+          });
+        `);
+        assert.equal(nonFiniteCases.length, 2);
+        const expectedNonFiniteMessage = route.startsWith('/zh/')
+          ? '不支持 Infinity（无穷大）和 NaN（非数值）。'
+          : 'Non-finite numbers such as Infinity and NaN are not supported.';
+        for (const result of nonFiniteCases) {
+          assert.equal(result.state, 'error', `${route} did not reject non-finite JSON-compatible values`);
+          assert.equal(result.message, expectedNonFiniteMessage, `${route} did not explain that non-finite values are unsupported`);
+          assert.equal(result.output, '', `${route} emitted a lossy conversion for a non-finite value`);
+        }
+        const storage = await evaluate(client, `return { local: Object.keys(localStorage), session: Object.keys(sessionStorage), cookies: document.cookie };`);
+        assert.deepEqual(storage.local, [], `${route} created a localStorage entry`);
+        assert.deepEqual(storage.session, [], `${route} created a sessionStorage entry`);
+        assert.equal(storage.cookies, '', `${route} created a cookie`);
+        await evaluate(client, `document.querySelector('#clearYaml').click(); return true;`);
+        const cleared = await evaluate(client, `return { input: document.querySelector('#yamlInput').value, output: document.querySelector('#yamlOutput').value, status: document.querySelector('#yamlStatus').dataset.state };`);
+        assert.deepEqual(cleared, { input: '', output: '', status: 'ready' }, `${route} did not clear YAML input and output`);
       }
       await wait(100);
       const networkRequests = requests.filter(request => /^https?:\/\//i.test(request.url));
@@ -1019,6 +1122,58 @@ async function runAcceptance() {
       cronHistory.push({ route, ...result });
     }
 
+    const yamlHistory = [];
+    for (const route of YAML_ROUTES) {
+      await navigate(route);
+      await evaluate(client, `
+        document.querySelector('#yamlInput').value = 'history-secret: local-only';
+        document.querySelector('#yamlMode').value = 'yaml-to-json';
+        document.querySelector('#runYaml').click();
+        return true;
+      `);
+      await navigate('/about/');
+      await evaluate(client, 'history.back(); return true;');
+      let restored = false;
+      for (let attempt = 0; attempt < 40; attempt += 1) {
+        await wait(50);
+        restored = await evaluate(client, `return location.pathname === '${route}' && Boolean(document.querySelector('#yamlInput'));`);
+        if (restored) break;
+      }
+      assert.equal(restored, true, `${route} did not return through browser history`);
+      const result = await evaluate(client, `return {
+        input: document.querySelector('#yamlInput').value,
+        output: document.querySelector('#yamlOutput').value,
+        mode: document.querySelector('#yamlMode').value,
+        status: document.querySelector('#yamlStatus').dataset.state,
+        copyDisabled: document.querySelector('#copyYaml').disabled,
+      };`);
+      assert.deepEqual(result, { input: '', output: '', mode: 'format-yaml', status: 'ready', copyDisabled: true }, `${route} did not clear YAML input and output after browser history`);
+      yamlHistory.push({ route, ...result });
+    }
+
+    const yamlPerformance = [];
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+    for (const route of YAML_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `
+        const rows = Array.from({ length: 19_998 }, () => '  - x').join('\\n');
+        document.querySelector('#yamlMode').value = 'yaml-to-json';
+        document.querySelector('#yamlInput').value = 'items:\\n' + rows;
+        const started = performance.now();
+        document.querySelector('#runYaml').click();
+        return {
+          elapsed: performance.now() - started,
+          status: document.querySelector('#yamlStatus').dataset.state,
+          outputLength: document.querySelector('#yamlOutput').value.length,
+        };
+      `);
+      assert.equal(result.status, 'success', `${route} failed its near-limit YAML parse probe`);
+      assert.ok(result.outputLength > 100_000, `${route} did not produce the large expected JSON result`);
+      assert.ok(result.elapsed < 5_000, `${route} near-limit YAML parse took ${result.elapsed} ms under 4x CPU throttling`);
+      yamlPerformance.push({ route, ...result });
+    }
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+
     const cronPerformance = [];
     await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
     for (const route of CRON_ROUTES) {
@@ -1046,6 +1201,7 @@ async function runAcceptance() {
       mobileRoutes: mobile,
       regexMobile,
       cronMobile,
+      yamlMobile,
       jwtStorage,
       textDiffNavigation,
       textDiffHistory,
@@ -1054,6 +1210,8 @@ async function runAcceptance() {
       regexRenderBounds,
       regexHistory,
       cronHistory,
+      yamlHistory,
+      yamlPerformance,
       cronPerformance,
       passwordResults,
       privacyFlows: privacy,
@@ -1084,7 +1242,7 @@ async function runAcceptance() {
 }
 
 module.exports = {
-  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, PRIVACY_FLOWS, CdpClient,
+  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
   runAcceptance, startStaticServer, stopBrowser, stopServer, browserBinary,
 };
 

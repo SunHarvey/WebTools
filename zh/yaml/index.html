@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>YAML 格式化、校验与 JSON 转换工具 | UtilCover</title>
+  <meta name="description" content="在浏览器本地格式化、校验 YAML，并在 YAML 与 JSON 之间转换。输入不会上传或保存。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/yaml/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/yaml/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/yaml/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/yaml/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/yaml/yaml.css">
+  <meta property="og:title" content="YAML 格式化、校验与 JSON 转换工具 | UtilCover">
+  <meta property="og:description" content="在浏览器本地格式化、校验 YAML，并进行 YAML 与 JSON 双向转换。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/zh/yaml/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/zh/yaml/#application",
+      "name": "YAML 格式化与校验工具",
+      "url": "https://www.utilcover.com/zh/yaml/",
+      "description": "在浏览器本地格式化、校验 YAML，并在 YAML 与 JSON 之间转换。输入不会上传或保存。",
+      "inLanguage": "zh-CN",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/zh/yaml/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "工具",
+          "item": "https://www.utilcover.com/zh/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "YAML 格式化与校验工具",
+          "item": "https://www.utilcover.com/zh/yaml/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="platform-nav nav-links"><a href="/zh/#popular-tools">工具</a><a href="/zh/#categories">分类</a><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><button class="search-trigger" type="button" aria-label="搜索工具">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/yaml/">English</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>YAML 格式化与校验工具</h1><p>格式化单个 YAML 文档、检查语法，并在 YAML 与 JSON 之间转换；所有处理都在浏览器中完成。</p></section>
+  <section class="tool-card yaml-card" aria-label="YAML 格式化与转换工具">
+    <p class="local-processing-note">输入和结果只保留在此浏览器页面中，不会上传、保存或加入最近使用记录。</p>
+    <div class="yaml-controls">
+      <div class="field"><label for="yamlMode">操作</label><select id="yamlMode"><option value="format-yaml" data-input-label="YAML 输入">格式化并校验 YAML</option><option value="yaml-to-json" data-input-label="YAML 输入">YAML 转 JSON</option><option value="json-to-yaml" data-input-label="JSON 输入">JSON 转 YAML</option></select></div>
+      <div class="yaml-actions"><button id="yamlExample" class="secondary" type="button">载入示例</button><button id="runYaml" type="button">执行</button><button id="copyYaml" class="secondary" type="button" disabled>复制结果</button><button id="clearYaml" class="danger" type="button">清除</button></div>
+    </div>
+    <div class="grid-2 yaml-workspace">
+      <div class="field"><label id="yamlInputLabel" for="yamlInput">YAML 输入</label><textarea id="yamlInput" maxlength="250000" spellcheck="false" autocomplete="off" placeholder="service: utilcover&#10;enabled: true"></textarea><small>最多 250,000 个字符。按 Ctrl+Enter 或 ⌘+Enter 执行。</small></div>
+      <div class="field"><label for="yamlOutput">结果</label><textarea id="yamlOutput" class="output" readonly spellcheck="false" aria-live="polite" placeholder="格式化或转换后的结果会显示在这里。"></textarea><small>结果仅在本页面临时可用；清除或离开页面后会删除。</small></div>
+    </div>
+    <div id="yamlStatus" class="status" role="status" aria-live="polite" data-state="ready">粘贴一个 YAML 文档或 JSON 值以开始。</div>
+  </section>
+  <section class="tool-guide" aria-labelledby="yaml-guide-title">
+    <div class="guide-intro"><h2 id="yaml-guide-title">格式化 YAML 并转换配置数据</h2><p>YAML 常用于人工编写的配置文件。本工具在本地检查单个文档的语法、重新排版 YAML，并提供 YAML 与 JSON 的互相转换。解析器和序列化器作为本站脚本随页面本地加载；工具不会把输入上传到服务器或第三方 API。</p></div>
+    <div class="guide-section how-to"><h2>如何使用 YAML 工具</h2><ol class="steps"><li><strong>粘贴一个文档。</strong><span>输入 YAML；如需从 JSON 转换，请先选择“JSON 转 YAML”再粘贴严格格式的 JSON。输入上限为 250,000 个字符。</span></li><li><strong>选择操作。</strong><span>“格式化并校验 YAML”会规范缩进并检查语法；“YAML 转 JSON”生成 JSON 表示；“JSON 转 YAML”则将 JSON 重新排成 YAML。</span></li><li><strong>检查结果再使用。</strong><span>解析器提供源位置时，语法错误会显示行号和列号。本地复制结果后再用于其他系统；清除或离开页面会删除当前输入和输出。</span></li></ol></div>
+    <div class="guide-section examples"><h2>YAML 实用示例</h2><div class="example-grid"><article><h3>整理服务配置</h3><p>可以粘贴包含 <code>service: api</code>、嵌套端口号和 <code>enabled</code> 布尔值的映射。格式化可让层级更易阅读；若语法不正确，工具会报告问题，而不会擅自猜测并修复内容。</p></article><article><h3>将配置转换为 JSON</h3><p>当应用接口、测试样例或其他系统需要 JSON 时，可使用 YAML 转 JSON。结果由 JavaScript 数据表示序列化而成，必须遵循 JSON 的键和值规则；如果 YAML 使用特殊键或仅适用于 YAML 的结构，请仔细核对转换结果。</p></article><article><h3>将 JSON 转为易读 YAML</h3><p>粘贴严格 JSON 并选择 JSON 转 YAML，即可得到缩进后的文档。这适合审阅配置变更或准备小型示例；它不会自动补充应用默认值，也不会替你验证特定产品的配置模式。</p></article></div></div>
+    <div class="guide-section limitations"><h2>支持范围、大小限制与转换说明</h2><p>本页使用本地打包的 <code>js-yaml</code> 解析器，并按照 YAML 1.2 与 JSON 兼容值规则处理。每次只接受单个文档，支持 JSON 可表达的字符串、数字、布尔值、空值、数组和映射。YAML 1.1 专有类型、自定义标签、多文档流以及 Infinity（无穷大）和 NaN（非数值）等非有限浮点数会被拒绝，因为 JSON 无法表示它们。像 <code>on</code> 这样的普通值按 YAML 1.2 规则处理，不会误判为旧版 YAML 1.1 布尔值。</p><p>为限制浏览器处理量，原始输入最多 250,000 个字符；解析后最多 20,000 个值、64 个别名和 100 层集合嵌套。达到上限时，工具会拒绝处理。设备性能不同，大文档耗时也会不同；特别大的文件或生产关键配置建议使用本地命令行解析器。</p><p>格式化会先解析再重新序列化，因此它不是保留源文件原样的编辑器：注释和原有空白会被移除，标量的书写风格也可能改变。YAML 映射键会转换成 JavaScript 对象属性，而 JSON 只支持字符串属性名，因此非字符串 YAML 键可能会转为字符串。如果这类差异会影响程序行为，请不要直接使用未经核对的转换结果。</p><p>JSON 转 YAML 只接受严格 JSON，不接受注释、尾随逗号或未加引号的对象键。本工具不执行 Kubernetes、GitHub Actions、Docker Compose 等配置模式校验，不解析外部引用，也不判断一份语法正确的配置对特定系统是否安全。输入和结果仅存在于页面内存中；用户内容不会发起网络请求，也不会写入最近使用记录。</p></div>
+    <div class="guide-section faq-list"><h2>YAML 工具常见问题</h2><details><summary>格式化会保留 YAML 注释吗？</summary><p>不会。工具会把文档解析为数据值，再重新生成 YAML，因此注释和原有空白会被移除。如果注释或原始格式很重要，请另外保留源文件。</p></details><details><summary>能校验 Kubernetes 或 GitHub Actions 配置模式吗？</summary><p>不能。本工具只检查支持范围内的 YAML 语法，并转换 JSON 兼容值；不会校验应用字段、资源限制、权限或部署行为。</p></details><details><summary>可以粘贴包含多个文档的 YAML 流吗？</summary><p>不可以。每次只处理单个文档；请先拆分文档，再分别使用本工具检查。</p></details><details><summary>我的配置会上传吗？</summary><p>不会。解析器脚本随本站页面本地提供，并在浏览器中执行。输入和结果不会发送到 UtilCover 或外部 API，离开页面时会清除。</p></details></div>
+    <nav class="related-tools" data-related-tools="yaml" aria-label="相关工具"><h2>相关工具</h2><div class="related-links"><a href="/zh/json/"><strong>JSON 格式化</strong><span>格式化、压缩、验证并浏览 JSON。</span></a><a href="/zh/text-diff/"><strong>文本差异比较器</strong><span>在本地逐行比较文本差异。</span></a><a href="/zh/encode/"><strong>Base64 与网址编解码</strong><span>进行 Base64 与网址组件编解码。</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="页脚导航"><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><a href="/zh/contact/">联系</a><a href="/zh/licenses/">开源许可</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · 私密、快速的浏览器本地工具</p></footer>
+<script type="module" src="/yaml/yaml-app.mjs"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

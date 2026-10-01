@@ -1,0 +1,17 @@
+.yaml-card { max-width: 1100px; margin: 0 auto 24px; }
+.yaml-controls { display: grid; grid-template-columns: minmax(220px, 320px) minmax(0, 1fr); align-items: end; gap: 16px; margin: 12px 0 18px; }
+.yaml-controls .field { min-width: 0; }
+.yaml-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+.yaml-workspace > .field { align-content: start; min-width: 0; }
+.yaml-workspace > .field + .field { margin-top: 0; }
+.yaml-workspace textarea { min-height: 340px; max-width: 100%; tab-size: 2; overflow-wrap: normal; }
+.yaml-workspace textarea:read-only { color: var(--text); }
+.yaml-card .status[data-state="working"] { opacity: 0.85; }
+.yaml-card .status[data-state="error"] { color: #ffaaa8; }
+.yaml-card .status[data-state="success"] { color: #9ae6bd; }
+@media (max-width: 760px) {
+  .yaml-controls { grid-template-columns: 1fr; }
+  .yaml-actions { justify-content: stretch; }
+  .yaml-actions button { flex: 1 1 135px; }
+  .yaml-workspace textarea { min-height: 260px; }
+}

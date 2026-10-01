@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>YAML Formatter, Validator &amp; JSON Converter | UtilCover</title>
+  <meta name="description" content="Format and validate one YAML document, or convert YAML and JSON locally in your browser. Input is never uploaded or saved.">
+  <link rel="canonical" href="https://www.utilcover.com/yaml/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/yaml/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/yaml/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/yaml/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/yaml/yaml.css">
+  <meta property="og:title" content="YAML Formatter, Validator &amp; JSON Converter | UtilCover">
+  <meta property="og:description" content="Format and validate YAML or convert it to and from JSON, locally in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/yaml/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/yaml/#application",
+      "name": "YAML Formatter & Validator",
+      "url": "https://www.utilcover.com/yaml/",
+      "description": "Format and validate one YAML document, or convert YAML and JSON locally in your browser. Input is never uploaded or saved.",
+      "inLanguage": "en",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/yaml/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tools",
+          "item": "https://www.utilcover.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "YAML Formatter & Validator",
+          "item": "https://www.utilcover.com/yaml/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/yaml/">中文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>YAML Formatter &amp; Validator</h1><p>Format one YAML document, check its syntax, and convert YAML to JSON or JSON to YAML—all in your browser.</p></section>
+  <section class="tool-card yaml-card" aria-label="YAML formatter and converter">
+    <p class="local-processing-note">Your input and result stay in this browser. They are not uploaded, saved, or added to recent-tool history.</p>
+    <div class="yaml-controls">
+      <div class="field"><label for="yamlMode">Action</label><select id="yamlMode"><option value="format-yaml" data-input-label="YAML input">Format &amp; validate YAML</option><option value="yaml-to-json" data-input-label="YAML input">Convert YAML to JSON</option><option value="json-to-yaml" data-input-label="JSON input">Convert JSON to YAML</option></select></div>
+      <div class="yaml-actions"><button id="yamlExample" class="secondary" type="button">Load example</button><button id="runYaml" type="button">Run</button><button id="copyYaml" class="secondary" type="button" disabled>Copy result</button><button id="clearYaml" class="danger" type="button">Clear</button></div>
+    </div>
+    <div class="grid-2 yaml-workspace">
+      <div class="field"><label id="yamlInputLabel" for="yamlInput">YAML input</label><textarea id="yamlInput" maxlength="250000" spellcheck="false" autocomplete="off" placeholder="service: utilcover&#10;enabled: true"></textarea><small>Maximum 250,000 characters. Use Ctrl+Enter or ⌘+Enter to run.</small></div>
+      <div class="field"><label for="yamlOutput">Result</label><textarea id="yamlOutput" class="output" readonly spellcheck="false" aria-live="polite" placeholder="Formatted or converted output appears here."></textarea><small>The result is only available in this page until you clear it or leave.</small></div>
+    </div>
+    <div id="yamlStatus" class="status" role="status" aria-live="polite" data-state="ready">Paste one YAML document or JSON value to begin.</div>
+  </section>
+  <section class="tool-guide" aria-labelledby="yaml-guide-title">
+    <div class="guide-intro"><h2 id="yaml-guide-title">Format YAML and convert configuration data</h2><p>YAML is commonly used for human-edited configuration. This local YAML formatter checks one document at a time, reprints parsed YAML, and converts between YAML and JSON. The parser and serializer run from a bundled browser file on this site; this tool does not upload your text to a server or third-party API.</p></div>
+    <div class="guide-section how-to"><h2>How to use the YAML tool</h2><ol class="steps"><li><strong>Paste one document.</strong><span>Enter YAML, or select the JSON-to-YAML action and paste strict JSON. The input limit is 250,000 characters.</span></li><li><strong>Choose an action.</strong><span>Format &amp; validate YAML to normalize indentation, convert YAML to JSON for a JSON representation, or convert JSON to YAML.</span></li><li><strong>Review before using the result.</strong><span>Syntax errors include a line and column when the parser provides a source mark. Copy only the result you intend to keep; clearing or leaving the page erases the current input and output.</span></li></ol></div>
+    <div class="guide-section examples"><h2>Practical YAML examples</h2><div class="example-grid"><article><h3>Format a service configuration</h3><p>Paste a mapping such as <code>service: api</code> with a nested <code>port</code> and <code>enabled</code> flag. Formatting makes the structure easier to scan and reports indentation or syntax errors without trying to guess a repair.</p></article><article><h3>Convert configuration to JSON</h3><p>Use YAML to JSON when an application, API or test fixture needs JSON. The result is a JavaScript representation serialized as JSON, so JSON’s string-key and value rules apply; inspect conversions involving unusual mapping keys or YAML-specific constructs.</p></article><article><h3>Turn JSON into readable YAML</h3><p>Paste strict JSON and choose JSON to YAML to produce an indented document. This is useful for reviewing configuration changes or preparing a small example, but it does not add application-specific defaults or validate a schema.</p></article></div></div>
+    <div class="guide-section limitations"><h2>Supported syntax, limits and conversion notes</h2><p>This page uses the locally bundled <code>js-yaml</code> parser with a JSON-compatible schema and YAML 1.2 scalar rules. It accepts one document per run and supports JSON-compatible strings, numbers, booleans, nulls, arrays and mappings. YAML 1.1-only types, custom tags, multi-document streams, and non-finite floats such as Infinity and NaN are rejected because JSON has no representation for them. Plain values such as <code>on</code> are handled using YAML 1.2 rules rather than older YAML 1.1 boolean conventions.</p><p>To bound browser work, raw input is limited to 250,000 characters; parsed output is limited to 20,000 values, 64 aliases, and 100 levels of collection nesting. These are rejection limits, not a guarantee that every device will process a maximum-sized document instantly. Use a local command-line parser for larger or operationally critical files.</p><p>Formatting parses and serializes the document, so it is not a lossless source editor: comments and original spacing are removed, and style choices may change. YAML mapping keys are represented as JavaScript object properties; JSON can only represent string property names, so non-string YAML keys may be converted to strings. Review the result if those distinctions matter.</p><p>JSON-to-YAML accepts strict JSON only; comments, trailing commas and unquoted object keys are not accepted. This tool does not perform Kubernetes, GitHub Actions, Docker Compose or other schema validation, does not resolve external references, and does not determine whether a syntactically valid configuration is safe for a particular system. Input and output remain in page memory only; no network request is made with your content, and the page does not store recent input.</p></div>
+    <div class="guide-section faq-list"><h2>YAML formatter FAQ</h2><details><summary>Does formatting preserve YAML comments?</summary><p>No. The parser converts the document to values and serializes those values again, so comments and original spacing are removed. Keep a separate copy of the source when comments or exact formatting are important.</p></details><details><summary>Does this validate Kubernetes or GitHub Actions schemas?</summary><p>No. It checks supported YAML syntax and converts JSON-compatible values. Application-specific fields, resource constraints, permissions and deployment behavior are not validated.</p></details><details><summary>Can I paste a multi-document YAML stream?</summary><p>No. Each run accepts a single document. Separate a stream into individual documents before checking it with this page.</p></details><details><summary>Is my configuration uploaded?</summary><p>No. The parser bundle is hosted with this site and runs locally in your browser. Input and output are not sent to UtilCover or an external API and are cleared when you leave the page.</p></details></div>
+    <nav class="related-tools" data-related-tools="yaml" aria-label="Related tools"><h2>Related tools</h2><div class="related-links"><a href="/json/"><strong>JSON Formatter</strong><span>Format, minify, validate and explore JSON.</span></a><a href="/text-diff/"><strong>Text Diff Checker</strong><span>Compare text line by line locally.</span></a><a href="/encode/"><strong>Base64 &amp; URL</strong><span>Encode and decode Base64 and URL components.</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/licenses/">Licenses</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · Private, fast, client-side utilities</p></footer>
+<script type="module" src="/yaml/yaml-app.mjs"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

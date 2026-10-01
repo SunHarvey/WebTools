@@ -24,13 +24,14 @@ test('browser acceptance covers every required EN and ZH mobile route', () => {
     '/text-diff/', '/zh/text-diff/',
     '/regex/', '/zh/regex/',
     '/cron/', '/zh/cron/',
+    '/yaml/', '/zh/yaml/',
   ]);
 });
 
 test('browser acceptance exercises all privacy-critical tools', () => {
   const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
   assert.deepEqual(Object.keys(acceptance.PRIVACY_FLOWS), [
-    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/',
+    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/', '/yaml/', '/zh/yaml/',
   ]);
 });
 
@@ -75,6 +76,22 @@ test('browser acceptance verifies localized Cron scheduling, clearing, and stora
   assert.match(source, /CRON_MOBILE_WIDTH = 320/);
   assert.match(source, /Emulation\.setCPUThrottlingRate', \{ rate: 4 \}/);
   assert.match(source, /maximum-frequency schedule probe/);
+});
+
+test('browser acceptance verifies localized YAML formatting, conversion, storage silence, and history cleanup', () => {
+  const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
+  assert.deepEqual(acceptance.YAML_ROUTES, ['/yaml/', '/zh/yaml/']);
+  for (const route of acceptance.YAML_ROUTES) assert.ok(acceptance.PRIVACY_FLOWS[route]);
+  const source = fs.readFileSync(path.join(root, 'scripts/browser-acceptance.cjs'), 'utf8');
+  assert.match(source, /did not convert YAML to JSON/);
+  assert.match(source, /exposed raw English YAML parser details to Chinese users/);
+  assert.match(source, /did not reject malformed flow syntax/);
+  assert.match(source, /did not reject non-finite JSON-compatible values/);
+  assert.match(source, /yamlHistory/);
+  assert.match(source, /did not clear YAML input and output/);
+  assert.match(source, /YAML_MOBILE_WIDTH = 320/);
+  assert.match(source, /\.mjs': 'text\/javascript; charset=utf-8'/);
+  assert.match(source, /yamlPerformance/);
 });
 
 test('package exposes the durable browser acceptance command', () => {
