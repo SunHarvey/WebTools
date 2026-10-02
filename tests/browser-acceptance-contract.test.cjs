@@ -25,13 +25,14 @@ test('browser acceptance covers every required EN and ZH mobile route', () => {
     '/regex/', '/zh/regex/',
     '/cron/', '/zh/cron/',
     '/yaml/', '/zh/yaml/',
+    '/xml/', '/zh/xml/',
   ]);
 });
 
 test('browser acceptance exercises all privacy-critical tools', () => {
   const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
   assert.deepEqual(Object.keys(acceptance.PRIVACY_FLOWS), [
-    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/', '/yaml/', '/zh/yaml/',
+    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/', '/yaml/', '/zh/yaml/', '/xml/', '/zh/xml/',
   ]);
 });
 
@@ -92,6 +93,21 @@ test('browser acceptance verifies localized YAML formatting, conversion, storage
   assert.match(source, /YAML_MOBILE_WIDTH = 320/);
   assert.match(source, /\.mjs': 'text\/javascript; charset=utf-8'/);
   assert.match(source, /yamlPerformance/);
+});
+
+test('browser acceptance verifies localized XML formatting, validation, privacy, history cleanup, and bounds', () => {
+  const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
+  assert.deepEqual(acceptance.XML_ROUTES, ['/xml/', '/zh/xml/']);
+  assert.equal(acceptance.XML_MOBILE_WIDTH, 320);
+  for (const route of acceptance.XML_ROUTES) assert.ok(acceptance.PRIVACY_FLOWS[route]);
+  const source = fs.readFileSync(path.join(root, 'scripts/browser-acceptance.cjs'), 'utf8');
+  assert.match(source, /did not format the XML document locally/);
+  assert.match(source, /did not reject malformed XML/);
+  assert.match(source, /exposed parser error details to Chinese users/);
+  assert.match(source, /did not reject XML DTDs/);
+  assert.match(source, /did not clear XML input and output/);
+  assert.match(source, /xmlHistory/);
+  assert.match(source, /xmlPerformance/);
 });
 
 test('package exposes the durable browser acceptance command', () => {

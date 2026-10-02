@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>XML 格式化与校验工具 | UtilCover</title>
+  <meta name="description" content="在浏览器本地格式化 XML 并进行良构性校验；数据不会上传，不支持 DTD、XSD 或 XML 转 JSON。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/xml/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/xml/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/xml/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/xml/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/xml/xml.css">
+  <meta property="og:title" content="XML 格式化与校验工具 | UtilCover">
+  <meta property="og:description" content="在浏览器本地格式化 XML 并检查文档是否良构。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/zh/xml/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/zh/xml/#application",
+      "name": "XML 格式化与校验工具",
+      "url": "https://www.utilcover.com/zh/xml/",
+      "description": "在浏览器本地格式化 XML 并进行良构性校验；数据不会上传，不支持 DTD、XSD 或 XML 转 JSON。",
+      "inLanguage": "zh-CN",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/zh/xml/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "工具",
+          "item": "https://www.utilcover.com/zh/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "XML 格式化与校验工具",
+          "item": "https://www.utilcover.com/zh/xml/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="platform-nav nav-links"><a href="/zh/#popular-tools">工具</a><a href="/zh/#categories">分类</a><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><button class="search-trigger" type="button" aria-label="搜索工具">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/xml/">English</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>XML 格式化与校验工具</h1><p>在浏览器本地格式化一个 XML 文档，并检查其格式是否良构。</p></section>
+  <section class="tool-card xml-card" aria-label="XML 格式化与校验工具">
+    <p class="local-processing-note">XML 内容只在当前浏览器中处理，不会上传、保存或加入最近使用记录。</p>
+    <div class="xml-controls">
+      <div class="field"><label for="xmlMode">操作</label><select id="xmlMode"><option value="format-xml">格式化并校验 XML</option><option value="validate-xml">仅校验 XML</option></select></div>
+      <div class="xml-actions"><button id="xmlExample" class="secondary" type="button">载入示例</button><button id="runXml" type="button">运行</button><button id="copyXml" class="secondary" type="button" disabled>复制结果</button><button id="clearXml" class="danger" type="button">清除</button></div>
+    </div>
+    <div class="grid-2 xml-workspace">
+      <div class="field"><label for="xmlInput">XML 输入</label><textarea id="xmlInput" maxlength="250000" spellcheck="false" autocomplete="off" placeholder="&lt;service&gt;&lt;name&gt;utilcover&lt;/name&gt;&lt;/service&gt;"></textarea><small>输入一个完整 XML 文档，最多 250,000 个字符。按 Ctrl+Enter 或 ⌘+Enter 可运行。</small></div>
+      <div class="field"><label for="xmlOutput">格式化后的 XML</label><textarea id="xmlOutput" class="output" readonly spellcheck="false" aria-live="polite" placeholder="格式化后的 XML 会显示在这里。仅校验模式不会生成输出。"></textarea><small>格式化可能会规范化元素之间的纯空白。使用结果前请先检查。</small></div>
+    </div>
+    <div id="xmlStatus" class="status" role="status" aria-live="polite" data-state="ready">粘贴一个完整 XML 文档以开始。</div>
+  </section>
+  <section class="tool-guide" aria-labelledby="xml-guide-title">
+    <div class="guide-intro"><h2 id="xml-guide-title">本地格式化 XML 并检查文档良构性</h2><p>本 XML 格式化工具使用浏览器原生 <code>DOMParser</code> 与 <code>XMLSerializer</code>，在本地处理一个完整 XML 文档。格式化模式会生成易读缩进，并在显示结果前再次解析输出；仅校验模式只检查文档是否良构，不修改或返回格式化副本。XML 内容不会上传或发送到服务器或第三方 API，页面也不会保存最近输入。</p></div>
+    <div class="guide-section how-to"><h2>如何使用 XML 工具</h2><ol class="steps"><li><strong>粘贴完整文档。</strong><span>输入一个 XML 根元素，以及文档所需的 XML 声明、注释、命名空间、属性和嵌套元素。不接受 XML 片段或多个根元素。</span></li><li><strong>选择操作。</strong><span>“格式化并校验 XML”会为仅含元素的内容添加缩进；“仅校验 XML”只检查格式良构性，并保持输出区域为空。</span></li><li><strong>检查结果和状态。</strong><span>如果浏览器提供源代码位置，语法错误会显示行号与列号，但不会回显解析器的原始诊断。离开页面或点击清除后，当前输入和输出会清除。</span></li></ol></div>
+    <div class="guide-section examples"><h2>XML 工具的实际用法</h2><div class="example-grid"><article><h3>格式化紧凑的服务文档</h3><p>输入 <code>&lt;service&gt;&lt;name&gt;utilcover&lt;/name&gt;&lt;enabled&gt;true&lt;/enabled&gt;&lt;/service&gt;</code> 并运行“格式化并校验”。子元素会显示在独立缩进行，随后工具会重新解析生成的结果，确认输出仍是良构 XML。</p></article><article><h3>检查带命名空间的文档</h3><p>如果只想检查语法而不重写可见源文本，可选择“仅校验 XML”，例如 <code>&lt;feed xmlns="urn:example:feed"&gt;...&lt;/feed&gt;</code>。命名空间会作为 XML 名称和声明解析，但不会据此执行任何模式校验。</p></article><article><h3>保留混合内容和空白</h3><p><code>&lt;p&gt;保留 &lt;em&gt;这段文字&lt;/em&gt; 连在一起&lt;/p&gt;</code> 这样的混合内容会保持在同一行，避免改动文字周围的空格。工具也会遵循 <code>xml:space="preserve"</code>，不在该元素内部插入缩进空白。</p></article></div></div>
+    <div class="guide-section limitations"><h2>支持范围、资源限制与格式说明</h2><p>工具接受一个完整 XML 文档，并调用浏览器原生 XML 解析器检查良构性，包括标签是否匹配、属性是否加引号、是否只有一个文档元素以及 XML 语法是否有效。只有在浏览器解析器提供可识别的行号和列号时，错误状态才会显示位置。这只是语法定位，不是模式校验报告。</p><p>为了避免处理 DTD 并限制浏览器解析成本，工具会在解析前拒绝任何 <code>DOCTYPE</code> 声明。当前不支持 DTD 或 XSD 校验，不解析外部引用、不获取网络资源，也不提供 XML 转 JSON。依赖自定义 DTD 实体的文档无法在此处理；若需要模式校验或 DTD 实体，请使用专门的 XML 应用。</p><p>原始输入最多 250,000 个字符；解析后的文档最多 20,000 个节点（包含属性），元素嵌套最多 100 层；格式化输出最多 500,000 个字符。这些上限用于控制浏览器工作量，并不代表所有设备都能瞬间处理达到上限的文档。</p><p>格式化并非逐字节保留源文件。序列化器可能会规范化空元素语法和命名空间声明。在仅含元素的区域，元素之间的纯空白文本会被规范化以便缩进；混合文本内容会保持同行，且 <code>xml:space="preserve"</code> 会禁止在对应元素内部插入新空白。如果空白本身属于应用数据，请设置该属性或只运行“仅校验 XML”。注释、处理指令、CDATA 和原有引号样式也可能被重新序列化。</p><p>解析与格式化都在当前页面运行。输入和生成结果只保留在页面内存中，不写入浏览器存储或最近工具记录；离开页面以及浏览器前进或后退恢复页面时，临时状态都会清除。</p></div>
+    <div class="guide-section faq-list"><h2>XML 格式化常见问题</h2><details><summary>这个工具会校验 XSD 模式或 DTD 吗？</summary><p>不会。它只检查 XML 良构性。工具会主动拒绝 DTD 声明，目前也没有实现 XSD 校验。</p></details><details><summary>可以格式化 XML 片段或一次处理多个文档吗？</summary><p>不可以。每次运行只接受一个包含单一根元素的完整 XML 文档。使用前请先将片段放入根元素中。</p></details><details><summary>格式化会保留所有空白字符吗？</summary><p>不会。元素子节点之间仅含空白的文本可能会被规范化为缩进。混合内容会保持同行；带有 <code>xml:space="preserve"</code> 的元素内部不会插入新的空白。如果不希望生成格式化结果，请选择“仅校验 XML”。</p></details><details><summary>我的 XML 会被上传或保存吗？</summary><p>不会。解析和格式化在浏览器本地运行。页面不会把 XML 内容放入网络请求、浏览器存储或最近使用记录，并会在离开页面时清除临时状态。</p></details></div>
+    <nav class="related-tools" data-related-tools="xml" aria-label="相关工具"><h2>相关工具</h2><div class="related-links"><a href="/zh/json/"><strong>JSON 格式化</strong><span>格式化、压缩、验证并浏览 JSON。</span></a><a href="/zh/yaml/"><strong>YAML 格式化工具</strong><span>在本地格式化 YAML 并转换 YAML 与 JSON。</span></a><a href="/zh/text-diff/"><strong>文本差异比较器</strong><span>在本地逐行比较文本差异。</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="页脚导航"><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><a href="/zh/contact/">联系</a><a href="/zh/licenses/">开源许可</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · 私密、快速的浏览器本地工具</p></footer>
+<script type="module" src="/xml/xml-app.mjs"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

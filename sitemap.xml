@@ -5,7 +5,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/" />
-    <lastmod>2026-10-01</lastmod>
+    <lastmod>2026-10-02</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/password/</loc>
@@ -141,6 +141,13 @@
     <lastmod>2026-09-19</lastmod>
   </url>
   <url>
+    <loc>https://www.utilcover.com/xml/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/xml/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/xml/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/xml/" />
+    <lastmod>2026-10-02</lastmod>
+  </url>
+  <url>
     <loc>https://www.utilcover.com/privacy/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/privacy/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/privacy/" />
@@ -173,7 +180,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/" />
-    <lastmod>2026-10-01</lastmod>
+    <lastmod>2026-10-02</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/password/</loc>
@@ -307,6 +314,13 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/image/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/image/" />
     <lastmod>2026-09-19</lastmod>
+  </url>
+  <url>
+    <loc>https://www.utilcover.com/zh/xml/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/xml/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/xml/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/xml/" />
+    <lastmod>2026-10-02</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/privacy/</loc>

@@ -1,0 +1,17 @@
+.xml-card { max-width: 1100px; margin: 0 auto 24px; }
+.xml-controls { display: grid; grid-template-columns: minmax(220px, 320px) minmax(0, 1fr); align-items: end; gap: 16px; margin: 12px 0 18px; }
+.xml-controls .field { min-width: 0; }
+.xml-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+.xml-workspace > .field { align-content: start; min-width: 0; }
+.xml-workspace > .field + .field { margin-top: 0; }
+.xml-workspace textarea { min-height: 340px; max-width: 100%; tab-size: 2; overflow-wrap: normal; }
+.xml-workspace textarea:read-only { color: var(--text); }
+.xml-card .status[data-state="working"] { opacity: 0.85; }
+.xml-card .status[data-state="error"] { color: #ffaaa8; }
+.xml-card .status[data-state="success"] { color: #9ae6bd; }
+@media (max-width: 760px) {
+  .xml-controls { grid-template-columns: 1fr; }
+  .xml-actions { justify-content: stretch; }
+  .xml-actions button { flex: 1 1 135px; }
+  .xml-workspace textarea { min-height: 260px; }
+}

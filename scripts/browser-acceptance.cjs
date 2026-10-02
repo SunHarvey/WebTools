@@ -13,6 +13,7 @@ const CDP_TIMEOUT_MS = 10_000;
 const REGEX_MOBILE_WIDTH = 320;
 const CRON_MOBILE_WIDTH = 320;
 const YAML_MOBILE_WIDTH = 320;
+const XML_MOBILE_WIDTH = 320;
 const MAX_RENDERED_DETAILS = 1_000;
 const MOBILE_ROUTES = [
   '/', '/zh/',
@@ -26,6 +27,7 @@ const MOBILE_ROUTES = [
   '/regex/', '/zh/regex/',
   '/cron/', '/zh/cron/',
   '/yaml/', '/zh/yaml/',
+  '/xml/', '/zh/xml/',
 ];
 const PASSWORD_RESULT_ROUTES = ['/password/', '/zh/password/'];
 const JWT_STORAGE_ROUTES = ['/jwt/', '/zh/jwt/'];
@@ -33,6 +35,7 @@ const TEXT_DIFF_ROUTES = ['/text-diff/', '/zh/text-diff/'];
 const REGEX_ROUTES = ['/regex/', '/zh/regex/'];
 const CRON_ROUTES = ['/cron/', '/zh/cron/'];
 const YAML_ROUTES = ['/yaml/', '/zh/yaml/'];
+const XML_ROUTES = ['/xml/', '/zh/xml/'];
 
 const PRIVACY_FLOWS = {
   '/json/': `
@@ -188,6 +191,118 @@ const PRIVACY_FLOWS = {
       status: document.querySelector('#yamlStatus').dataset.state,
       output: document.querySelector('#yamlOutput').value,
       mode: document.querySelector('#yamlMode').value,
+    };
+  `,
+  '/xml/': `
+    const input = document.querySelector('#xmlInput');
+    const mode = document.querySelector('#xmlMode');
+    const run = () => document.querySelector('#runXml').click();
+    input.value = '<root><item>xml-privacy-sentinel</item></root>';
+    mode.value = 'format-xml';
+    run();
+    const formatted = document.querySelector('#xmlOutput').value;
+    const formatStatus = document.querySelector('#xmlStatus').dataset.state;
+    input.value = '<root><p>Keep <em>this</em> together</p></root>';
+    run();
+    const mixedPreserved = document.querySelector('#xmlOutput').value.includes('<p>Keep <em>this</em> together</p>');
+    input.value = '<root xml:space="preserve">' + String.fromCharCode(10) + '   <child/>' + String.fromCharCode(10) + '  </root>';
+    run();
+    const preservedSpace = document.querySelector('#xmlOutput').value.includes(String.fromCharCode(10) + '   <child/>' + String.fromCharCode(10) + '  ');
+    input.value = ['<root>', '  <item>broken</root>'].join(String.fromCharCode(10));
+    run();
+    const malformed = {
+      state: document.querySelector('#xmlStatus').dataset.state,
+      message: document.querySelector('#xmlStatus').textContent,
+      output: document.querySelector('#xmlOutput').value,
+    };
+    input.value = '<!DOCTYPE root [<!ENTITY x SYSTEM "https://example.invalid/x">]><root>&x;</root>';
+    run();
+    const dtd = { state: document.querySelector('#xmlStatus').dataset.state, message: document.querySelector('#xmlStatus').textContent };
+    mode.value = 'validate-xml';
+    input.value = '<valid><child/></valid>';
+    run();
+    const validation = {
+      state: document.querySelector('#xmlStatus').dataset.state,
+      output: document.querySelector('#xmlOutput').value,
+      copyDisabled: document.querySelector('#copyXml').disabled,
+    };
+    mode.value = 'format-xml';
+    input.value = '<node>'.repeat(101) + '</node>'.repeat(101);
+    run();
+    const depthLimit = document.querySelector('#xmlStatus').dataset.state;
+    input.value = '<root>' + '<n/>'.repeat(19999) + '</root>';
+    mode.value = 'validate-xml';
+    run();
+    const nodeLimit = document.querySelector('#xmlStatus').dataset.state;
+    input.value = 'x'.repeat(250001);
+    run();
+    return {
+      formatStatus,
+      formatted: formatted.includes('<item>xml-privacy-sentinel</item>'),
+      mixedPreserved,
+      preservedSpace,
+      malformed,
+      dtd,
+      validation,
+      depthLimit,
+      nodeLimit,
+      inputLimit: document.querySelector('#xmlStatus').dataset.state,
+    };
+  `,
+  '/zh/xml/': `
+    const input = document.querySelector('#xmlInput');
+    const mode = document.querySelector('#xmlMode');
+    const run = () => document.querySelector('#runXml').click();
+    input.value = '<root><item>xml-privacy-sentinel</item></root>';
+    mode.value = 'format-xml';
+    run();
+    const formatted = document.querySelector('#xmlOutput').value;
+    const formatStatus = document.querySelector('#xmlStatus').dataset.state;
+    input.value = '<root><p>保留 <em>这段文字</em> 连在一起</p></root>';
+    run();
+    const mixedPreserved = document.querySelector('#xmlOutput').value.includes('<p>保留 <em>这段文字</em> 连在一起</p>');
+    input.value = '<root xml:space="preserve">' + String.fromCharCode(10) + '   <child/>' + String.fromCharCode(10) + '  </root>';
+    run();
+    const preservedSpace = document.querySelector('#xmlOutput').value.includes(String.fromCharCode(10) + '   <child/>' + String.fromCharCode(10) + '  ');
+    input.value = ['<root>', '  <item>broken</root>'].join(String.fromCharCode(10));
+    run();
+    const malformed = {
+      state: document.querySelector('#xmlStatus').dataset.state,
+      message: document.querySelector('#xmlStatus').textContent,
+      output: document.querySelector('#xmlOutput').value,
+    };
+    input.value = '<!DOCTYPE root [<!ENTITY x SYSTEM "https://example.invalid/x">]><root>&x;</root>';
+    run();
+    const dtd = { state: document.querySelector('#xmlStatus').dataset.state, message: document.querySelector('#xmlStatus').textContent };
+    mode.value = 'validate-xml';
+    input.value = '<valid><child/></valid>';
+    run();
+    const validation = {
+      state: document.querySelector('#xmlStatus').dataset.state,
+      output: document.querySelector('#xmlOutput').value,
+      copyDisabled: document.querySelector('#copyXml').disabled,
+    };
+    mode.value = 'format-xml';
+    input.value = '<node>'.repeat(101) + '</node>'.repeat(101);
+    run();
+    const depthLimit = document.querySelector('#xmlStatus').dataset.state;
+    input.value = '<root>' + '<n/>'.repeat(19999) + '</root>';
+    mode.value = 'validate-xml';
+    run();
+    const nodeLimit = document.querySelector('#xmlStatus').dataset.state;
+    input.value = 'x'.repeat(250001);
+    run();
+    return {
+      formatStatus,
+      formatted: formatted.includes('<item>xml-privacy-sentinel</item>'),
+      mixedPreserved,
+      preservedSpace,
+      malformed,
+      dtd,
+      validation,
+      depthLimit,
+      nodeLimit,
+      inputLimit: document.querySelector('#xmlStatus').dataset.state,
     };
   `,
 };
@@ -569,6 +684,18 @@ async function runAcceptance() {
     }
     await client.send('Emulation.clearDeviceMetricsOverride');
 
+    const xmlMobile = [];
+    await client.send('Emulation.setDeviceMetricsOverride', {
+      width: XML_MOBILE_WIDTH, height: 700, deviceScaleFactor: 1, mobile: true,
+    });
+    for (const route of XML_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `return { viewport: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth };`);
+      assert.ok(result.scrollWidth <= result.viewport + 1, `${route} overflows at ${XML_MOBILE_WIDTH}px: ${result.scrollWidth}px > ${result.viewport}px`);
+      xmlMobile.push({ route, ...result });
+    }
+    await client.send('Emulation.clearDeviceMetricsOverride');
+
     const jwtStorage = [];
     for (const route of JWT_STORAGE_ROUTES) {
       await navigate('/');
@@ -664,7 +791,7 @@ async function runAcceptance() {
     await client.send('Emulation.clearDeviceMetricsOverride');
     const privacy = [];
     for (const [route, flow] of Object.entries(PRIVACY_FLOWS)) {
-      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route)) {
+      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route) || XML_ROUTES.includes(route)) {
         await navigate('/');
         await evaluate(client, `
           localStorage.clear();
@@ -801,6 +928,33 @@ async function runAcceptance() {
         await evaluate(client, `document.querySelector('#clearYaml').click(); return true;`);
         const cleared = await evaluate(client, `return { input: document.querySelector('#yamlInput').value, output: document.querySelector('#yamlOutput').value, status: document.querySelector('#yamlStatus').dataset.state };`);
         assert.deepEqual(cleared, { input: '', output: '', status: 'ready' }, `${route} did not clear YAML input and output`);
+      }
+      if (XML_ROUTES.includes(route)) {
+        assert.equal(result.formatStatus, 'success', `${route} did not format the XML document locally`);
+        assert.equal(result.formatted, true, `${route} did not return formatted XML`);
+        assert.equal(result.mixedPreserved, true, `${route} did not preserve mixed XML content`);
+        assert.equal(result.preservedSpace, true, `${route} did not honor xml:space="preserve"`);
+        assert.equal(result.malformed.state, 'error', `${route} did not reject malformed XML`);
+        assert.equal(result.malformed.output, '', `${route} left output after malformed XML`);
+        if (route.startsWith('/zh/')) {
+          assert.match(result.malformed.message, new RegExp('第 2 行，第 [0-9]+ 列'), `${route} did not report a localized parser location`);
+          assert.doesNotMatch(result.malformed.message, /This page contains|error on line|Opening and ending tag|Check the document/i, `${route} exposed parser error details to Chinese users: ${result.malformed.message}`);
+        } else {
+          assert.match(result.malformed.message, new RegExp('line 2, column [0-9]+'), `${route} did not report the XML error location`);
+        }
+        assert.equal(result.dtd.state, 'error', `${route} did not reject XML DTDs`);
+        assert.match(result.dtd.message, /DOCTYPE.*DTD/i, `${route} did not explain the DTD restriction`);
+        assert.deepEqual(result.validation, { state: 'success', output: '', copyDisabled: true }, `${route} validate-only mode changed or returned the document`);
+        assert.equal(result.depthLimit, 'error', `${route} did not enforce the XML depth limit`);
+        assert.equal(result.nodeLimit, 'error', `${route} did not enforce the XML node limit`);
+        assert.equal(result.inputLimit, 'error', `${route} did not enforce the raw input limit`);
+        const storage = await evaluate(client, `return { local: Object.keys(localStorage), session: Object.keys(sessionStorage), cookies: document.cookie };`);
+        assert.deepEqual(storage.local, [], `${route} stored XML or recorded recent-tool history`);
+        assert.deepEqual(storage.session, [], `${route} stored XML in session storage`);
+        assert.equal(storage.cookies, '', `${route} created a cookie while processing XML`);
+        await evaluate(client, `document.querySelector('#clearXml').click(); return true;`);
+        const cleared = await evaluate(client, `return { input: document.querySelector('#xmlInput').value, output: document.querySelector('#xmlOutput').value, mode: document.querySelector('#xmlMode').value, status: document.querySelector('#xmlStatus').dataset.state, copyDisabled: document.querySelector('#copyXml').disabled };`);
+        assert.deepEqual(cleared, { input: '', output: '', mode: 'format-xml', status: 'ready', copyDisabled: true }, `${route} did not clear XML input and output`);
       }
       await wait(100);
       const networkRequests = requests.filter(request => /^https?:\/\//i.test(request.url));
@@ -1151,6 +1305,36 @@ async function runAcceptance() {
       yamlHistory.push({ route, ...result });
     }
 
+    const xmlHistory = [];
+    for (const route of XML_ROUTES) {
+      await navigate(route);
+      await evaluate(client, `
+        document.querySelector('#xmlInput').value = '<root><secret>history-secret</secret></root>';
+        document.querySelector('#xmlMode').value = 'format-xml';
+        document.querySelector('#runXml').click();
+        return true;
+      `);
+      await navigate('/about/');
+      await evaluate(client, 'history.back(); return true;');
+      let restored = false;
+      for (let attempt = 0; attempt < 40; attempt += 1) {
+        await wait(50);
+        restored = await evaluate(client, `return location.pathname === '${route}' && document.readyState === 'complete' && Boolean(document.querySelector('#xmlInput'));`);
+        if (restored) break;
+      }
+      assert.equal(restored, true, `${route} did not return through browser history`);
+      const result = await evaluate(client, `return {
+        input: document.querySelector('#xmlInput').value,
+        output: document.querySelector('#xmlOutput').value,
+        mode: document.querySelector('#xmlMode').value,
+        status: document.querySelector('#xmlStatus').dataset.state,
+        copyDisabled: document.querySelector('#copyXml').disabled,
+      };`);
+      assert.deepEqual(result, { input: '', output: '', mode: 'format-xml', status: 'ready', copyDisabled: true }, `${route} did not clear XML input and output after browser history`);
+      assert.doesNotMatch(JSON.stringify(result), /history-secret/, `${route} restored sensitive XML from browser history`);
+      xmlHistory.push({ route, ...result });
+    }
+
     const yamlPerformance = [];
     await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
     for (const route of YAML_ROUTES) {
@@ -1171,6 +1355,30 @@ async function runAcceptance() {
       assert.ok(result.outputLength > 100_000, `${route} did not produce the large expected JSON result`);
       assert.ok(result.elapsed < 5_000, `${route} near-limit YAML parse took ${result.elapsed} ms under 4x CPU throttling`);
       yamlPerformance.push({ route, ...result });
+    }
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+
+    const xmlPerformance = [];
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+    for (const route of XML_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `
+        const input = document.querySelector('#xmlInput');
+        input.value = '<root>' + Array.from({ length: 5000 }, (_, index) => '<item>' + index + '</item>').join('') + '</root>';
+        document.querySelector('#xmlMode').value = 'format-xml';
+        const started = performance.now();
+        document.querySelector('#runXml').click();
+        return {
+          elapsed: performance.now() - started,
+          status: document.querySelector('#xmlStatus').dataset.state,
+          outputLength: document.querySelector('#xmlOutput').value.length,
+        };
+      `);
+      assert.equal(result.status, 'success', `${route} failed its bounded XML formatting probe`);
+      assert.ok(result.outputLength > 50_000, `${route} did not format the expected multi-node XML document`);
+      assert.ok(result.outputLength <= 500_000, `${route} exceeded the documented XML output bound`);
+      assert.ok(result.elapsed < 5_000, `${route} near-limit XML formatting took ${result.elapsed} ms under 4x CPU throttling`);
+      xmlPerformance.push({ route, ...result });
     }
     await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
 
@@ -1202,6 +1410,7 @@ async function runAcceptance() {
       regexMobile,
       cronMobile,
       yamlMobile,
+      xmlMobile,
       jwtStorage,
       textDiffNavigation,
       textDiffHistory,
@@ -1211,7 +1420,9 @@ async function runAcceptance() {
       regexHistory,
       cronHistory,
       yamlHistory,
+      xmlHistory,
       yamlPerformance,
+      xmlPerformance,
       cronPerformance,
       passwordResults,
       privacyFlows: privacy,
@@ -1242,7 +1453,7 @@ async function runAcceptance() {
 }
 
 module.exports = {
-  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
+  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, XML_ROUTES, XML_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
   runAcceptance, startStaticServer, stopBrowser, stopServer, browserBinary,
 };
 

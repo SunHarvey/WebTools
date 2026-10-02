@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>XML Formatter &amp; Validator | UtilCover</title>
+  <meta name="description" content="Format XML and check one document for well-formedness locally in your browser. No upload, DTD, XSD or XML-to-JSON conversion.">
+  <link rel="canonical" href="https://www.utilcover.com/xml/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/xml/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/xml/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/xml/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/xml/xml.css">
+  <meta property="og:title" content="XML Formatter &amp; Validator | UtilCover">
+  <meta property="og:description" content="Format XML and check one document for well-formedness locally in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/xml/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/xml/#application",
+      "name": "XML Formatter & Validator",
+      "url": "https://www.utilcover.com/xml/",
+      "description": "Format XML and check one document for well-formedness locally in your browser. No upload, DTD, XSD or XML-to-JSON conversion.",
+      "inLanguage": "en",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/xml/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tools",
+          "item": "https://www.utilcover.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "XML Formatter & Validator",
+          "item": "https://www.utilcover.com/xml/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/xml/">中文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>XML Formatter &amp; Validator</h1><p>Format one XML document and check that it is well-formed, entirely in your browser.</p></section>
+  <section class="tool-card xml-card" aria-label="XML formatter and validator">
+    <p class="local-processing-note">Your XML stays in this browser. It is not uploaded, saved, or added to recent-tool history.</p>
+    <div class="xml-controls">
+      <div class="field"><label for="xmlMode">Action</label><select id="xmlMode"><option value="format-xml">Format &amp; validate XML</option><option value="validate-xml">Validate XML only</option></select></div>
+      <div class="xml-actions"><button id="xmlExample" class="secondary" type="button">Load example</button><button id="runXml" type="button">Run</button><button id="copyXml" class="secondary" type="button" disabled>Copy result</button><button id="clearXml" class="danger" type="button">Clear</button></div>
+    </div>
+    <div class="grid-2 xml-workspace">
+      <div class="field"><label for="xmlInput">XML input</label><textarea id="xmlInput" maxlength="250000" spellcheck="false" autocomplete="off" placeholder="&lt;service&gt;&lt;name&gt;utilcover&lt;/name&gt;&lt;/service&gt;"></textarea><small>One complete XML document; maximum 250,000 characters. Use Ctrl+Enter or ⌘+Enter to run.</small></div>
+      <div class="field"><label for="xmlOutput">Formatted XML</label><textarea id="xmlOutput" class="output" readonly spellcheck="false" aria-live="polite" placeholder="Formatted XML appears here. Validate-only mode does not create output."></textarea><small>Formatting may normalize whitespace-only gaps between elements. Review before using the result.</small></div>
+    </div>
+    <div id="xmlStatus" class="status" role="status" aria-live="polite" data-state="ready">Paste one complete XML document to begin.</div>
+  </section>
+  <section class="tool-guide" aria-labelledby="xml-guide-title">
+    <div class="guide-intro"><h2 id="xml-guide-title">Format XML and check well-formedness</h2><p>This XML formatter uses the browser's native <code>DOMParser</code> and <code>XMLSerializer</code> to process one complete XML document locally. Format mode creates readable indentation and reparses its own output before displaying it. Validate-only mode checks whether the document is well-formed without changing or returning a formatted copy. Your XML is not uploaded or sent to a server or third-party API, and the page does not retain recent input.</p></div>
+    <div class="guide-section how-to"><h2>How to use the XML tool</h2><ol class="steps"><li><strong>Paste one complete document.</strong><span>Use a single XML root element, with any XML declaration, comments, namespaces, attributes, and nested elements that belong in the document. XML fragments and multiple root elements are not accepted.</span></li><li><strong>Choose an action.</strong><span>Format &amp; validate XML adds indentation where the document has element-only content. Validate XML only checks well-formedness and leaves the output area empty.</span></li><li><strong>Review the result and status.</strong><span>When the browser provides source coordinates, a syntax error reports its line and column without echoing the parser's raw diagnostic. Clear the page or leave it to erase the temporary input and output.</span></li></ol></div>
+    <div class="guide-section examples"><h2>Practical XML examples</h2><div class="example-grid"><article><h3>Format a compact service document</h3><p>Paste <code>&lt;service&gt;&lt;name&gt;utilcover&lt;/name&gt;&lt;enabled&gt;true&lt;/enabled&gt;&lt;/service&gt;</code> and run Format &amp; validate. Child elements are placed on separate indented lines, while the document is reparsed to make sure the generated output remains well-formed.</p></article><article><h3>Check a namespaced document</h3><p>Use Validate XML only for a document such as <code>&lt;feed xmlns="urn:example:feed"&gt;...&lt;/feed&gt;</code> when you want a syntax check without rewriting its visible source. Namespace bindings are parsed as XML names and namespace declarations, not as a schema.</p></article><article><h3>Keep mixed content and preserved spaces</h3><p>Content like <code>&lt;p&gt;Keep &lt;em&gt;this&lt;/em&gt; together&lt;/p&gt;</code> is kept inline so spaces around text are not reflowed. The formatter also respects <code>xml:space="preserve"</code> by serializing that element without inserting indentation inside it.</p></article></div></div>
+    <div class="guide-section limitations"><h2>Supported XML, limits and formatting notes</h2><p>The tool accepts one complete XML document and uses the browser's native XML parser. It checks well-formedness: matching element tags, quoted attributes, a single document element, and valid XML syntax. Error positions are shown only when the browser parser exposes a usable line and column. They are syntax locations, not a schema validation report.</p><p>To avoid DTD processing and keep parsing bounded, any <code>DOCTYPE</code> declaration is rejected before parsing. The tool does not validate DTDs or XSD schemas, resolve external references, fetch resources, or convert XML to JSON. A document that depends on a custom DTD entity therefore cannot be processed here. Use a dedicated XML application when schema validation or DTD-based entities are required.</p><p>Raw input is limited to 250,000 characters; the parsed document is limited to 20,000 nodes, including attributes, and a 100-level element nesting depth. Formatted output is limited to 500,000 characters. These limits bound browser work; they are not a promise that every device will process a maximum-sized document instantly.</p><p>Formatting is not byte-for-byte source preservation. The serializer may normalize empty-element syntax and namespace declarations. In element-only sections, whitespace-only text between child elements is normalized to create indentation. Mixed text content is kept inline, and <code>xml:space="preserve"</code> disables inserted whitespace for that element. If whitespace itself is application data, use that attribute or choose Validate XML only. Comments, processing instructions, CDATA and original quoting may be serialized in a normalized form.</p><p>Both the parser and serializer run in the page. The input and generated result are kept only in page memory, are not stored in browser storage or recent-tool history, and are cleared on page navigation or browser back/forward restoration.</p></div>
+    <div class="guide-section faq-list"><h2>XML formatter FAQ</h2><details><summary>Does this validate an XSD schema or DTD?</summary><p>No. It checks XML well-formedness only. DTD declarations are intentionally rejected, and XSD validation is not implemented.</p></details><details><summary>Can I format an XML fragment or several documents at once?</summary><p>No. Each run accepts one complete XML document with a single root element. Wrap a fragment in a document element before using the tool.</p></details><details><summary>Will formatting preserve every whitespace character?</summary><p>No. Whitespace-only gaps between element children may be normalized for indentation. Mixed content remains inline, and an element with <code>xml:space="preserve"</code> is serialized without inserting new whitespace inside it. Use Validate XML only when you do not want a formatted result.</p></details><details><summary>Is my XML uploaded or saved?</summary><p>No. Parsing and formatting run locally in your browser. The page makes no request with the XML content, does not save it in browser storage or recent history, and clears the temporary page state when you leave.</p></details></div>
+    <nav class="related-tools" data-related-tools="xml" aria-label="Related tools"><h2>Related tools</h2><div class="related-links"><a href="/json/"><strong>JSON Formatter</strong><span>Format, minify, validate and explore JSON.</span></a><a href="/yaml/"><strong>YAML Formatter</strong><span>Format YAML and convert YAML and JSON locally.</span></a><a href="/text-diff/"><strong>Text Diff Checker</strong><span>Compare text line by line locally.</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/licenses/">Licenses</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · Private, fast, client-side utilities</p></footer>
+<script type="module" src="/xml/xml-app.mjs"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

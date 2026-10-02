@@ -274,6 +274,28 @@ test('YAML pages document local YAML 1.2 formatting, JSON conversion and parser 
   }
 });
 
+test('XML pages document local well-formedness validation, formatting limits, and unsupported schemas', () => {
+  assertGuide('xml/index.html', 'en', ['/json/', '/yaml/', '/text-diff/']);
+  assertGuide('zh/xml/index.html', 'zh', ['/zh/json/', '/zh/yaml/', '/zh/text-diff/']);
+  assertMetadata('xml/index.html', /XML Formatter.*Validator/i, /format.*well-formedness.*locally/i);
+  assertMetadata('zh/xml/index.html', /XML.*(?:格式化|格式整理).*(?:校验|验证)/, /本地.*XML.*(?:良构|格式).*校验/);
+  for (const file of ['xml/index.html', 'zh/xml/index.html']) {
+    const guide = guideFor(file).text;
+    assert.match(guide, /DOMParser/);
+    assert.match(guide, /XMLSerializer/);
+    assert.match(guide, /250,000/);
+    assert.match(guide, /20,000/);
+    assert.match(guide, /100(?:-level| level| 层)/i);
+    assert.match(guide, /500,000/);
+    assert.match(guide, /DOCTYPE|DTD/);
+    assert.match(guide, /XSD/);
+    assert.match(guide, /xml:space/);
+    assert.match(guide, /(?:mixed content|混合内容)/i);
+    assert.match(guide, /(?:line and column|行.*列)/i);
+    assert.match(guide, /(?:not uploaded|does not upload|不会上传)/i);
+  }
+});
+
 test('encode pages explain UTF-8 Base64 and URL component conversion honestly in each locale', () => {
   assertGuide('encode/index.html', 'en', ['/text/', '/json/', '/hash/']);
   assertGuide('zh/encode/index.html', 'zh', ['/zh/text/', '/zh/json/', '/zh/hash/']);

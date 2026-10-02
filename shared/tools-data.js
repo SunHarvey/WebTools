@@ -20,6 +20,7 @@ const TOOLS = [
   { id: 'base64', icon: '64', category: 'developer', popular: false, name: { en: 'Base64 Encoder', zh: 'Base64 编解码器' }, description: { en: 'Encode and decode UTF-8 text as Base64.', zh: '将 UTF-8 文本进行 Base64 编解码。' }, keywords: ['base64', 'encode', 'decode'] },
   { id: 'url-encoder', icon: '%', category: 'developer', popular: false, name: { en: 'URL Encoder', zh: '网址编解码器' }, description: { en: 'Encode and decode URL components safely.', zh: '安全进行网址组件编解码。' }, keywords: ['url', 'uri', 'encode', 'decode', 'percent'] },
   { id: 'yaml', icon: 'YAML', category: 'developer', popular: false, recordRecent: false, name: { en: 'YAML Formatter', zh: 'YAML 格式化工具' }, description: { en: 'Format YAML and convert YAML and JSON locally.', zh: '在本地格式化 YAML 并转换 YAML 与 JSON。' }, keywords: ['yaml', 'yml', 'format', 'formatter', 'validator', 'json', 'configuration'] },
+  { id: 'xml', icon: 'XML', category: 'developer', popular: false, recordRecent: false, name: { en: 'XML Formatter', zh: 'XML 格式化与校验工具' }, description: { en: 'Format XML and check well-formedness locally.', zh: '在本地格式化 XML 并检查文档是否良构。' }, keywords: ['xml', 'format', 'formatter', 'validator', 'well-formed', 'markup', 'document'] },
 ];
 
 const TOOL_CATEGORIES = {
@@ -40,6 +41,7 @@ const RELATED_TOOLS = {
   regex: ['text', 'text-diff', 'json'],
   cron: ['timestamp', 'regex', 'calculator'],
   yaml: ['json', 'text-diff', 'encode'],
+  xml: ['json', 'yaml', 'text-diff'],
 };
 
 function toolPath(tool, language = 'en') { return `${language === 'zh' ? '/zh' : ''}/${tool.id}/`; }
