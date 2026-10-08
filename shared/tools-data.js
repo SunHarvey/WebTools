@@ -21,6 +21,7 @@ const TOOLS = [
   { id: 'url-encoder', icon: '%', category: 'developer', popular: false, name: { en: 'URL Encoder', zh: '网址编解码器' }, description: { en: 'Encode and decode URL components safely.', zh: '安全进行网址组件编解码。' }, keywords: ['url', 'uri', 'encode', 'decode', 'percent'] },
   { id: 'yaml', icon: 'YAML', category: 'developer', popular: false, recordRecent: false, name: { en: 'YAML Formatter', zh: 'YAML 格式化工具' }, description: { en: 'Format YAML and convert YAML and JSON locally.', zh: '在本地格式化 YAML 并转换 YAML 与 JSON。' }, keywords: ['yaml', 'yml', 'format', 'formatter', 'validator', 'json', 'configuration'] },
   { id: 'xml', icon: 'XML', category: 'developer', popular: false, recordRecent: false, name: { en: 'XML Formatter', zh: 'XML 格式化与校验工具' }, description: { en: 'Format XML and check well-formedness locally.', zh: '在本地格式化 XML 并检查文档是否良构。' }, keywords: ['xml', 'format', 'formatter', 'validator', 'well-formed', 'markup', 'document'] },
+  { id: 'csv', icon: 'CSV', category: 'developer', popular: false, recordRecent: false, name: { en: 'CSV / TSV ↔ JSON Converter', zh: 'CSV / TSV 与 JSON 转换器' }, description: { en: 'Convert CSV and TSV tables and flat JSON arrays locally.', zh: '在本地转换 CSV/TSV 表格与扁平 JSON 数组。' }, keywords: ['csv', 'tsv', 'json', 'comma-separated values', 'tab-separated values', 'spreadsheet', 'table', 'convert'] },
 ];
 
 const TOOL_CATEGORIES = {
@@ -42,6 +43,7 @@ const RELATED_TOOLS = {
   cron: ['timestamp', 'regex', 'calculator'],
   yaml: ['json', 'text-diff', 'encode'],
   xml: ['json', 'yaml', 'text-diff'],
+  csv: ['json', 'yaml', 'xml'],
 };
 
 function toolPath(tool, language = 'en') { return `${language === 'zh' ? '/zh' : ''}/${tool.id}/`; }

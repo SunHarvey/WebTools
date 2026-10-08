@@ -14,6 +14,7 @@ const REGEX_MOBILE_WIDTH = 320;
 const CRON_MOBILE_WIDTH = 320;
 const YAML_MOBILE_WIDTH = 320;
 const XML_MOBILE_WIDTH = 320;
+const CSV_MOBILE_WIDTH = 320;
 const MAX_RENDERED_DETAILS = 1_000;
 const MOBILE_ROUTES = [
   '/', '/zh/',
@@ -28,6 +29,7 @@ const MOBILE_ROUTES = [
   '/cron/', '/zh/cron/',
   '/yaml/', '/zh/yaml/',
   '/xml/', '/zh/xml/',
+  '/csv/', '/zh/csv/',
 ];
 const PASSWORD_RESULT_ROUTES = ['/password/', '/zh/password/'];
 const JWT_STORAGE_ROUTES = ['/jwt/', '/zh/jwt/'];
@@ -36,6 +38,32 @@ const REGEX_ROUTES = ['/regex/', '/zh/regex/'];
 const CRON_ROUTES = ['/cron/', '/zh/cron/'];
 const YAML_ROUTES = ['/yaml/', '/zh/yaml/'];
 const XML_ROUTES = ['/xml/', '/zh/xml/'];
+const CSV_ROUTES = ['/csv/', '/zh/csv/'];
+
+const CSV_PRIVACY_FLOW = `
+  const input = document.querySelector('#csvInput');
+  const mode = document.querySelector('#csvMode');
+  mode.value = 'csv-to-json';
+  document.querySelector('#csvDelimiter').value = 'comma';
+  document.querySelector('#csvHeader').checked = true;
+  input.value = [
+    'name,code,flag,note',
+    'Ada,007,true,"said ""hello, world""' + String.fromCharCode(10) + 'from Paris"',
+  ].join(String.fromCharCode(10));
+  document.querySelector('#runCsv').click();
+  const csvStatus = document.querySelector('#csvStatus').dataset.state;
+  const csvJson = JSON.parse(document.querySelector('#csvOutput').value);
+  mode.value = 'json-to-csv';
+  const note = 'first' + String.fromCharCode(10) + 'second';
+  input.value = '[{"note":' + JSON.stringify(note) + ',"exact":9007199254740993}]';
+  document.querySelector('#runCsv').click();
+  return {
+    csvStatus,
+    csvJson,
+    jsonStatus: document.querySelector('#csvStatus').dataset.state,
+    jsonCsv: document.querySelector('#csvOutput').value,
+  };
+`;
 
 const PRIVACY_FLOWS = {
   '/json/': `
@@ -305,6 +333,8 @@ const PRIVACY_FLOWS = {
       inputLimit: document.querySelector('#xmlStatus').dataset.state,
     };
   `,
+  '/csv/': CSV_PRIVACY_FLOW,
+  '/zh/csv/': CSV_PRIVACY_FLOW,
 };
 
 const MIME_TYPES = {
@@ -696,6 +726,25 @@ async function runAcceptance() {
     }
     await client.send('Emulation.clearDeviceMetricsOverride');
 
+    const csvMobile = [];
+    await client.send('Emulation.setDeviceMetricsOverride', {
+      width: CSV_MOBILE_WIDTH, height: 700, deviceScaleFactor: 1, mobile: true,
+    });
+    for (const route of CSV_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `return {
+        viewport: document.documentElement.clientWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+        inputVisible: document.querySelector('#csvInput').getBoundingClientRect().width > 0,
+        modeVisible: document.querySelector('#csvMode').getBoundingClientRect().width > 0,
+      };`);
+      assert.ok(result.scrollWidth <= result.viewport + 1, `${route} overflows at ${CSV_MOBILE_WIDTH}px: ${result.scrollWidth}px > ${result.viewport}px`);
+      assert.equal(result.inputVisible, true, `${route} hides the CSV input at ${CSV_MOBILE_WIDTH}px`);
+      assert.equal(result.modeVisible, true, `${route} hides the conversion controls at ${CSV_MOBILE_WIDTH}px`);
+      csvMobile.push({ route, ...result });
+    }
+    await client.send('Emulation.clearDeviceMetricsOverride');
+
     const jwtStorage = [];
     for (const route of JWT_STORAGE_ROUTES) {
       await navigate('/');
@@ -791,7 +840,7 @@ async function runAcceptance() {
     await client.send('Emulation.clearDeviceMetricsOverride');
     const privacy = [];
     for (const [route, flow] of Object.entries(PRIVACY_FLOWS)) {
-      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route) || XML_ROUTES.includes(route)) {
+      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route) || XML_ROUTES.includes(route) || CSV_ROUTES.includes(route)) {
         await navigate('/');
         await evaluate(client, `
           localStorage.clear();
@@ -955,6 +1004,81 @@ async function runAcceptance() {
         await evaluate(client, `document.querySelector('#clearXml').click(); return true;`);
         const cleared = await evaluate(client, `return { input: document.querySelector('#xmlInput').value, output: document.querySelector('#xmlOutput').value, mode: document.querySelector('#xmlMode').value, status: document.querySelector('#xmlStatus').dataset.state, copyDisabled: document.querySelector('#copyXml').disabled };`);
         assert.deepEqual(cleared, { input: '', output: '', mode: 'format-xml', status: 'ready', copyDisabled: true }, `${route} did not clear XML input and output`);
+      }
+      if (CSV_ROUTES.includes(route)) {
+        assert.equal(result.csvStatus, 'success', `${route} did not convert quoted CSV to string-valued JSON`);
+        assert.deepEqual(result.csvJson, [{
+          name: 'Ada', code: '007', flag: 'true', note: 'said "hello, world"\nfrom Paris',
+        }], `${route} did not convert quoted CSV to string-valued JSON`);
+        assert.equal(result.jsonStatus, 'success', `${route} did not convert JSON numbers without precision loss`);
+        assert.match(result.jsonCsv, /9007199254740993/, `${route} did not convert JSON numbers without precision loss`);
+        assert.match(result.jsonCsv, /"first\nsecond"/, `${route} did not quote a JSON cell containing a line break`);
+
+        const malformed = await evaluate(client, `
+          document.querySelector('#csvMode').value = 'csv-to-json';
+          document.querySelector('#csvInput').value = 'a,b' + String.fromCharCode(10) + '1,"unclosed';
+          document.querySelector('#runCsv').click();
+          return {
+            state: document.querySelector('#csvStatus').dataset.state,
+            message: document.querySelector('#csvStatus').textContent,
+            output: document.querySelector('#csvOutput').value,
+          };
+        `);
+        assert.equal(malformed.state, 'error', `${route} did not reject malformed CSV`);
+        assert.equal(malformed.output, '', `${route} retained output after malformed CSV`);
+        if (route.startsWith('/zh/')) {
+          assert.equal(malformed.message, '引用字段未闭合（第 2 行，第 3 列）。请检查双引号转义和字段边界。', `${route} exposed English CSV error details to Chinese users`);
+        } else {
+          assert.equal(malformed.message, 'Unclosed quoted field (line 2, column 3). Check doubled quotes and field boundaries.', `${route} did not report a localized CSV parse location`);
+        }
+
+        const nested = await evaluate(client, `
+          document.querySelector('#csvMode').value = 'json-to-csv';
+          document.querySelector('#csvInput').value = '[{"nested":{"x":1}}]';
+          document.querySelector('#runCsv').click();
+          return {
+            state: document.querySelector('#csvStatus').dataset.state,
+            message: document.querySelector('#csvStatus').textContent,
+            output: document.querySelector('#csvOutput').value,
+          };
+        `);
+        assert.equal(nested.state, 'error', `${route} did not reject nested JSON cell values`);
+        assert.equal(nested.output, '', `${route} emitted lossy CSV for nested JSON cell values`);
+        assert.match(nested.message, route.startsWith('/zh/') ? /嵌套/ : /nested/i, `${route} did not explain the nested-value restriction`);
+
+        const inputLimit = await evaluate(client, `
+          document.querySelector('#csvMode').value = 'csv-to-json';
+          document.querySelector('#csvInput').value = 'x'.repeat(250001);
+          document.querySelector('#runCsv').click();
+          return {
+            state: document.querySelector('#csvStatus').dataset.state,
+            message: document.querySelector('#csvStatus').textContent,
+            output: document.querySelector('#csvOutput').value,
+            length: document.querySelector('#csvInput').value.length,
+          };
+        `);
+        assert.equal(inputLimit.length, 250001, `${route} browser input probe was unexpectedly truncated`);
+        assert.equal(inputLimit.state, 'error', `${route} did not enforce the raw input limit`);
+        assert.match(inputLimit.message, /250,000/, `${route} did not explain the raw input limit`);
+        assert.equal(inputLimit.output, '', `${route} retained output after an over-limit input`);
+
+        const storage = await evaluate(client, `return { local: Object.keys(localStorage), session: Object.keys(sessionStorage), cookies: document.cookie };`);
+        assert.deepEqual(storage.local, [], `${route} stored CSV data or recent-tool history`);
+        assert.deepEqual(storage.session, [], `${route} stored CSV data in session storage`);
+        assert.equal(storage.cookies, '', `${route} created a cookie while converting CSV`);
+        await evaluate(client, `document.querySelector('#clearCsv').click(); return true;`);
+        const cleared = await evaluate(client, `return {
+          input: document.querySelector('#csvInput').value,
+          output: document.querySelector('#csvOutput').value,
+          mode: document.querySelector('#csvMode').value,
+          delimiter: document.querySelector('#csvDelimiter').value,
+          header: document.querySelector('#csvHeader').checked,
+          status: document.querySelector('#csvStatus').dataset.state,
+          copyDisabled: document.querySelector('#copyCsv').disabled,
+        };`);
+        assert.deepEqual(cleared, {
+          input: '', output: '', mode: 'csv-to-json', delimiter: 'comma', header: true, status: 'ready', copyDisabled: true,
+        }, `${route} did not clear CSV input, output, and options`);
       }
       await wait(100);
       const networkRequests = requests.filter(request => /^https?:\/\//i.test(request.url));
@@ -1335,6 +1459,94 @@ async function runAcceptance() {
       xmlHistory.push({ route, ...result });
     }
 
+    const csvHistory = [];
+    for (const route of CSV_ROUTES) {
+      await navigate(route);
+      const converted = await evaluate(client, `
+        const mode = document.querySelector('#csvMode');
+        mode.value = 'json-to-csv';
+        document.querySelector('#csvDelimiter').value = 'tab';
+        document.querySelector('#csvHeader').checked = false;
+        document.querySelector('#csvInput').value = '[{"private":"history-secret"}]';
+        document.querySelector('#runCsv').click();
+        return {
+          state: document.querySelector('#csvStatus').dataset.state,
+          output: document.querySelector('#csvOutput').value,
+        };
+      `);
+      assert.equal(converted.state, 'success', `${route} did not complete a CSV conversion before history navigation`);
+      assert.match(converted.output, /history-secret/, `${route} did not create the history sentinel output`);
+      await navigate('/about/');
+      await evaluate(client, 'history.back(); return true;');
+      let restored = false;
+      for (let attempt = 0; attempt < 40; attempt += 1) {
+        await wait(50);
+        restored = await evaluate(client, `return location.pathname === '${route}' && document.readyState === 'complete' && Boolean(document.querySelector('#csvInput'));`);
+        if (restored) break;
+      }
+      assert.equal(restored, true, `${route} did not return through browser history`);
+      const result = await evaluate(client, `return {
+        input: document.querySelector('#csvInput').value,
+        output: document.querySelector('#csvOutput').value,
+        mode: document.querySelector('#csvMode').value,
+        delimiter: document.querySelector('#csvDelimiter').value,
+        header: document.querySelector('#csvHeader').checked,
+        status: document.querySelector('#csvStatus').dataset.state,
+        copyDisabled: document.querySelector('#copyCsv').disabled,
+      };`);
+      assert.deepEqual(result, {
+        input: '', output: '', mode: 'csv-to-json', delimiter: 'comma', header: true, status: 'ready', copyDisabled: true,
+      }, `${route} restored CSV input, output, or options after browser history`);
+      assert.doesNotMatch(JSON.stringify(result), /history-secret/, `${route} restored sensitive CSV data from browser history`);
+      csvHistory.push({ route, ...result });
+    }
+
+    const csvLifecycle = [];
+    for (const route of CSV_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `
+        const input = document.querySelector('#csvInput');
+        const output = document.querySelector('#csvOutput');
+        const mode = document.querySelector('#csvMode');
+        const delimiter = document.querySelector('#csvDelimiter');
+        const header = document.querySelector('#csvHeader');
+        const snapshot = () => ({
+          input: input.value,
+          output: output.value,
+          mode: mode.value,
+          delimiter: delimiter.value,
+          header: header.checked,
+          status: document.querySelector('#csvStatus').dataset.state,
+          copyDisabled: document.querySelector('#copyCsv').disabled,
+        });
+
+        input.value = 'pagehide-secret';
+        output.value = 'stale output';
+        mode.value = 'json-to-csv';
+        delimiter.value = 'tab';
+        header.checked = false;
+        window.dispatchEvent(new Event('pagehide'));
+        const afterPagehide = snapshot();
+
+        input.value = 'pageshow-secret';
+        output.value = 'stale output';
+        mode.value = 'json-to-csv';
+        delimiter.value = 'tab';
+        header.checked = false;
+        const pageshow = new Event('pageshow');
+        Object.defineProperty(pageshow, 'persisted', { value: true });
+        window.dispatchEvent(pageshow);
+        const afterPersistedPageshow = snapshot();
+        return { afterPagehide, afterPersistedPageshow };
+      `);
+      const clearedState = {
+        input: '', output: '', mode: 'csv-to-json', delimiter: 'comma', header: true, status: 'ready', copyDisabled: true,
+      };
+      assert.deepEqual(result.afterPagehide, clearedState, `${route} retained CSV state after pagehide`);
+      assert.deepEqual(result.afterPersistedPageshow, clearedState, `${route} retained CSV state after persisted pageshow`);
+      csvLifecycle.push({ route, ...result });
+    }
+
     const yamlPerformance = [];
     await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
     for (const route of YAML_ROUTES) {
@@ -1382,6 +1594,108 @@ async function runAcceptance() {
     }
     await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
 
+    const csvPerformance = [];
+    const csvWorstFieldPerformance = [];
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+    for (const route of CSV_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `
+        const input = document.querySelector('#csvInput');
+        const mode = document.querySelector('#csvMode');
+        document.querySelector('#csvDelimiter').value = 'comma';
+        document.querySelector('#csvHeader').checked = true;
+        mode.value = 'csv-to-json';
+        const csv = ['a,b', ...Array.from({ length: 9999 }, (_, index) => index + ',true')].join(String.fromCharCode(10));
+        input.value = csv;
+        const csvStarted = performance.now();
+        document.querySelector('#runCsv').click();
+        const csvElapsed = performance.now() - csvStarted;
+        const csvOutput = document.querySelector('#csvOutput').value;
+        const csvResult = {
+          elapsed: csvElapsed,
+          status: document.querySelector('#csvStatus').dataset.state,
+          inputLength: csv.length,
+          outputLength: csvOutput.length,
+          rows: JSON.parse(csvOutput).length,
+        };
+
+        mode.value = 'json-to-csv';
+        const jsonRows = Array.from({ length: 9999 }, (_, index) => '{"a":' + index + ',"b":true}');
+        const json = '[' + jsonRows.join(',') + ']';
+        input.value = json;
+        const jsonStarted = performance.now();
+        document.querySelector('#runCsv').click();
+        const jsonElapsed = performance.now() - jsonStarted;
+        const jsonOutput = document.querySelector('#csvOutput').value;
+        const jsonResult = {
+          elapsed: jsonElapsed,
+          status: document.querySelector('#csvStatus').dataset.state,
+          inputLength: json.length,
+          outputLength: jsonOutput.length,
+          header: jsonOutput.split(String.fromCharCode(10))[0],
+        };
+
+        mode.value = 'csv-to-json';
+        document.querySelector('#csvHeader').checked = false;
+        const longField = 'x'.repeat(250000);
+        input.value = longField;
+        const fieldStarted = performance.now();
+        document.querySelector('#runCsv').click();
+        const fieldElapsed = performance.now() - fieldStarted;
+        const fieldOutput = document.querySelector('#csvOutput').value;
+        const fieldRows = JSON.parse(fieldOutput);
+        const fieldResult = {
+          elapsed: fieldElapsed,
+          status: document.querySelector('#csvStatus').dataset.state,
+          inputLength: longField.length,
+          outputLength: fieldOutput.length,
+          cellLength: fieldRows[0][0].length,
+        };
+
+        const quotedField = '"' + '""'.repeat(124999) + '"';
+        input.value = quotedField;
+        const quotedStarted = performance.now();
+        document.querySelector('#runCsv').click();
+        const quotedElapsed = performance.now() - quotedStarted;
+        const quotedOutput = document.querySelector('#csvOutput').value;
+        const quotedRows = JSON.parse(quotedOutput);
+        const quotedResult = {
+          elapsed: quotedElapsed,
+          status: document.querySelector('#csvStatus').dataset.state,
+          inputLength: quotedField.length,
+          outputLength: quotedOutput.length,
+          cellLength: quotedRows[0][0].length,
+          quoteCharactersPreserved: quotedRows[0][0].charCodeAt(0) === 34 && quotedRows[0][0].charCodeAt(quotedRows[0][0].length - 1) === 34,
+        };
+        return { csv: csvResult, json: jsonResult, worstField: fieldResult, worstQuotedField: quotedResult };
+      `);
+      assert.equal(result.csv.status, 'success', `${route} failed the near-limit CSV-to-JSON probe`);
+      assert.equal(result.csv.rows, 9999, `${route} converted the wrong number of CSV records`);
+      assert.ok(result.csv.inputLength <= 250_000, `${route} CSV benchmark exceeded the raw input limit`);
+      assert.ok(result.csv.outputLength > 300_000 && result.csv.outputLength <= 500_000, `${route} CSV benchmark output was outside its expected bounded range`);
+      assert.ok(result.csv.elapsed < 5_000, `${route} near-limit CSV conversion took ${result.csv.elapsed} ms under 4x CPU throttling`);
+      assert.equal(result.json.status, 'success', `${route} failed the near-limit JSON-to-CSV probe`);
+      assert.equal(result.json.header, 'a,b', `${route} produced the wrong JSON-to-CSV header`);
+      assert.ok(result.json.inputLength <= 250_000, `${route} JSON benchmark exceeded the raw input limit`);
+      assert.ok(result.json.outputLength > 80_000 && result.json.outputLength <= 500_000, `${route} JSON benchmark output was outside its expected bounded range`);
+      assert.ok(result.json.elapsed < 5_000, `${route} near-limit JSON conversion took ${result.json.elapsed} ms under 4x CPU throttling`);
+      assert.equal(result.worstField.status, 'success', `${route} did not complete max-size single-field CSV conversion`);
+      assert.equal(result.worstField.inputLength, 250_000, `${route} did not test the raw CSV input boundary`);
+      assert.equal(result.worstField.cellLength, 250_000, `${route} corrupted a maximum-size CSV field`);
+      assert.ok(result.worstField.outputLength <= 500_000, `${route} exceeded the CSV output bound for one large field`);
+      assert.ok(result.worstField.elapsed < 5_000, `${route} maximum-size single-field CSV conversion took ${result.worstField.elapsed} ms under 4x CPU throttling`);
+      csvWorstFieldPerformance.push({ route, kind: 'plain', ...result.worstField });
+      assert.equal(result.worstQuotedField.status, 'success', `${route} did not complete max-size quoted-field CSV conversion`);
+      assert.equal(result.worstQuotedField.inputLength, 250_000, `${route} did not test the quoted CSV input boundary`);
+      assert.equal(result.worstQuotedField.cellLength, 124_999, `${route} changed the number of escaped quotes in a maximum-size field`);
+      assert.equal(result.worstQuotedField.quoteCharactersPreserved, true, `${route} corrupted doubled quote escapes`);
+      assert.ok(result.worstQuotedField.outputLength <= 500_000, `${route} exceeded the CSV output bound for a quoted field`);
+      assert.ok(result.worstQuotedField.elapsed < 5_000, `${route} maximum-size quoted-field conversion took ${result.worstQuotedField.elapsed} ms under 4x CPU throttling`);
+      csvWorstFieldPerformance.push({ route, kind: 'quoted', ...result.worstQuotedField });
+      csvPerformance.push({ route, ...result });
+    }
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+
     const cronPerformance = [];
     await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
     for (const route of CRON_ROUTES) {
@@ -1411,6 +1725,7 @@ async function runAcceptance() {
       cronMobile,
       yamlMobile,
       xmlMobile,
+      csvMobile,
       jwtStorage,
       textDiffNavigation,
       textDiffHistory,
@@ -1421,8 +1736,12 @@ async function runAcceptance() {
       cronHistory,
       yamlHistory,
       xmlHistory,
+      csvHistory,
+      csvLifecycle,
       yamlPerformance,
       xmlPerformance,
+      csvPerformance,
+      csvWorstFieldPerformance,
       cronPerformance,
       passwordResults,
       privacyFlows: privacy,
@@ -1453,7 +1772,7 @@ async function runAcceptance() {
 }
 
 module.exports = {
-  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, XML_ROUTES, XML_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
+  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, XML_ROUTES, XML_MOBILE_WIDTH, CSV_ROUTES, CSV_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
   runAcceptance, startStaticServer, stopBrowser, stopServer, browserBinary,
 };
 

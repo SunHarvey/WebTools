@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>CSV / TSV 与 JSON 转换器 | UtilCover</title>
+  <meta name="description" content="在浏览器本地转换 CSV、TSV 与扁平 JSON。支持带引号字段、可选表头和明确分隔符；数据不会上传。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/csv/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/csv/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/csv/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/csv/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/csv/csv.css">
+  <meta property="og:title" content="CSV / TSV 与 JSON 转换器 | UtilCover">
+  <meta property="og:description" content="在浏览器本地转换 CSV、TSV 与扁平 JSON，不会上传或使用第三方转换服务。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/zh/csv/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/zh/csv/#application",
+      "name": "CSV / TSV 与 JSON 转换器",
+      "url": "https://www.utilcover.com/zh/csv/",
+      "description": "在浏览器本地转换 CSV、TSV 与扁平 JSON。支持带引号字段、可选表头和明确分隔符；数据不会上传。",
+      "inLanguage": "zh-CN",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/zh/csv/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "工具",
+          "item": "https://www.utilcover.com/zh/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "CSV / TSV 与 JSON 转换器",
+          "item": "https://www.utilcover.com/zh/csv/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="platform-nav nav-links"><a href="/zh/#popular-tools">工具</a><a href="/zh/#categories">分类</a><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><button class="search-trigger" type="button" aria-label="搜索工具">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/csv/">English</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>CSV / TSV 与 JSON 转换器</h1><p>在浏览器本地转换逗号或制表符分隔的表格与扁平 JSON 数组，不需要上传数据。</p></section>
+  <section class="tool-card csv-card" aria-label="CSV、TSV 与 JSON 转换器">
+    <p class="local-processing-note">输入仅在当前浏览器中处理，不会上传、保存或加入最近使用记录。</p>
+    <div class="csv-controls">
+      <div class="field"><label for="csvMode">转换方向</label><select id="csvMode"><option value="csv-to-json">CSV / TSV 转 JSON</option><option value="json-to-csv">JSON 转 CSV / TSV</option></select></div>
+      <div class="field"><label for="csvDelimiter">分隔符</label><select id="csvDelimiter"><option value="comma">逗号 (,)</option><option value="tab">制表符 (TSV)</option></select></div>
+      <div id="csvHeaderRow" class="checkbox-row"><label for="csvHeader"><input id="csvHeader" type="checkbox" checked> 第一行包含表头</label></div>
+      <div class="csv-actions"><button id="csvExample" class="secondary" type="button">载入示例</button><button id="runCsv" type="button">转换</button><button id="copyCsv" class="secondary" type="button" disabled>复制结果</button><button id="clearCsv" class="danger" type="button">清除</button></div>
+    </div>
+    <p id="csvModeHelp" class="csv-mode-help">CSV 单元格会作为字符串处理；不会猜测数字或布尔值。</p>
+    <div class="grid-2 csv-workspace">
+      <div class="field"><label id="csvInputLabel" for="csvInput">CSV / TSV 输入</label><textarea id="csvInput" maxlength="250000" spellcheck="false" autocomplete="off" placeholder="name,code&#10;Ada,007"></textarea><small>仅粘贴文本。最多 250,000 个字符。可按 Ctrl+Enter 或 ⌘+Enter 转换。</small></div>
+      <div class="field"><label id="csvOutputLabel" for="csvOutput">JSON 输出</label><textarea id="csvOutput" class="output" readonly spellcheck="false" aria-live="polite" placeholder="转换结果将显示在这里。"></textarea><small>输出最多 500,000 个字符，并且只保留在当前页面中。</small></div>
+    </div>
+    <p class="csv-spreadsheet-warning" role="note">普通 CSV 并不是电子表格公式净化器。电子表格软件可能会把类似公式的单元格内容当作指令；打开不可信数据前请先检查。</p>
+    <div id="csvStatus" class="status" role="status" aria-live="polite" data-state="ready">选择转换方向并粘贴数据，然后开始转换。</div>
+  </section>
+  <section class="tool-guide" aria-labelledby="csv-guide-title">
+    <div class="guide-intro"><h2 id="csv-guide-title">在本地转换 CSV、TSV 与 JSON</h2><p>本工具会按 CSV 引号规则解析字段，不会简单地按逗号或换行拆分文本。你可以明确选择逗号或制表符，选择是否使用表头，并在 CSV 与 JSON 之间双向转换。CSV 单元格始终作为字符串，不猜测数字、布尔值或日期；JSON 数字以原始文本写出，避免 JavaScript 浮点数舍入改变大整数。输入、输出和结构均有限制，页面不会上传或保存你的数据。</p></div>
+    <div class="guide-section how-to"><h2>如何使用 CSV / TSV 转换器</h2><ol class="steps"><li><strong>选择转换方向和分隔符。</strong><span>选择 CSV / TSV 转 JSON，或 JSON 转 CSV / TSV，然后明确选择逗号或制表符。工具不会自动猜测分隔符。解析 CSV 时，还可以选择第一条记录是否包含表头。</span></li><li><strong>粘贴一张表格或一个 JSON 数组。</strong><span>在输入框中粘贴普通文本。带引号的 CSV 字段可以包含逗号、制表符、双引号转义和字段内换行。启用表头后，每条 CSV 记录的字段数量必须一致。</span></li><li><strong>转换、检查并复制。</strong><span>开始转换后，请先检查结果再复制。错误消息会按页面语言显示，不会回显你的输入。点击清除或离开页面，临时数据会从页面内存中清理。</span></li></ol></div>
+    <div class="guide-section examples"><h2>CSV 与 JSON 转换示例</h2><div class="example-grid"><article><h3>保留前导零和看似布尔值的文本</h3><p>输入表头 <code>code,active</code> 和数据 <code>007,true</code>，CSV 转 JSON 会得到 <code>{"code":"007","active":"true"}</code>。每个 CSV 单元格始终是字符串，不会把编号、布尔值、日期或类似空值的内容自动转换类型，避免表格中的文本被改写。</p></article><article><h3>解析带逗号和换行的引用字段</h3><p>字段 <code>"said ""hello, world"""</code> 会解析为 <code>said "hello, world"</code>。引用字段也可以跨越物理行；其中的换行保留在同一个单元格中，不会意外产生新记录。记录分隔符支持 CRLF、LF 和 CR。</p></article><article><h3>导出扁平 JSON 对象数组</h3><p><code>[{"name":"Ada","code":7},{"name":"Lin","active":true}]</code> 会按首次出现的属性顺序生成表头。某行缺少的属性会写成空白字段。标量值会写为文本；JSON 数字按原始数字文本保留，包括大整数的每一位。</p></article></div></div>
+    <div class="guide-section limitations"><h2>支持的数据、校验规则和限制</h2><p>CSV 转 JSON 时，分隔符必须明确选择逗号或制表符。解析器支持带引号字段、双引号转义、引用字段内的分隔符以及字段内换行，并支持 CRLF、LF 和 CR 作为记录分隔符。启用表头时，表头必须唯一且非空，每条记录的字段数必须一致。关闭表头后，每条记录会转换为数组。工具不会猜测单元格的数据类型。</p><p>JSON 转 CSV 仅接受顶层的扁平对象数组。嵌套数组或对象不受支持，遇到时会明确报错，不会静默展开或丢弃数据。空属性名和重复 JSON 对象属性名会被拒绝，因为它们无法形成可靠的 CSV 表头。属性按 JSON 源文本中首次出现的顺序合并；缺失属性会写为空白字段。JSON 字符串会解码为文本，布尔值和 null 分别写为 <code>true</code>、<code>false</code> 和 <code>null</code>。数字词法片段会从 JSON 源文本直接保留，避免 JavaScript 浮点数舍入大整数。</p><p>转换前会检查资源上限：原始输入最多 250,000 个字符；CSV 记录总数最多 10,000 条，其中包含表头；每条记录最多 256 列；全部单元格合计最多 20,000 个。JSON 嵌套最多 100 层，序列化输出最多 500,000 个字符。达到限制时会清除旧输出并显示错误。限制旨在约束浏览器工作量，并不保证所有设备都能瞬间处理最大输入。</p><p>输出是普通 CSV 文本，不会执行电子表格专用的安全改写。CSV 引号可以保留字段边界，但不能让类似公式的内容在电子表格软件中自动变得安全。某些电子表格可能会将以公式标记开头的内容当作指令。打开来自不可信来源的数据前请先检查；本工具不会擅自改写单元格，也不会声称完成了公式净化。</p><p>所有转换均由页面中的本地 JavaScript 完成。CSV 或 JSON 输入不会上传、发送到 API、写入浏览器存储或加入最近工具记录。工具不提供文件上传。点击清除、离开页面或通过浏览器历史返回时，输入、输出和选项都会清理。</p></div>
+    <div class="guide-section faq-list"><h2>CSV / TSV 转换器常见问题</h2><details><summary>工具会自动判断分隔符是逗号还是制表符吗？</summary><p>不会。CSV 请选择逗号，TSV 请选择制表符。输入和输出都使用当前选择的分隔符，避免自动猜测导致转换结果不确定。</p></details><details><summary>CSV 中的数字会转换成 JSON 数字吗？</summary><p>不会。CSV 单元格始终作为字符串，因此 <code>007</code>、<code>true</code> 和日期样式文本都会原样作为文本保留。JSON 转 CSV 时，标量也会写为单元格文本，并保留数字的原始源文本。</p></details><details><summary>嵌套对象或数组可以转成 CSV 吗？</summary><p>不可以。JSON 转 CSV 只接受顶层扁平对象数组。遇到嵌套数组或对象会明确报错，不会静默展开、合并或丢弃。</p></details><details><summary>输出的 CSV 可以安全地直接用电子表格打开吗？</summary><p>这只是普通 CSV，并不是公式净化器。电子表格软件可能会解释类似公式的单元格内容。打开不可信数据前请检查，不能把 CSV 引号当成安全处理。</p></details><details><summary>我的输入会上传或保存吗？</summary><p>不会。转换在浏览器本地进行。页面不会把数据发送到服务器或第三方 API，不会将内容保存到浏览器存储或最近记录，并会在离开页面时清除临时输入和输出。</p></details></div>
+    <nav class="related-tools" data-related-tools="csv" aria-label="相关工具"><h2>相关工具</h2><div class="related-links"><a href="/zh/json/"><strong>JSON 格式化</strong><span>格式化、压缩、验证并浏览 JSON。</span></a><a href="/zh/yaml/"><strong>YAML 格式化工具</strong><span>在本地格式化 YAML 并转换 YAML 与 JSON。</span></a><a href="/zh/xml/"><strong>XML 格式化与校验工具</strong><span>在本地格式化 XML 并检查文档是否良构。</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="页脚导航"><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><a href="/zh/contact/">联系</a><a href="/zh/licenses/">开源许可</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · 私密、快速的浏览器本地工具</p></footer>
+<script type="module" src="/csv/csv-app.mjs"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

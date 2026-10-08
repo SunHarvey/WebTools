@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>CSV / TSV ↔ JSON Converter | UtilCover</title>
+  <meta name="description" content="Convert CSV, TSV and flat JSON in your browser locally. Quoted fields, optional headers and explicit delimiters; no upload.">
+  <link rel="canonical" href="https://www.utilcover.com/csv/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/csv/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/csv/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/csv/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/csv/csv.css">
+  <meta property="og:title" content="CSV / TSV ↔ JSON Converter | UtilCover">
+  <meta property="og:description" content="Convert CSV, TSV and flat JSON in your browser locally. No upload or third-party conversion service.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/csv/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/csv/#application",
+      "name": "CSV / TSV ↔ JSON Converter",
+      "url": "https://www.utilcover.com/csv/",
+      "description": "Convert CSV, TSV and flat JSON in your browser locally. Quoted fields, optional headers and explicit delimiters; no upload.",
+      "inLanguage": "en",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/csv/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tools",
+          "item": "https://www.utilcover.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "CSV / TSV ↔ JSON Converter",
+          "item": "https://www.utilcover.com/csv/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/csv/">中文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>CSV / TSV ↔ JSON Converter</h1><p>Convert comma- or tab-delimited tables and flat JSON arrays in your browser, without uploading your data.</p></section>
+  <section class="tool-card csv-card" aria-label="CSV, TSV and JSON converter">
+    <p class="local-processing-note">Your input stays in this browser. It is not uploaded, saved, or added to recent-tool history.</p>
+    <div class="csv-controls">
+      <div class="field"><label for="csvMode">Conversion direction</label><select id="csvMode"><option value="csv-to-json">CSV / TSV to JSON</option><option value="json-to-csv">JSON to CSV / TSV</option></select></div>
+      <div class="field"><label for="csvDelimiter">Delimiter</label><select id="csvDelimiter"><option value="comma">Comma (,)</option><option value="tab">Tab (TSV)</option></select></div>
+      <div id="csvHeaderRow" class="checkbox-row"><label for="csvHeader"><input id="csvHeader" type="checkbox" checked> First row contains headers</label></div>
+      <div class="csv-actions"><button id="csvExample" class="secondary" type="button">Load example</button><button id="runCsv" type="button">Convert</button><button id="copyCsv" class="secondary" type="button" disabled>Copy result</button><button id="clearCsv" class="danger" type="button">Clear</button></div>
+    </div>
+    <p id="csvModeHelp" class="csv-mode-help">CSV cells stay strings; numbers and booleans are not inferred.</p>
+    <div class="grid-2 csv-workspace">
+      <div class="field"><label id="csvInputLabel" for="csvInput">CSV / TSV input</label><textarea id="csvInput" maxlength="250000" spellcheck="false" autocomplete="off" placeholder="name,code&#10;Ada,007"></textarea><small>Paste text only. Maximum 250,000 characters. Use Ctrl+Enter or ⌘+Enter to convert.</small></div>
+      <div class="field"><label id="csvOutputLabel" for="csvOutput">JSON output</label><textarea id="csvOutput" class="output" readonly spellcheck="false" aria-live="polite" placeholder="Converted output appears here."></textarea><small>Output is limited to 500,000 characters and is kept only in this page.</small></div>
+    </div>
+    <p class="csv-spreadsheet-warning" role="note">Plain CSV is not a spreadsheet formula sanitizer. Spreadsheet apps may interpret formula-like cell values; inspect untrusted data before opening it in a spreadsheet.</p>
+    <div id="csvStatus" class="status" role="status" aria-live="polite" data-state="ready">Choose a direction, paste data, then convert.</div>
+  </section>
+  <section class="tool-guide" aria-labelledby="csv-guide-title">
+    <div class="guide-intro"><h2 id="csv-guide-title">Convert CSV, TSV and JSON locally</h2><p>This browser-based CSV converter handles quoted fields rather than splitting rows on punctuation. It supports explicit comma or tab delimiters, optional headers, and conversions in both directions. CSV values remain strings; JSON numbers are preserved as their original source text instead of being rounded through JavaScript numbers. Input, output and structure are bounded, and the page does not upload or retain your data.</p></div>
+    <div class="guide-section how-to"><h2>How to use the CSV / TSV converter</h2><ol class="steps"><li><strong>Choose a direction and delimiter.</strong><span>Select CSV / TSV to JSON or JSON to CSV / TSV, then explicitly choose comma or tab. The tool does not guess the delimiter. For CSV input, choose whether the first record contains headers.</span></li><li><strong>Paste one table or JSON array.</strong><span>Paste plain text into the input. Quoted CSV fields can contain commas, tabs, doubled quotes and embedded line breaks. Use one consistent number of fields in every CSV record when headers are enabled.</span></li><li><strong>Convert, review and copy.</strong><span>Run the conversion and inspect the output before copying it. Errors are localized and do not echo your input. Clear the page or navigate away to erase temporary values from memory.</span></li></ol></div>
+    <div class="guide-section examples"><h2>Practical CSV and JSON examples</h2><div class="example-grid"><article><h3>Keep leading zeroes and boolean-looking values</h3><p>With <code>code,active</code> followed by <code>007,true</code>, CSV-to-JSON returns <code>{"code":"007","active":"true"}</code>. Every CSV cell remains a string; the converter does not infer numbers, booleans, dates or null values. This avoids changing identifiers and spreadsheet-like text during conversion.</p></article><article><h3>Convert quoted fields with commas and line breaks</h3><p>A field such as <code>"said ""hello, world"""</code> decodes to <code>said "hello, world"</code>. A quoted field may span physical lines; its embedded line break stays inside that cell instead of creating an extra record. The reader accepts CRLF, LF and CR record breaks.</p></article><article><h3>Export a flat JSON object array</h3><p><code>[{"name":"Ada","code":7},{"name":"Lin","active":true}]</code> becomes a CSV table with the first-seen property names as headers. Missing properties become blank fields. Scalar values are written as text, and numeric source text is preserved exactly, including large integer digits.</p></article></div></div>
+    <div class="guide-section limitations"><h2>Supported data, validation and limits</h2><p>For CSV-to-JSON, the delimiter must be selected as comma or tab. The parser supports quoted fields, doubled quotes, separators inside quoted fields, and embedded line breaks. It accepts CRLF, LF and CR record separators. With the header option enabled, header names must be unique and non-empty, and each record must have the same number of fields. With headers disabled, rows become arrays instead of objects. No type guessing is performed.</p><p>JSON-to-CSV accepts only a top-level array of flat objects. Nested arrays and objects are not supported and produce an explicit error rather than being flattened or silently discarded. Empty or duplicate JSON property names are rejected because they cannot become reliable CSV headers. Properties are collected in first-seen source order; a missing property becomes a blank field. JSON strings are decoded as text, booleans and null become the words <code>true</code>, <code>false</code> and <code>null</code>, and number tokens are preserved from the JSON source so JavaScript floating-point rounding does not alter large digits.</p><p>Limits apply before conversion: raw input is at most 250,000 characters, the CSV record budget is 10,000 records including a header row, each record has at most 256 columns, and the aggregate is at most 20,000 cells. JSON nesting is limited to 100 levels, and serialized output is capped at 500,000 characters. A limit error clears stale output. These bounds limit browser work; they do not promise that every device will process maximum-sized input instantly.</p><p>The output is ordinary CSV text, not a spreadsheet-specific safety transformation. CSV quoting preserves field boundaries but does not make formula-like values harmless in spreadsheet software. Some spreadsheet apps may interpret values beginning with formula markers as instructions. Review data from untrusted sources before opening the output in a spreadsheet; this tool deliberately does not rewrite cell values or claim formula sanitization.</p><p>Everything runs in the page with local JavaScript. No CSV or JSON input is uploaded, sent to an API, written to browser storage, or added to recent-tool history. There is no file upload. Input, output and selected options are cleared on the Clear button, when you leave the page, and when a page is restored through browser history.</p></div>
+    <div class="guide-section faq-list"><h2>CSV / TSV converter FAQ</h2><details><summary>Does the converter guess whether my delimiter is a comma or tab?</summary><p>No. Select comma for CSV or tab for TSV before running. The selected delimiter is applied to both input and output so a conversion never depends on automatic guessing.</p></details><details><summary>Are CSV numbers converted to JSON numbers?</summary><p>No. CSV cells always remain strings, so values such as <code>007</code>, <code>true</code> and date-like text are preserved as text. JSON-to-CSV also writes scalar values as cell text and preserves numeric source tokens.</p></details><details><summary>Can JSON with nested objects or arrays be converted?</summary><p>No. JSON-to-CSV accepts a top-level array of flat objects only. A nested array or object is rejected with an explicit message; the converter does not silently flatten it.</p></details><details><summary>Is the CSV output safe to open in a spreadsheet?</summary><p>This is plain CSV, not a formula sanitizer. Spreadsheet programs may interpret formula-like cell contents. Review untrusted values before opening the file, and do not treat CSV quoting as a security transformation.</p></details><details><summary>Is my input uploaded or saved?</summary><p>No. Conversion happens locally in your browser. The page sends no data to a server or third-party API, does not save content in browser storage or recent-tool history, and clears temporary input and output on navigation.</p></details></div>
+    <nav class="related-tools" data-related-tools="csv" aria-label="Related tools"><h2>Related tools</h2><div class="related-links"><a href="/json/"><strong>JSON Formatter</strong><span>Format, minify, validate and explore JSON.</span></a><a href="/yaml/"><strong>YAML Formatter</strong><span>Format YAML and convert YAML and JSON locally.</span></a><a href="/xml/"><strong>XML Formatter</strong><span>Format XML and check well-formedness locally.</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/licenses/">Licenses</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · Private, fast, client-side utilities</p></footer>
+<script type="module" src="/csv/csv-app.mjs"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

@@ -296,6 +296,54 @@ test('XML pages document local well-formedness validation, formatting limits, an
   }
 });
 
+test('CSV and TSV pages explain local conversion semantics, exact limits, and spreadsheet caveats in both locales', () => {
+  assertGuide('csv/index.html', 'en', ['/json/', '/yaml/', '/xml/']);
+  assertGuide('zh/csv/index.html', 'zh', ['/zh/json/', '/zh/yaml/', '/zh/xml/']);
+  assertMetadata('csv/index.html', /CSV.*TSV.*JSON.*Converter/i, /CSV.*TSV.*JSON.*browser.*locally/i);
+  assertMetadata('zh/csv/index.html', /CSV.*TSV.*JSON.*(?:转换器|转换工具)/, /本地.*CSV.*TSV.*JSON/);
+  const english = guideFor('csv/index.html').text;
+  assert.match(english, /comma.*tab|tab.*comma/i);
+  assert.match(english, /doubled quotes|escaped quotes/i);
+  assert.match(english, /embedded line breaks/i);
+  assert.match(english, /CRLF.*LF.*CR|CR.*LF.*CRLF/i);
+  assert.match(english, /CSV values remain strings|every CSV cell remains a string|all values.*strings/i);
+  assert.match(english, /unique.*non-empty headers|header names.*unique and non-empty/i);
+  assert.match(english, /same number of fields|ragged rows/i);
+  assert.match(english, /array of flat objects/i);
+  assert.match(english, /nested.*not supported/i);
+  assert.match(english, /missing.*blank/i);
+  assert.match(english, /duplicate JSON.*(?:reject|error)/i);
+  assert.match(english, /numeric source text|preserv.*number.*precision/i);
+  assert.match(english, /250,000/);
+  assert.match(english, /10,000/);
+  assert.match(english, /256 columns/);
+  assert.match(english, /20,000 cells/);
+  assert.match(english, /500,000/);
+  assert.match(english, /spreadsheet|formula/i);
+  assert.match(english, /not uploaded|does not upload/i);
+
+  const chinese = guideFor('zh/csv/index.html').text;
+  assert.match(chinese, /逗号.*制表符|制表符.*逗号/);
+  assert.match(chinese, /双引号|引号转义/);
+  assert.match(chinese, /换行/);
+  assert.match(chinese, /CRLF.*LF.*CR/);
+  assert.match(chinese, /单元格.*字符串/);
+  assert.match(chinese, /表头.*唯一.*非空|唯一.*非空表头/);
+  assert.match(chinese, /字段数.*一致/);
+  assert.match(chinese, /扁平对象数组/);
+  assert.match(chinese, /嵌套.*不(?:受)?支持/);
+  assert.match(chinese, /缺失.*空白/);
+  assert.match(chinese, /重复 JSON.*属性.*拒绝/);
+  assert.match(chinese, /数字.*原始文本/);
+  assert.match(chinese, /250,000/);
+  assert.match(chinese, /10,000/);
+  assert.match(chinese, /256 列/);
+  assert.match(chinese, /20,000/);
+  assert.match(chinese, /500,000/);
+  assert.match(chinese, /电子表格|公式/);
+  assert.match(chinese, /不会上传/);
+});
+
 test('encode pages explain UTF-8 Base64 and URL component conversion honestly in each locale', () => {
   assertGuide('encode/index.html', 'en', ['/text/', '/json/', '/hash/']);
   assertGuide('zh/encode/index.html', 'zh', ['/zh/text/', '/zh/json/', '/zh/hash/']);

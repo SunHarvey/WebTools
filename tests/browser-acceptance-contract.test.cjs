@@ -26,13 +26,14 @@ test('browser acceptance covers every required EN and ZH mobile route', () => {
     '/cron/', '/zh/cron/',
     '/yaml/', '/zh/yaml/',
     '/xml/', '/zh/xml/',
+    '/csv/', '/zh/csv/',
   ]);
 });
 
 test('browser acceptance exercises all privacy-critical tools', () => {
   const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
   assert.deepEqual(Object.keys(acceptance.PRIVACY_FLOWS), [
-    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/', '/yaml/', '/zh/yaml/', '/xml/', '/zh/xml/',
+    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/', '/yaml/', '/zh/yaml/', '/xml/', '/zh/xml/', '/csv/', '/zh/csv/',
   ]);
 });
 
@@ -108,6 +109,24 @@ test('browser acceptance verifies localized XML formatting, validation, privacy,
   assert.match(source, /did not clear XML input and output/);
   assert.match(source, /xmlHistory/);
   assert.match(source, /xmlPerformance/);
+});
+
+test('browser acceptance verifies localized CSV/TSV conversion, privacy, history cleanup, and bounds', () => {
+  const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
+  assert.deepEqual(acceptance.CSV_ROUTES, ['/csv/', '/zh/csv/']);
+  assert.equal(acceptance.CSV_MOBILE_WIDTH, 320);
+  for (const route of acceptance.CSV_ROUTES) assert.ok(acceptance.PRIVACY_FLOWS[route]);
+  const source = fs.readFileSync(path.join(root, 'scripts/browser-acceptance.cjs'), 'utf8');
+  assert.match(source, /did not convert quoted CSV to string-valued JSON/);
+  assert.match(source, /did not convert JSON numbers without precision loss/);
+  assert.match(source, /did not reject malformed CSV/);
+  assert.match(source, /exposed English CSV error details to Chinese users/);
+  assert.match(source, /did not reject nested JSON cell values/);
+  assert.match(source, /did not clear CSV input, output, and options/);
+  assert.match(source, /csvHistory/);
+  assert.match(source, /csvLifecycle/);
+  assert.match(source, /csvWorstFieldPerformance/);
+  assert.match(source, /csvPerformance/);
 });
 
 test('package exposes the durable browser acceptance command', () => {
