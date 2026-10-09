@@ -27,13 +27,14 @@ test('browser acceptance covers every required EN and ZH mobile route', () => {
     '/yaml/', '/zh/yaml/',
     '/xml/', '/zh/xml/',
     '/csv/', '/zh/csv/',
+    '/sql/', '/zh/sql/',
   ]);
 });
 
 test('browser acceptance exercises all privacy-critical tools', () => {
   const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
   assert.deepEqual(Object.keys(acceptance.PRIVACY_FLOWS), [
-    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/', '/yaml/', '/zh/yaml/', '/xml/', '/zh/xml/', '/csv/', '/zh/csv/',
+    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/', '/yaml/', '/zh/yaml/', '/xml/', '/zh/xml/', '/csv/', '/zh/csv/', '/sql/', '/zh/sql/',
   ]);
 });
 
@@ -127,6 +128,20 @@ test('browser acceptance verifies localized CSV/TSV conversion, privacy, history
   assert.match(source, /csvLifecycle/);
   assert.match(source, /csvWorstFieldPerformance/);
   assert.match(source, /csvPerformance/);
+});
+
+test('browser acceptance verifies localized SQL formatting, privacy, history cleanup, and resource limits', () => {
+  const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
+  assert.deepEqual(acceptance.SQL_ROUTES, ['/sql/', '/zh/sql/']);
+  assert.equal(acceptance.SQL_MOBILE_WIDTH, 320);
+  for (const route of acceptance.SQL_ROUTES) assert.ok(acceptance.PRIVACY_FLOWS[route]);
+  const source = fs.readFileSync(path.join(root, 'scripts/browser-acceptance.cjs'), 'utf8');
+  assert.match(source, /did not format SQL locally/);
+  assert.match(source, /did not minify SQL locally/);
+  assert.match(source, /did not clear SQL input, output, and options/);
+  assert.match(source, /sqlHistory/);
+  assert.match(source, /sqlLifecycle/);
+  assert.match(source, /sqlPerformance/);
 });
 
 test('package exposes the durable browser acceptance command', () => {

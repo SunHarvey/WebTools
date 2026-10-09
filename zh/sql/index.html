@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>SQL 格式化与压缩工具：PostgreSQL、MySQL、SQLite | UtilCover</title>
+  <meta name="description" content="在浏览器本地格式化并压缩 PostgreSQL、MySQL 和 SQLite SQL。保留注释与带引号的内容；不会执行或上传 SQL。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/sql/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/sql/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/sql/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/sql/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/sql/sql.css">
+  <meta property="og:title" content="SQL 格式化与压缩工具 | UtilCover">
+  <meta property="og:description" content="在本地格式化并压缩 SQL，不执行查询、不上传内容，也不调用远程服务。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/zh/sql/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/zh/sql/#application",
+      "name": "SQL 格式化与压缩工具",
+      "url": "https://www.utilcover.com/zh/sql/",
+      "description": "在浏览器本地格式化并压缩 PostgreSQL、MySQL 和 SQLite SQL。保留注释与带引号的内容；不会执行或上传 SQL。",
+      "inLanguage": "zh-CN",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/zh/sql/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "工具",
+          "item": "https://www.utilcover.com/zh/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "SQL 格式化与压缩工具",
+          "item": "https://www.utilcover.com/zh/sql/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="platform-nav nav-links"><a href="/zh/#popular-tools">工具</a><a href="/zh/#categories">分类</a><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><button class="search-trigger" type="button" aria-label="搜索工具">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/sql/">English</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>SQL 格式化与压缩工具</h1><p>在本地整理 SQL 语句，或压缩空白字符。可选择识别不同方言的词法规则；工具不会执行语句，也不会发送内容。</p></section>
+  <section class="tool-card sql-card" aria-label="本地 SQL 格式化与压缩工具">
+    <p class="local-processing-note">SQL 内容只留在此浏览器中，不会上传、保存或加入最近使用记录。</p>
+    <div class="sql-controls">
+      <div class="field"><label for="sqlMode">处理方式</label><select id="sqlMode"><option value="format">格式化</option><option value="minify">压缩空白</option></select></div>
+      <div class="field"><label for="sqlDialect">SQL 方言</label><select id="sqlDialect"><option value="postgres">PostgreSQL</option><option value="mysql">MySQL</option><option value="sqlite">SQLite</option></select></div>
+      <div class="field"><label for="sqlKeywordCase">识别到的关键字大小写</label><select id="sqlKeywordCase"><option value="upper">大写</option><option value="lower">小写</option><option value="preserve">保留输入大小写</option></select></div>
+      <div class="field"><label for="sqlIndent">缩进</label><select id="sqlIndent"><option value="2">2 个空格</option><option value="4">4 个空格</option></select></div>
+      <div class="sql-actions"><button id="sqlExample" class="secondary" type="button">载入示例</button><button id="runSql" type="button">处理 SQL</button><button id="copySql" class="secondary" type="button" disabled>复制输出</button><button id="clearSql" class="danger" type="button">清除</button></div>
+    </div>
+    <div class="grid-2 sql-workspace">
+      <div class="field"><label for="sqlInput">SQL 输入</label><textarea id="sqlInput" maxlength="250000" spellcheck="false" autocomplete="off" placeholder="SELECT id, name FROM users WHERE active = TRUE;"></textarea><small>仅粘贴 SQL 文本，最多 250,000 个字符。按 Ctrl+Enter 或 ⌘+Enter 开始处理。</small></div>
+      <div class="field"><label for="sqlOutput">SQL 输出</label><textarea id="sqlOutput" class="output" readonly spellcheck="false" aria-live="polite" placeholder="处理后的 SQL 将显示在这里。"></textarea><small>输出最多 500,000 个字符，仅保存在当前页面。</small></div>
+    </div>
+    <p class="sql-limit-note" role="note">这是词法格式化工具，不是 SQL 解析器、校验器或数据库客户端。使用结果前请自行检查。</p>
+    <div id="sqlStatus" class="status" role="status" aria-live="polite" data-state="ready">粘贴 SQL，选择方言与样式，然后在本地处理。</div>
+  </section>
+  <section class="tool-guide" aria-labelledby="sql-guide-title">
+    <div class="guide-intro"><h2 id="sql-guide-title">在本地格式化 SQL，不执行查询</h2><p>这个浏览器 SQL 格式化工具会整理较长的语句，也可以压缩空白，让 SQL 更易阅读或更紧凑。它会识别常见子句、运算符、括号、带引号的值、带引号的标识符和注释，因此关键字大小写与换行不会改写字符串或注释内部的文本。选择 PostgreSQL、MySQL 或 SQLite，可应用常见引用和注释形式的词法规则。所有处理都在浏览器本地完成；工具不会连接数据库、执行语句，也不会上传查询内容。</p></div>
+    <div class="guide-section how-to"><h2>如何使用 SQL 格式化工具</h2><ol class="steps"><li><strong>选择处理方式和方言。</strong><span>选择“格式化”以按子句换行并缩进，或选择“压缩空白”以缩短排版。根据 SQL 选择 PostgreSQL、MySQL 或 SQLite，以正确处理常见的引用和注释形式。</span></li><li><strong>设置关键字大小写和缩进。</strong><span>识别到的未引用 SQL 关键字可以转换为大写、小写，也可以保持原样。缩进支持 2 个或 4 个空格。带引号的标识符、字符串和注释保留原文。</span></li><li><strong>粘贴、处理、检查并复制。</strong><span>可先载入示例，再运行处理并检查结果。此工具不会校验数据库语法或执行 SQL。清除页面或离开页面即可擦除内存中的临时内容。</span></li></ol></div>
+    <div class="guide-section examples"><h2>SQL 格式化与压缩示例</h2><div class="example-grid"><article><h3>按子句展开查询</h3><p><code>select id,name from users where active=true order by id</code> 会在 <code>FROM</code>、<code>WHERE</code> 和 <code>ORDER BY</code> 前换行，并将逗号分隔的项目整理到易读的行中。转换关键字大小写时，不会更改带引号的值。</p></article><article><h3>压缩空白但不删除注释</h3><p>压缩 <code>SELECT a, b FROM t -- keep this note</code> 会去掉标点周围多余的空格并收紧排版，但会保留注释及其必要的换行。块注释和数据库提示也会保留，不会被删除。</p></article><article><h3>识别方言常见引用方式</h3><p>PostgreSQL 美元引用字符串、MySQL 反引号和井号注释、SQLite 方括号标识符都会作为完整词法内容保留。遇到这些写法时请选择对应方言。工具并不声称理解所有厂商扩展或完整 SQL 语法。</p></article></div></div>
+    <div class="guide-section limitations"><h2>支持范围与资源限制</h2><p>本工具只进行识别词法单元的空白格式化，不会建立数据库语法树，不会验证查询是否合法、检查表结构或函数名、改写查询逻辑，也不会执行语句。它支持常见子句、标点、比较与算术运算符、单引号和双引号内容、常见引用标识符、行注释和块注释，以及部分方言引用形式，例如 PostgreSQL 美元字符串、MySQL 反引号和井号注释、SQLite 方括号标识符。PostgreSQL 嵌套块注释会按嵌套规则识别；MySQL 的双连字符只有在后面跟空白时才按行注释处理。此工具无法配置 SQL 模式或会话级字符串设置，包括 MySQL ANSI_QUOTES、NO_BACKSLASH_ESCAPES 和 PostgreSQL standard_conforming_strings；依赖其他设置的语句可能会被不同地识别。较少见的过程式语法、厂商扩展以及词法完整但语法错误的语句，排版结果可能不理想。请在其他环境执行前自行检查生成文本。</p><p>格式化会规范空白，并可能将子句或逗号分隔项目换到不同的行；带引号的值、带引号的标识符和注释内部的词元不会改写。关键字大小写选项只作用于识别到的未引用单词；如果未引用标识符恰好与保留关键字同名，也可能被调整大小写。压缩模式仍会保留注释和带引号的内容，因为注释可能包含优化器提示或其他有意义的指令。压缩模式会保留每个左括号前原有的空格；在某些方言或 SQL 模式下，这些空格可能影响函数名的解析。</p><p>原始输入最多 250,000 个字符，最多处理 50,000 个词法单元，括号嵌套最多 100 层，输出最多 500,000 个字符。这些独立限制用于约束浏览器工作量和输出大小，不代表任何设备都能瞬间处理最大输入。输入不会写入 localStorage、sessionStorage、Cookie、服务器日志或最近工具记录。离开页面以及从浏览器历史恢复页面时，临时输入和输出都会清除。</p><p>此页面是文本格式化器，不是安全的 SQL 执行环境。不要在这里运行数据库命令，也不要把格式化结果当作权限审查或查询安全检查。除非你主动复制，SQL 会一直留在当前页面。</p></div>
+    <div class="guide-section faq-list"><h2>SQL 格式化工具常见问题</h2><details><summary>这个工具会执行或校验 SQL 吗？</summary><p>不会。它只通过识别词法内容来调整空白和已识别关键字的大小写，不会连接数据库、执行语句、校验表结构，也不能保证 SQL 语法有效。</p></details><details><summary>支持哪些 SQL 方言？</summary><p>可选择 PostgreSQL、MySQL 或 SQLite，以处理常见的引用与注释词法差异。这不是完整的厂商语法支持；较少见的扩展和过程式 SQL 可能无法理想排版。</p></details><details><summary>压缩时会删除注释吗？</summary><p>不会。行注释和块注释都会保留，包括优化器提示；行注释后的换行也会保留，以免后续 SQL 被并入注释。</p></details><details><summary>我的 SQL 会被上传或保存吗？</summary><p>不会。格式化和压缩都在浏览器本地运行，不会把 SQL 发送到服务器或第三方 API，不会保存到浏览器存储或最近工具记录，并会在离开页面时清除临时值。</p></details></div>
+    <nav class="related-tools" data-related-tools="sql" aria-label="相关工具"><h2>相关工具</h2><div class="related-links"><a href="/zh/json/"><strong>JSON 格式化</strong><span>格式化、压缩、验证并浏览 JSON。</span></a><a href="/zh/csv/"><strong>CSV / TSV 与 JSON 转换器</strong><span>在本地转换 CSV/TSV 表格与扁平 JSON 数组。</span></a><a href="/zh/yaml/"><strong>YAML 格式化工具</strong><span>在本地格式化 YAML 并转换 YAML 与 JSON。</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="页脚导航"><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><a href="/zh/contact/">联系</a><a href="/zh/licenses/">开源许可</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · 私密、快速的浏览器本地工具</p></footer>
+<script type="module" src="/sql/sql-app.mjs"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

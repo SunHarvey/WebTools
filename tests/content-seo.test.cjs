@@ -344,6 +344,36 @@ test('CSV and TSV pages explain local conversion semantics, exact limits, and sp
   assert.match(chinese, /不会上传/);
 });
 
+test('SQL pages explain dialect-aware local formatting without claiming validation or execution', () => {
+  assertGuide('sql/index.html', 'en', ['/json/', '/csv/', '/yaml/']);
+  assertGuide('zh/sql/index.html', 'zh', ['/zh/json/', '/zh/csv/', '/zh/yaml/']);
+  assertMetadata('sql/index.html', /SQL Formatter.*Minifier/i, /PostgreSQL.*MySQL.*SQLite.*locally/i);
+  assertMetadata('zh/sql/index.html', /SQL.*格式化.*压缩/, /本地.*PostgreSQL.*MySQL.*SQLite/);
+  const english = guideFor('sql/index.html').text;
+  assert.match(english, /token-aware whitespace formatting only/i);
+  assert.match(english, /does not.*(?:validate|execute)/i);
+  assert.match(english, /dollar-quoted/);
+  assert.match(english, /ANSI_QUOTES|NO_BACKSLASH_ESCAPES|SQL modes are not configurable/i);
+  assert.match(english, /optimizer hints.*preserved/i);
+  assert.match(english, /preserves whitespace before each opening parenthesis as entered/i);
+  assert.match(english, /50,000 tokens/);
+  assert.match(english, /100 levels/);
+  assert.match(english, /250,000/);
+  assert.match(english, /500,000/);
+  assert.match(english, /does not send SQL|does not upload/i);
+  const chinese = guideFor('zh/sql/index.html').text;
+  assert.match(chinese, /识别词法单元.*空白格式化/);
+  assert.match(chinese, /不会.*(?:校验|执行)/);
+  assert.match(chinese, /SQL 模式|会话设置/);
+  assert.match(chinese, /优化器提示.*保留/);
+  assert.match(chinese, /左括号前.*空格.*保留/);
+  assert.match(chinese, /50,000.*词法单元/);
+  assert.match(chinese, /100 层/);
+  assert.match(chinese, /250,000/);
+  assert.match(chinese, /500,000/);
+  assert.match(chinese, /不会上传/);
+});
+
 test('encode pages explain UTF-8 Base64 and URL component conversion honestly in each locale', () => {
   assertGuide('encode/index.html', 'en', ['/text/', '/json/', '/hash/']);
   assertGuide('zh/encode/index.html', 'zh', ['/zh/text/', '/zh/json/', '/zh/hash/']);

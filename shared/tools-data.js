@@ -22,6 +22,7 @@ const TOOLS = [
   { id: 'yaml', icon: 'YAML', category: 'developer', popular: false, recordRecent: false, name: { en: 'YAML Formatter', zh: 'YAML 格式化工具' }, description: { en: 'Format YAML and convert YAML and JSON locally.', zh: '在本地格式化 YAML 并转换 YAML 与 JSON。' }, keywords: ['yaml', 'yml', 'format', 'formatter', 'validator', 'json', 'configuration'] },
   { id: 'xml', icon: 'XML', category: 'developer', popular: false, recordRecent: false, name: { en: 'XML Formatter', zh: 'XML 格式化与校验工具' }, description: { en: 'Format XML and check well-formedness locally.', zh: '在本地格式化 XML 并检查文档是否良构。' }, keywords: ['xml', 'format', 'formatter', 'validator', 'well-formed', 'markup', 'document'] },
   { id: 'csv', icon: 'CSV', category: 'developer', popular: false, recordRecent: false, name: { en: 'CSV / TSV ↔ JSON Converter', zh: 'CSV / TSV 与 JSON 转换器' }, description: { en: 'Convert CSV and TSV tables and flat JSON arrays locally.', zh: '在本地转换 CSV/TSV 表格与扁平 JSON 数组。' }, keywords: ['csv', 'tsv', 'json', 'comma-separated values', 'tab-separated values', 'spreadsheet', 'table', 'convert'] },
+  { id: 'sql', icon: 'SQL', category: 'developer', popular: false, recordRecent: false, name: { en: 'SQL Formatter & Minifier', zh: 'SQL 格式化与压缩工具' }, description: { en: 'Format and compact PostgreSQL, MySQL, and SQLite SQL locally; no execution or upload.', zh: '在本地格式化并压缩 PostgreSQL、MySQL 与 SQLite SQL；不会执行或上传。' }, keywords: ['sql', 'formatter', 'minifier', 'postgresql', 'mysql', 'sqlite', 'query', 'database'] },
 ];
 
 const TOOL_CATEGORIES = {
@@ -44,6 +45,7 @@ const RELATED_TOOLS = {
   yaml: ['json', 'text-diff', 'encode'],
   xml: ['json', 'yaml', 'text-diff'],
   csv: ['json', 'yaml', 'xml'],
+  sql: ['json', 'csv', 'yaml'],
 };
 
 function toolPath(tool, language = 'en') { return `${language === 'zh' ? '/zh' : ''}/${tool.id}/`; }

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>SQL Formatter &amp; Minifier for PostgreSQL, MySQL &amp; SQLite | UtilCover</title>
+  <meta name="description" content="Format and compact PostgreSQL, MySQL, and SQLite SQL locally in your browser. Preserve comments and quoted values; SQL is never executed or uploaded.">
+  <link rel="canonical" href="https://www.utilcover.com/sql/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/sql/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/sql/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/sql/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/sql/sql.css">
+  <meta property="og:title" content="SQL Formatter &amp; Minifier | UtilCover">
+  <meta property="og:description" content="Format and compact SQL locally for PostgreSQL, MySQL, and SQLite. No execution, upload, or remote service.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/sql/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/sql/#application",
+      "name": "SQL Formatter & Minifier",
+      "url": "https://www.utilcover.com/sql/",
+      "description": "Format and compact PostgreSQL, MySQL, and SQLite SQL locally in your browser. Preserve comments and quoted values; SQL is never executed or uploaded.",
+      "inLanguage": "en",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/sql/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tools",
+          "item": "https://www.utilcover.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "SQL Formatter & Minifier",
+          "item": "https://www.utilcover.com/sql/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/sql/">中文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>SQL Formatter &amp; Minifier</h1><p>Format readable SQL or compact its whitespace locally. Choose a dialect-aware lexical mode; statements are never executed or sent anywhere.</p></section>
+  <section class="tool-card sql-card" aria-label="Local SQL formatter and minifier">
+    <p class="local-processing-note">Your SQL stays in this browser. It is not uploaded, saved, or added to recent-tool history.</p>
+    <div class="sql-controls">
+      <div class="field"><label for="sqlMode">Operation</label><select id="sqlMode"><option value="format">Format</option><option value="minify">Minify whitespace</option></select></div>
+      <div class="field"><label for="sqlDialect">SQL dialect</label><select id="sqlDialect"><option value="postgres">PostgreSQL</option><option value="mysql">MySQL</option><option value="sqlite">SQLite</option></select></div>
+      <div class="field"><label for="sqlKeywordCase">Recognized keyword case</label><select id="sqlKeywordCase"><option value="upper">Uppercase</option><option value="lower">Lowercase</option><option value="preserve">Preserve input case</option></select></div>
+      <div class="field"><label for="sqlIndent">Indentation</label><select id="sqlIndent"><option value="2">2 spaces</option><option value="4">4 spaces</option></select></div>
+      <div class="sql-actions"><button id="sqlExample" class="secondary" type="button">Load example</button><button id="runSql" type="button">Format SQL</button><button id="copySql" class="secondary" type="button" disabled>Copy output</button><button id="clearSql" class="danger" type="button">Clear</button></div>
+    </div>
+    <div class="grid-2 sql-workspace">
+      <div class="field"><label for="sqlInput">SQL input</label><textarea id="sqlInput" maxlength="250000" spellcheck="false" autocomplete="off" placeholder="SELECT id, name FROM users WHERE active = TRUE;"></textarea><small>Paste SQL text only. Maximum 250,000 characters. Press Ctrl+Enter or ⌘+Enter to run.</small></div>
+      <div class="field"><label for="sqlOutput">SQL output</label><textarea id="sqlOutput" class="output" readonly spellcheck="false" aria-live="polite" placeholder="Processed SQL appears here."></textarea><small>Output is limited to 500,000 characters and exists only in this page.</small></div>
+    </div>
+    <p class="sql-limit-note" role="note">This is a lexical formatter, not a SQL parser, validator, or database client. Review the result before using it.</p>
+    <div id="sqlStatus" class="status" role="status" aria-live="polite" data-state="ready">Paste SQL, choose a dialect and style, then run locally.</div>
+  </section>
+  <section class="tool-guide" aria-labelledby="sql-guide-title">
+    <div class="guide-intro"><h2 id="sql-guide-title">Format SQL locally, without running it</h2><p>This browser-based SQL formatter makes long statements easier to inspect and can compact whitespace when you need a smaller text representation. It recognizes common clause words, operators, parentheses, quoted values, quoted identifiers, and comments so keyword casing and line breaks do not rewrite text inside strings or comments. Choose PostgreSQL, MySQL, or SQLite for the lexical rules used by common quoting and comment forms. All processing happens in this browser; the tool never connects to a database, executes a statement, or uploads your query.</p></div>
+    <div class="guide-section how-to"><h2>How to use the SQL formatter</h2><ol class="steps"><li><strong>Choose the operation and dialect.</strong><span>Select Format for clause line breaks and indentation, or Minify whitespace to compact layout. Pick PostgreSQL, MySQL, or SQLite to apply the corresponding common quote and comment handling.</span></li><li><strong>Set keyword case and indentation.</strong><span>Recognized unquoted SQL keywords can be uppercased, lowercased, or left as typed. The formatter supports two- or four-space indentation. Quoted identifiers, literals, and comments keep their original text.</span></li><li><strong>Paste, run, inspect, and copy.</strong><span>Use the example button for a safe sample, then run the operation and review the output. The tool does not validate database grammar or execute SQL. Clear the page or navigate away to erase temporary values from memory.</span></li></ol></div>
+    <div class="guide-section examples"><h2>SQL formatting and minifying examples</h2><div class="example-grid"><article><h3>Break a query into clauses</h3><p><code>select id,name from users where active=true order by id</code> is laid out with a line break before <code>FROM</code>, <code>WHERE</code>, and <code>ORDER BY</code>, and with list items separated onto readable lines. Recognized keywords can be capitalized without changing quoted values.</p></article><article><h3>Compact without stripping comments</h3><p>Minifying <code>SELECT a, b FROM t -- keep this note</code> removes unnecessary spaces around punctuation and collapses line layout, but retains the comment and its required line ending. Block comments, including database hints, are preserved rather than discarded.</p></article><article><h3>Respect dialect-specific quoting</h3><p>PostgreSQL dollar-quoted strings, MySQL backticks and hash comments, and SQLite bracket identifiers are kept intact. Choose the matching dialect when input uses these forms. The formatter does not claim to understand every vendor extension or SQL grammar.</p></article></div></div>
+    <div class="guide-section limitations"><h2>Supported SQL subset and limits</h2><p>The tool performs token-aware whitespace formatting only. It does not build a database syntax tree, validate whether a query is legal, check schema names, resolve functions, rewrite query logic, or execute statements. It supports common clause words, punctuation, comparison and arithmetic operators, single- and double-quoted text, common quoted identifiers, line comments, block comments, and selected dialect quoting such as PostgreSQL dollar strings, MySQL backticks and hash comments, and SQLite bracket identifiers. PostgreSQL nested block comments are recognized; MySQL double hyphens start a line comment only when followed by whitespace. SQL mode and session-level string settings are not configurable, including MySQL ANSI_QUOTES and NO_BACKSLASH_ESCAPES and PostgreSQL standard_conforming_strings; statements that rely on other settings may tokenize differently. Unusual procedural syntax, vendor extensions, and malformed but lexically complete statements may not receive ideal layout. Review any generated text before running it elsewhere.</p><p>Formatting normalizes whitespace and may place clauses or comma-separated items on different lines. It does not change tokens inside quoted values, quoted identifiers, or comments. Keyword casing applies only to recognized unquoted words; an unquoted identifier that happens to match a reserved keyword may also be recased. The minifier retains comments and quoted text because comments can contain optimizer hints or other meaningful directives. The minifier preserves whitespace before each opening parenthesis as entered; in some dialects or SQL modes that space can affect function-name parsing. Minification is not encryption, obfuscation, or a guarantee of equivalent behavior for every database mode.</p><p>Raw input is limited to 250,000 characters, tokenization to 50,000 tokens, parenthesis nesting to 100 levels, and output to 500,000 characters. These independent bounds limit browser work and generated text; they do not guarantee instant processing on every device. The input is not written to local storage, session storage, cookies, a server log, or recent-tool history. Temporary input and output are cleared when leaving the page and when a page is restored from browser history.</p><p>This page is a text formatter, not a secure SQL execution environment. Do not use it to run database commands, and do not treat formatting as a review of permissions or query safety. SQL remains in the page unless you explicitly copy it yourself.</p></div>
+    <div class="guide-section faq-list"><h2>SQL formatter FAQ</h2><details><summary>Does this tool execute or validate my SQL?</summary><p>No. It only tokenizes text to format whitespace and recognized keyword case. It does not connect to a database, execute statements, validate schema names, or guarantee that a query is syntactically valid.</p></details><details><summary>Which SQL dialects are supported?</summary><p>Choose PostgreSQL, MySQL, or SQLite for common lexical differences in comments and quoting. This is not full vendor grammar support; unusual extensions and procedural SQL may not format ideally.</p></details><details><summary>Does minifying remove comments?</summary><p>No. Line comments and block comments are preserved, including optimizer hints. Line-comment endings are kept so following SQL does not become part of the comment.</p></details><details><summary>Is my SQL uploaded or saved?</summary><p>No. Formatting and minifying run locally in your browser. The page does not send SQL to a server or third-party API, does not store it in browser storage or recent-tool history, and clears temporary values on navigation.</p></details></div>
+    <nav class="related-tools" data-related-tools="sql" aria-label="Related tools"><h2>Related tools</h2><div class="related-links"><a href="/json/"><strong>JSON Formatter</strong><span>Format, minify, validate and explore JSON.</span></a><a href="/csv/"><strong>CSV / TSV ↔ JSON Converter</strong><span>Convert CSV and TSV tables and flat JSON arrays locally.</span></a><a href="/yaml/"><strong>YAML Formatter</strong><span>Format YAML and convert YAML and JSON locally.</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/licenses/">Licenses</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · Private, fast, client-side utilities</p></footer>
+<script type="module" src="/sql/sql-app.mjs"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

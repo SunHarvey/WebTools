@@ -15,6 +15,7 @@ const CRON_MOBILE_WIDTH = 320;
 const YAML_MOBILE_WIDTH = 320;
 const XML_MOBILE_WIDTH = 320;
 const CSV_MOBILE_WIDTH = 320;
+const SQL_MOBILE_WIDTH = 320;
 const MAX_RENDERED_DETAILS = 1_000;
 const MOBILE_ROUTES = [
   '/', '/zh/',
@@ -30,6 +31,7 @@ const MOBILE_ROUTES = [
   '/yaml/', '/zh/yaml/',
   '/xml/', '/zh/xml/',
   '/csv/', '/zh/csv/',
+  '/sql/', '/zh/sql/',
 ];
 const PASSWORD_RESULT_ROUTES = ['/password/', '/zh/password/'];
 const JWT_STORAGE_ROUTES = ['/jwt/', '/zh/jwt/'];
@@ -39,6 +41,7 @@ const CRON_ROUTES = ['/cron/', '/zh/cron/'];
 const YAML_ROUTES = ['/yaml/', '/zh/yaml/'];
 const XML_ROUTES = ['/xml/', '/zh/xml/'];
 const CSV_ROUTES = ['/csv/', '/zh/csv/'];
+const SQL_ROUTES = ['/sql/', '/zh/sql/'];
 
 const CSV_PRIVACY_FLOW = `
   const input = document.querySelector('#csvInput');
@@ -62,6 +65,36 @@ const CSV_PRIVACY_FLOW = `
     csvJson,
     jsonStatus: document.querySelector('#csvStatus').dataset.state,
     jsonCsv: document.querySelector('#csvOutput').value,
+  };
+`;
+
+const SQL_PRIVACY_FLOW = `
+  const input = document.querySelector('#sqlInput');
+  const mode = document.querySelector('#sqlMode');
+  const run = document.querySelector('#runSql');
+  mode.value = 'format';
+  document.querySelector('#sqlDialect').value = 'postgres';
+  document.querySelector('#sqlKeywordCase').value = 'upper';
+  input.value = "select id,name from users where active=true and note='where' order by id;";
+  run.click();
+  const formatState = document.querySelector('#sqlStatus').dataset.state;
+  const formatted = document.querySelector('#sqlOutput').value;
+  mode.value = 'minify';
+  document.querySelector('#sqlDialect').value = 'mysql';
+  input.value = 'SELECT a, b FROM t -- keep-comment' + String.fromCharCode(10) + 'WHERE id = 1;';
+  run.click();
+  const minifyState = document.querySelector('#sqlStatus').dataset.state;
+  const minified = document.querySelector('#sqlOutput').value;
+  input.value = "SELECT 'sql-private-sentinel";
+  run.click();
+  return {
+    formatState,
+    formatted,
+    minifyState,
+    minified,
+    errorState: document.querySelector('#sqlStatus').dataset.state,
+    errorMessage: document.querySelector('#sqlStatus').textContent,
+    errorOutput: document.querySelector('#sqlOutput').value,
   };
 `;
 
@@ -335,6 +368,8 @@ const PRIVACY_FLOWS = {
   `,
   '/csv/': CSV_PRIVACY_FLOW,
   '/zh/csv/': CSV_PRIVACY_FLOW,
+  '/sql/': SQL_PRIVACY_FLOW,
+  '/zh/sql/': SQL_PRIVACY_FLOW,
 };
 
 const MIME_TYPES = {
@@ -745,6 +780,27 @@ async function runAcceptance() {
     }
     await client.send('Emulation.clearDeviceMetricsOverride');
 
+    const sqlMobile = [];
+    await client.send('Emulation.setDeviceMetricsOverride', {
+      width: SQL_MOBILE_WIDTH, height: 700, deviceScaleFactor: 1, mobile: true,
+    });
+    for (const route of SQL_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `return {
+        viewport: document.documentElement.clientWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+        inputVisible: document.querySelector('#sqlInput').getBoundingClientRect().width > 0,
+        modeVisible: document.querySelector('#sqlMode').getBoundingClientRect().width > 0,
+        dialectVisible: document.querySelector('#sqlDialect').getBoundingClientRect().width > 0,
+      };`);
+      assert.ok(result.scrollWidth <= result.viewport + 1, `${route} overflows at ${SQL_MOBILE_WIDTH}px: ${result.scrollWidth}px > ${result.viewport}px`);
+      assert.equal(result.inputVisible, true, `${route} hides SQL input at ${SQL_MOBILE_WIDTH}px`);
+      assert.equal(result.modeVisible, true, `${route} hides SQL operation controls at ${SQL_MOBILE_WIDTH}px`);
+      assert.equal(result.dialectVisible, true, `${route} hides SQL dialect controls at ${SQL_MOBILE_WIDTH}px`);
+      sqlMobile.push({ route, ...result });
+    }
+    await client.send('Emulation.clearDeviceMetricsOverride');
+
     const jwtStorage = [];
     for (const route of JWT_STORAGE_ROUTES) {
       await navigate('/');
@@ -840,7 +896,7 @@ async function runAcceptance() {
     await client.send('Emulation.clearDeviceMetricsOverride');
     const privacy = [];
     for (const [route, flow] of Object.entries(PRIVACY_FLOWS)) {
-      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route) || XML_ROUTES.includes(route) || CSV_ROUTES.includes(route)) {
+      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route) || XML_ROUTES.includes(route) || CSV_ROUTES.includes(route) || SQL_ROUTES.includes(route)) {
         await navigate('/');
         await evaluate(client, `
           localStorage.clear();
@@ -1079,6 +1135,38 @@ async function runAcceptance() {
         assert.deepEqual(cleared, {
           input: '', output: '', mode: 'csv-to-json', delimiter: 'comma', header: true, status: 'ready', copyDisabled: true,
         }, `${route} did not clear CSV input, output, and options`);
+      }
+      if (SQL_ROUTES.includes(route)) {
+        assert.equal(result.formatState, 'success', `${route} did not format SQL locally`);
+        assert.match(result.formatted, /^SELECT/m, `${route} did not normalize recognized SQL keywords`);
+        assert.match(result.formatted, /^FROM users/m, `${route} did not break before the FROM clause`);
+        assert.match(result.formatted, /^WHERE active = TRUE/m, `${route} did not format the WHERE clause`);
+        assert.equal(result.minifyState, 'success', `${route} did not minify SQL locally`);
+        assert.ok(result.minified.includes('a,b'), `${route} did not compact comma spacing`);
+        assert.ok(result.minified.includes('-- keep-comment' + String.fromCharCode(10) + 'WHERE'), `${route} did not preserve comment line boundaries`);
+        assert.equal(result.errorState, 'error', `${route} did not reject an unterminated SQL string`);
+        assert.equal(result.errorOutput, '', `${route} retained stale SQL output after an error`);
+        assert.doesNotMatch(result.errorMessage, /sql-private-sentinel/, `${route} echoed submitted SQL in an error`);
+        assert.match(result.errorMessage, route.startsWith('/zh/') ? /第 1 行，第 8 列/ : /line 1, column 8/,
+          `${route} did not localize the SQL error position`);
+        const storage = await evaluate(client, `return { local: Object.keys(localStorage), session: Object.keys(sessionStorage), cookies: document.cookie };`);
+        assert.deepEqual(storage.local, [], `${route} stored SQL or recent-tool history`);
+        assert.deepEqual(storage.session, [], `${route} stored SQL in session storage`);
+        assert.equal(storage.cookies, '', `${route} created a cookie while formatting SQL`);
+        await evaluate(client, `document.querySelector('#clearSql').click(); return true;`);
+        const cleared = await evaluate(client, `return {
+          input: document.querySelector('#sqlInput').value,
+          output: document.querySelector('#sqlOutput').value,
+          mode: document.querySelector('#sqlMode').value,
+          dialect: document.querySelector('#sqlDialect').value,
+          keywordCase: document.querySelector('#sqlKeywordCase').value,
+          indent: document.querySelector('#sqlIndent').value,
+          status: document.querySelector('#sqlStatus').dataset.state,
+          copyDisabled: document.querySelector('#copySql').disabled,
+        };`);
+        assert.deepEqual(cleared, {
+          input: '', output: '', mode: 'format', dialect: 'postgres', keywordCase: 'upper', indent: '2', status: 'ready', copyDisabled: true,
+        }, `${route} did not clear SQL input, output, and options`);
       }
       await wait(100);
       const networkRequests = requests.filter(request => /^https?:\/\//i.test(request.url));
@@ -1501,6 +1589,49 @@ async function runAcceptance() {
       csvHistory.push({ route, ...result });
     }
 
+    const sqlHistory = [];
+    for (const route of SQL_ROUTES) {
+      await navigate(route);
+      const processed = await evaluate(client, `
+        document.querySelector('#sqlMode').value = 'minify';
+        document.querySelector('#sqlDialect').value = 'mysql';
+        document.querySelector('#sqlKeywordCase').value = 'lower';
+        document.querySelector('#sqlIndent').value = '4';
+        document.querySelector('#sqlInput').value = "SELECT 'history-secret' FROM users;";
+        document.querySelector('#runSql').click();
+        return {
+          state: document.querySelector('#sqlStatus').dataset.state,
+          output: document.querySelector('#sqlOutput').value,
+        };
+      `);
+      assert.equal(processed.state, 'success', `${route} did not process SQL before history navigation`);
+      assert.match(processed.output, /history-secret/, `${route} did not create the SQL history sentinel`);
+      await navigate('/about/');
+      await evaluate(client, 'history.back(); return true;');
+      let restored = false;
+      for (let attempt = 0; attempt < 40; attempt += 1) {
+        await wait(50);
+        restored = await evaluate(client, `return location.pathname === '${route}' && document.readyState === 'complete' && Boolean(document.querySelector('#sqlInput'));`);
+        if (restored) break;
+      }
+      assert.equal(restored, true, `${route} did not return through browser history`);
+      const result = await evaluate(client, `return {
+        input: document.querySelector('#sqlInput').value,
+        output: document.querySelector('#sqlOutput').value,
+        mode: document.querySelector('#sqlMode').value,
+        dialect: document.querySelector('#sqlDialect').value,
+        keywordCase: document.querySelector('#sqlKeywordCase').value,
+        indent: document.querySelector('#sqlIndent').value,
+        status: document.querySelector('#sqlStatus').dataset.state,
+        copyDisabled: document.querySelector('#copySql').disabled,
+      };`);
+      assert.deepEqual(result, {
+        input: '', output: '', mode: 'format', dialect: 'postgres', keywordCase: 'upper', indent: '2', status: 'ready', copyDisabled: true,
+      }, `${route} restored SQL input, output, or options after browser history`);
+      assert.doesNotMatch(JSON.stringify(result), /history-secret/, `${route} restored sensitive SQL data from browser history`);
+      sqlHistory.push({ route, ...result });
+    }
+
     const csvLifecycle = [];
     for (const route of CSV_ROUTES) {
       await navigate(route);
@@ -1545,6 +1676,54 @@ async function runAcceptance() {
       assert.deepEqual(result.afterPagehide, clearedState, `${route} retained CSV state after pagehide`);
       assert.deepEqual(result.afterPersistedPageshow, clearedState, `${route} retained CSV state after persisted pageshow`);
       csvLifecycle.push({ route, ...result });
+    }
+
+    const sqlLifecycle = [];
+    for (const route of SQL_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `
+        const input = document.querySelector('#sqlInput');
+        const output = document.querySelector('#sqlOutput');
+        const mode = document.querySelector('#sqlMode');
+        const dialect = document.querySelector('#sqlDialect');
+        const keywordCase = document.querySelector('#sqlKeywordCase');
+        const indent = document.querySelector('#sqlIndent');
+        const snapshot = () => ({
+          input: input.value,
+          output: output.value,
+          mode: mode.value,
+          dialect: dialect.value,
+          keywordCase: keywordCase.value,
+          indent: indent.value,
+          status: document.querySelector('#sqlStatus').dataset.state,
+          copyDisabled: document.querySelector('#copySql').disabled,
+        });
+        input.value = 'pagehide-secret';
+        output.value = 'stale output';
+        mode.value = 'minify';
+        dialect.value = 'mysql';
+        keywordCase.value = 'lower';
+        indent.value = '4';
+        window.dispatchEvent(new Event('pagehide'));
+        const afterPagehide = snapshot();
+        input.value = 'pageshow-secret';
+        output.value = 'stale output';
+        mode.value = 'minify';
+        dialect.value = 'mysql';
+        keywordCase.value = 'lower';
+        indent.value = '4';
+        const pageshow = new Event('pageshow');
+        Object.defineProperty(pageshow, 'persisted', { value: true });
+        window.dispatchEvent(pageshow);
+        const afterPersistedPageshow = snapshot();
+        return { afterPagehide, afterPersistedPageshow };
+      `);
+      const clearedState = {
+        input: '', output: '', mode: 'format', dialect: 'postgres', keywordCase: 'upper', indent: '2', status: 'ready', copyDisabled: true,
+      };
+      assert.deepEqual(result.afterPagehide, clearedState, `${route} retained SQL state after pagehide`);
+      assert.deepEqual(result.afterPersistedPageshow, clearedState, `${route} retained SQL state after persisted pageshow`);
+      sqlLifecycle.push({ route, ...result });
     }
 
     const yamlPerformance = [];
@@ -1696,6 +1875,75 @@ async function runAcceptance() {
     }
     await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
 
+    const sqlPerformance = [];
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+    for (const route of SQL_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `
+        const input = document.querySelector('#sqlInput');
+        const run = document.querySelector('#runSql');
+        const mode = document.querySelector('#sqlMode');
+        mode.value = 'format';
+        document.querySelector('#sqlDialect').value = 'postgres';
+        document.querySelector('#sqlKeywordCase').value = 'preserve';
+        input.value = 'x'.repeat(250000);
+        const maxInputStarted = performance.now();
+        run.click();
+        const maxInput = {
+          elapsed: performance.now() - maxInputStarted,
+          state: document.querySelector('#sqlStatus').dataset.state,
+          inputLength: input.value.length,
+          outputLength: document.querySelector('#sqlOutput').value.length,
+        };
+        input.value = Array.from({ length: 25000 }, () => 'x').join(',');
+        const nearTokenStarted = performance.now();
+        run.click();
+        const nearToken = {
+          elapsed: performance.now() - nearTokenStarted,
+          state: document.querySelector('#sqlStatus').dataset.state,
+          inputLength: input.value.length,
+          outputLength: document.querySelector('#sqlOutput').value.length,
+        };
+        input.value = Array.from({ length: 25001 }, () => 'x').join(',');
+        const tokenLimitStarted = performance.now();
+        run.click();
+        const tokenLimit = {
+          elapsed: performance.now() - tokenLimitStarted,
+          state: document.querySelector('#sqlStatus').dataset.state,
+          message: document.querySelector('#sqlStatus').textContent,
+          outputLength: document.querySelector('#sqlOutput').value.length,
+        };
+        input.value = '('.repeat(100) + Array.from({ length: 5000 }, () => 'x').join(',') + ')'.repeat(100);
+        const outputLimitStarted = performance.now();
+        run.click();
+        const outputLimit = {
+          elapsed: performance.now() - outputLimitStarted,
+          state: document.querySelector('#sqlStatus').dataset.state,
+          message: document.querySelector('#sqlStatus').textContent,
+          outputLength: document.querySelector('#sqlOutput').value.length,
+        };
+        return { maxInput, nearToken, tokenLimit, outputLimit };
+      `);
+      assert.equal(result.maxInput.state, 'success', `${route} rejected its exact maximum SQL input`);
+      assert.equal(result.maxInput.inputLength, 250_000, `${route} did not probe the exact SQL input boundary`);
+      assert.equal(result.maxInput.outputLength, 250_000, `${route} changed a maximum-size single SQL token`);
+      assert.ok(result.maxInput.elapsed < 5_000, `${route} maximum SQL input took ${result.maxInput.elapsed} ms under 4x CPU throttling`);
+      assert.equal(result.nearToken.state, 'success', `${route} rejected a SQL input just below the token limit`);
+      assert.equal(result.nearToken.inputLength, 49_999, `${route} did not measure the near-limit SQL token input`);
+      assert.ok(result.nearToken.outputLength > 49_999 && result.nearToken.outputLength <= 500_000, `${route} produced an unexpected near-token-limit output size`);
+      assert.ok(result.nearToken.elapsed < 5_000, `${route} near-token-limit SQL formatting took ${result.nearToken.elapsed} ms under 4x CPU throttling`);
+      assert.equal(result.tokenLimit.state, 'error', `${route} did not reject an over-limit SQL token stream`);
+      assert.match(result.tokenLimit.message, /50,000/, `${route} did not explain its SQL token limit`);
+      assert.equal(result.tokenLimit.outputLength, 0, `${route} retained output after a token-limit error`);
+      assert.ok(result.tokenLimit.elapsed < 5_000, `${route} SQL token-limit check took ${result.tokenLimit.elapsed} ms under 4x CPU throttling`);
+      assert.equal(result.outputLimit.state, 'error', `${route} did not enforce the SQL output-size bound`);
+      assert.match(result.outputLimit.message, /500,000/, `${route} did not explain its SQL output limit`);
+      assert.equal(result.outputLimit.outputLength, 0, `${route} retained output after an output-limit error`);
+      assert.ok(result.outputLimit.elapsed < 5_000, `${route} SQL output-limit check took ${result.outputLimit.elapsed} ms under 4x CPU throttling`);
+      sqlPerformance.push({ route, ...result });
+    }
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+
     const cronPerformance = [];
     await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
     for (const route of CRON_ROUTES) {
@@ -1726,6 +1974,7 @@ async function runAcceptance() {
       yamlMobile,
       xmlMobile,
       csvMobile,
+      sqlMobile,
       jwtStorage,
       textDiffNavigation,
       textDiffHistory,
@@ -1737,11 +1986,14 @@ async function runAcceptance() {
       yamlHistory,
       xmlHistory,
       csvHistory,
+      sqlHistory,
       csvLifecycle,
+      sqlLifecycle,
       yamlPerformance,
       xmlPerformance,
       csvPerformance,
       csvWorstFieldPerformance,
+      sqlPerformance,
       cronPerformance,
       passwordResults,
       privacyFlows: privacy,
@@ -1772,7 +2024,7 @@ async function runAcceptance() {
 }
 
 module.exports = {
-  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, XML_ROUTES, XML_MOBILE_WIDTH, CSV_ROUTES, CSV_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
+  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, XML_ROUTES, XML_MOBILE_WIDTH, CSV_ROUTES, CSV_MOBILE_WIDTH, SQL_ROUTES, SQL_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
   runAcceptance, startStaticServer, stopBrowser, stopServer, browserBinary,
 };
 

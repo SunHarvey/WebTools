@@ -5,7 +5,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/" />
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/password/</loc>
@@ -152,7 +152,14 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/csv/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/csv/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/csv/" />
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-08</lastmod>
+  </url>
+  <url>
+    <loc>https://www.utilcover.com/sql/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/sql/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/sql/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/sql/" />
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/privacy/</loc>
@@ -187,7 +194,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/" />
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/password/</loc>
@@ -334,7 +341,14 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/csv/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/csv/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/csv/" />
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-08</lastmod>
+  </url>
+  <url>
+    <loc>https://www.utilcover.com/zh/sql/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/sql/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/sql/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/sql/" />
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/privacy/</loc>
