@@ -23,6 +23,7 @@ const TOOLS = [
   { id: 'xml', icon: 'XML', category: 'developer', popular: false, recordRecent: false, name: { en: 'XML Formatter', zh: 'XML 格式化与校验工具' }, description: { en: 'Format XML and check well-formedness locally.', zh: '在本地格式化 XML 并检查文档是否良构。' }, keywords: ['xml', 'format', 'formatter', 'validator', 'well-formed', 'markup', 'document'] },
   { id: 'csv', icon: 'CSV', category: 'developer', popular: false, recordRecent: false, name: { en: 'CSV / TSV ↔ JSON Converter', zh: 'CSV / TSV 与 JSON 转换器' }, description: { en: 'Convert CSV and TSV tables and flat JSON arrays locally.', zh: '在本地转换 CSV/TSV 表格与扁平 JSON 数组。' }, keywords: ['csv', 'tsv', 'json', 'comma-separated values', 'tab-separated values', 'spreadsheet', 'table', 'convert'] },
   { id: 'sql', icon: 'SQL', category: 'developer', popular: false, recordRecent: false, name: { en: 'SQL Formatter & Minifier', zh: 'SQL 格式化与压缩工具' }, description: { en: 'Format and compact PostgreSQL, MySQL, and SQLite SQL locally; no execution or upload.', zh: '在本地格式化并压缩 PostgreSQL、MySQL 与 SQLite SQL；不会执行或上传。' }, keywords: ['sql', 'formatter', 'minifier', 'postgresql', 'mysql', 'sqlite', 'query', 'database'] },
+  { id: 'pdf', icon: 'PDF', category: 'developer', popular: false, recordRecent: false, name: { en: 'PDF Merger', zh: 'PDF 合并工具' }, description: { en: 'Merge PDF pages in your chosen order locally; no upload or account.', zh: '按照所选顺序在本地合并 PDF 页面；无需上传或账户。' }, keywords: ['pdf', 'merge', 'join', 'combine', 'pages', 'document'] },
 ];
 
 const TOOL_CATEGORIES = {
@@ -46,6 +47,7 @@ const RELATED_TOOLS = {
   xml: ['json', 'yaml', 'text-diff'],
   csv: ['json', 'yaml', 'xml'],
   sql: ['json', 'csv', 'yaml'],
+  pdf: ['image', 'text', 'csv'],
 };
 
 function toolPath(tool, language = 'en') { return `${language === 'zh' ? '/zh' : ''}/${tool.id}/`; }

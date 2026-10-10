@@ -633,6 +633,37 @@ test('calculator pages explain immediate basic arithmetic and input limits witho
   assert.doesNotMatch(chinese, /遵循.*运算优先级|完整精度/);
 });
 
+test('PDF pages document local page merging, limits, unsupported features and privacy in both locales', () => {
+  assertGuide('pdf/index.html', 'en', ['/image/', '/text/', '/csv/']);
+  assertGuide('zh/pdf/index.html', 'zh', ['/zh/image/', '/zh/text/', '/zh/csv/']);
+  assertMetadata('pdf/index.html', /PDF Merger/i, /merge PDF.*locally/i);
+  assertMetadata('zh/pdf/index.html', /PDF.*合并/, /本地.*合并.*PDF/);
+  const english = guideFor('pdf/index.html').text;
+  assert.match(english, /selected order/i);
+  assert.match(english, /password-protected/i);
+  assert.match(english, /digital signatures/i);
+  assert.match(english, /interactive forms/i);
+  assert.match(english, /bookmarks.*attachments/i);
+  assert.match(english, /25 MiB/);
+  assert.match(english, /40 MiB/);
+  assert.match(english, /500 pages/);
+  assert.match(english, /60 MiB/);
+  assert.match(english, /45 seconds/);
+  assert.match(english, /not uploaded/i);
+  const chinese = guideFor('zh/pdf/index.html').text;
+  assert.match(chinese, /所选顺序/);
+  assert.match(chinese, /密码保护/);
+  assert.match(chinese, /数字签名/);
+  assert.match(chinese, /交互式表单/);
+  assert.match(chinese, /书签.*附件/);
+  assert.match(chinese, /25 MiB/);
+  assert.match(chinese, /40 MiB/);
+  assert.match(chinese, /500.*页/);
+  assert.match(chinese, /60 MiB/);
+  assert.match(chinese, /45 秒/);
+  assert.match(chinese, /不会上传/);
+});
+
 test('shared tool-guide styles are responsive and keyboard accessible', () => {
   const css = read('shared/tools.css');
   for (const selector of ['.tool-guide', '.guide-intro', '.guide-section', '.steps', '.example-grid', '.faq-list', '.related-links']) {

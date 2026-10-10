@@ -97,7 +97,7 @@ function renderHeaders(routeSources) {
     return [
       headerPattern(route),
       '  ! Content-Security-Policy',
-      `  Content-Security-Policy: ${csp(hash, route === '/regex/' || route === '/zh/regex/')}`
+      `  Content-Security-Policy: ${csp(hash, route === '/regex/' || route === '/zh/regex/' || route === '/pdf/' || route === '/zh/pdf/')}`
     ].join('\n');
   }).join('\n\n');
   const previewHeaders = [

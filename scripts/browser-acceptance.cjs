@@ -16,6 +16,7 @@ const YAML_MOBILE_WIDTH = 320;
 const XML_MOBILE_WIDTH = 320;
 const CSV_MOBILE_WIDTH = 320;
 const SQL_MOBILE_WIDTH = 320;
+const PDF_MOBILE_WIDTH = 320;
 const MAX_RENDERED_DETAILS = 1_000;
 const MOBILE_ROUTES = [
   '/', '/zh/',
@@ -32,6 +33,7 @@ const MOBILE_ROUTES = [
   '/xml/', '/zh/xml/',
   '/csv/', '/zh/csv/',
   '/sql/', '/zh/sql/',
+  '/pdf/', '/zh/pdf/',
 ];
 const PASSWORD_RESULT_ROUTES = ['/password/', '/zh/password/'];
 const JWT_STORAGE_ROUTES = ['/jwt/', '/zh/jwt/'];
@@ -42,6 +44,84 @@ const YAML_ROUTES = ['/yaml/', '/zh/yaml/'];
 const XML_ROUTES = ['/xml/', '/zh/xml/'];
 const CSV_ROUTES = ['/csv/', '/zh/csv/'];
 const SQL_ROUTES = ['/sql/', '/zh/sql/'];
+const PDF_ROUTES = ['/pdf/', '/zh/pdf/'];
+
+const PDF_FIXTURE_SETUP = `
+  const pdfBytes = [
+    Uint8Array.from(atob('JVBERi0xLjcKJYGBgYEKCjEgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFsgNCAwIFIgXQovQ291bnQgMQo+PgplbmRvYmoKCjIgMCBvYmoKPDwKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDEgMCBSCj4+CmVuZG9iagoKNCAwIG9iago8PAovVHlwZSAvUGFnZQovUGFyZW50IDEgMCBSCi9SZXNvdXJjZXMgPDwKPj4KL01lZGlhQm94IFsgMCAwIDIwMCAzMDAgXQo+PgplbmRvYmoKCjUgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiAxCi9GaXJzdCA0Ci9MZW5ndGggMTYwCj4+CnN0cmVhbQp4nNVPOQ7CMBDs/QqXUGVYJw5BUSSUo0OipouICxosWeH/zFoUNNCnGK09xx7OwratKa4pLq97SLadxmkCagC+JDwgA2tPNITwT02OfBM1PRnkage4MzXmFZ6kZlTP3uqTH1np9ephb/WW2u97rs5SHwnV/+7TdKa4xGWY12B3w0kg/gA0cJVIedubok9hXuN2j8v7P+Lz54VdZ95AGWKbCmVuZHN0cmVhbQplbmRvYmoKCjYgMCBvYmoKPDwKL1NpemUgNwovUm9vdCAyIDAgUgovSW5mbyAzIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvWFJlZgovTGVuZ3RoIDM3Ci9XIFsgMSAyIDIgXQovSW5kZXggWyAwIDcgXQo+PgpzdHJlYW0KeJxjYGD4/5+RQYCBgZHBh4GBiYEVxKoDETeBBOM9BgYAWBsEnQplbmRzdHJlYW0KZW5kb2JqCgpzdGFydHhyZWYKNDc4CiUlRU9G'), value => value.charCodeAt(0)),
+    Uint8Array.from(atob('JVBERi0xLjcKJYGBgYEKCjEgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFsgNCAwIFIgXQovQ291bnQgMQo+PgplbmRvYmoKCjIgMCBvYmoKPDwKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDEgMCBSCj4+CmVuZG9iagoKNCAwIG9iago8PAovVHlwZSAvUGFnZQovUGFyZW50IDEgMCBSCi9SZXNvdXJjZXMgPDwKPj4KL01lZGlhQm94IFsgMCAwIDQwMCA1MDAgXQo+PgplbmRvYmoKCjUgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiAxCi9GaXJzdCA0Ci9MZW5ndGggMTYwCj4+CnN0cmVhbQp4nNVPOQ7CMBDs/QqXUGVYJw5BUSSUo0OipouICxosWeH/zFoUNNCnGK09xx7OwratKa4pLq97SLadxmkCagC+JDwgA2tPNITwT02OfBM1PRnkage4MzXmFZ6kZlTP3uqTH1np9ephb/WW2u97rs5SHwnV/+7TdKa4xGWY12B3w0kg/gA0cJVIedubok9hXuN2j8v7P+Lz54VdZ95AGWKbCmVuZHN0cmVhbQplbmRvYmoKCjYgMCBvYmoKPDwKL1NpemUgNwovUm9vdCAyIDAgUgovSW5mbyAzIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvWFJlZgovTGVuZ3RoIDM3Ci9XIFsgMSAyIDIgXQovSW5kZXggWyAwIDcgXQo+PgpzdHJlYW0KeJxjYGD4/5+RQYCBgZHBh4GBiYEVxKoDETeBBOM9BgYAWBsEnQplbmRzdHJlYW0KZW5kb2JqCgpzdGFydHhyZWYKNDc4CiUlRU9G'), value => value.charCodeAt(0)),
+  ];
+  const setPdfFiles = files => {
+    const transfer = new DataTransfer();
+    for (const [bytes, name] of files) transfer.items.add(new File([bytes], name, { type: 'application/pdf' }));
+    const input = document.querySelector('#pdfFiles');
+    input.files = transfer.files;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+`;
+
+const PDF_PRIVACY_FLOW = `
+${PDF_FIXTURE_SETUP}
+  const revoked = [];
+  const originalRevoke = URL.revokeObjectURL;
+  URL.revokeObjectURL = function (url) { revoked.push(url); return originalRevoke.call(this, url); };
+  setPdfFiles([[pdfBytes[0], 'period-one.pdf'], [pdfBytes[1], 'period-two.pdf']]);
+  document.querySelector('#pdfFileList').children[1].querySelector('[data-action="up"]').click();
+  const order = Array.from(document.querySelectorAll('.pdf-file-name'), item => item.textContent);
+  const started = performance.now();
+  document.querySelector('#mergePdfs').click();
+  for (let attempt = 0; attempt < 1200 && document.querySelector('#pdfStatus').dataset.state === 'working'; attempt += 1) await new Promise(resolve => setTimeout(resolve, 50));
+  const elapsed = performance.now() - started;
+  const success = {
+    state: document.querySelector('#pdfStatus').dataset.state,
+    message: document.querySelector('#pdfStatus').textContent,
+    fileCount: Number(document.querySelector('#downloadPdf').dataset.fileCount),
+    pageCount: Number(document.querySelector('#downloadPdf').dataset.pageCount),
+    blobProtocol: document.querySelector('#downloadPdf').href.startsWith('blob:') ? 'blob:' : '',
+    downloadName: document.querySelector('#downloadPdf').download,
+    visible: !document.querySelector('#downloadPdf').hidden,
+    elapsed,
+  };
+  window.dispatchEvent(new Event('pagehide'));
+  const snapshot = () => ({
+    fileCount: document.querySelector('#pdfFileList').children.length,
+    inputFiles: document.querySelector('#pdfFiles').files.length,
+    downloadHidden: document.querySelector('#downloadPdf').hidden,
+    hasDownloadHref: document.querySelector('#downloadPdf').hasAttribute('href'),
+    state: document.querySelector('#pdfStatus').dataset.state,
+  });
+  const afterPagehide = snapshot();
+  setPdfFiles([[new Uint8Array([37, 80, 68, 70, 45, 49]), 'pageshow-secret.pdf']]);
+  const pageshow = new Event('pageshow');
+  Object.defineProperty(pageshow, 'persisted', { value: true });
+  window.dispatchEvent(pageshow);
+  const afterPersistedPageshow = snapshot();
+  URL.revokeObjectURL = originalRevoke;
+  setPdfFiles([[pdfBytes[0], 'period-one.pdf'], [pdfBytes[1], 'period-two.pdf'], [new TextEncoder().encode('private-pdf-sentinel'), 'private-pdf-sentinel.pdf']]);
+  document.querySelector('#mergePdfs').click();
+  for (let attempt = 0; attempt < 100 && document.querySelector('#pdfStatus').dataset.state === 'working'; attempt += 1) await new Promise(resolve => setTimeout(resolve, 20));
+  const invalid = {
+    state: document.querySelector('#pdfStatus').dataset.state,
+    message: document.querySelector('#pdfStatus').textContent,
+    hasDownload: !document.querySelector('#downloadPdf').hidden,
+  };
+  document.querySelector('#clearPdfs').click();
+  const cleared = snapshot();
+  const storage = { local: Object.keys(localStorage), session: Object.keys(sessionStorage), cookies: document.cookie };
+  return { order, success, afterPagehide, afterPersistedPageshow, revokedCount: revoked.length, invalid, cleared, storage };
+`;
+
+const PDF_HISTORY_FLOW = `
+${PDF_FIXTURE_SETUP}
+  setPdfFiles([[pdfBytes[0], 'history-secret-one.pdf'], [pdfBytes[1], 'history-secret-two.pdf']]);
+  document.querySelector('#mergePdfs').click();
+  for (let attempt = 0; attempt < 1200 && document.querySelector('#pdfStatus').dataset.state === 'working'; attempt += 1) await new Promise(resolve => setTimeout(resolve, 50));
+  return {
+    state: document.querySelector('#pdfStatus').dataset.state,
+    pageCount: Number(document.querySelector('#downloadPdf').dataset.pageCount),
+    visible: !document.querySelector('#downloadPdf').hidden,
+  };
+`;
 
 const CSV_PRIVACY_FLOW = `
   const input = document.querySelector('#csvInput');
@@ -370,6 +450,8 @@ const PRIVACY_FLOWS = {
   '/zh/csv/': CSV_PRIVACY_FLOW,
   '/sql/': SQL_PRIVACY_FLOW,
   '/zh/sql/': SQL_PRIVACY_FLOW,
+  '/pdf/': PDF_PRIVACY_FLOW,
+  '/zh/pdf/': PDF_PRIVACY_FLOW,
 };
 
 const MIME_TYPES = {
@@ -676,10 +758,14 @@ async function runAcceptance() {
       requests.length = 0;
       exceptions.length = 0;
       const loaded = client.once('Page.loadEventFired');
-      await Promise.all([
-        client.send('Page.navigate', { url: `http://127.0.0.1:${sitePort}${route}` }),
-        loaded,
-      ]);
+      try {
+        await Promise.all([
+          client.send('Page.navigate', { url: `http://127.0.0.1:${sitePort}${route}` }),
+          loaded,
+        ]);
+      } catch (error) {
+        throw new Error(`${route} navigation failed: ${error.message}`);
+      }
       await wait(150);
       assert.deepEqual(exceptions, [], `${route} raised a browser exception`);
       requests.length = 0;
@@ -801,6 +887,25 @@ async function runAcceptance() {
     }
     await client.send('Emulation.clearDeviceMetricsOverride');
 
+    const pdfMobile = [];
+    await client.send('Emulation.setDeviceMetricsOverride', {
+      width: PDF_MOBILE_WIDTH, height: 700, deviceScaleFactor: 1, mobile: true,
+    });
+    for (const route of PDF_ROUTES) {
+      await navigate(route);
+      const result = await evaluate(client, `return {
+        viewport: document.documentElement.clientWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+        inputVisible: document.querySelector('#pdfFiles').getBoundingClientRect().width > 0,
+        mergeVisible: document.querySelector('#mergePdfs').getBoundingClientRect().width > 0,
+      };`);
+      assert.ok(result.scrollWidth <= result.viewport + 1, `${route} overflows at ${PDF_MOBILE_WIDTH}px: ${result.scrollWidth}px > ${result.viewport}px`);
+      assert.equal(result.inputVisible, true, `${route} hides the PDF input at ${PDF_MOBILE_WIDTH}px`);
+      assert.equal(result.mergeVisible, true, `${route} hides merge controls at ${PDF_MOBILE_WIDTH}px`);
+      pdfMobile.push({ route, ...result });
+    }
+    await client.send('Emulation.clearDeviceMetricsOverride');
+
     const jwtStorage = [];
     for (const route of JWT_STORAGE_ROUTES) {
       await navigate('/');
@@ -895,8 +1000,10 @@ async function runAcceptance() {
     await client.send('Emulation.setEmulatedMedia', { media: '', features: [] });
     await client.send('Emulation.clearDeviceMetricsOverride');
     const privacy = [];
+    const pdfLifecycle = [];
+    const pdfPerformance = [];
     for (const [route, flow] of Object.entries(PRIVACY_FLOWS)) {
-      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route) || XML_ROUTES.includes(route) || CSV_ROUTES.includes(route) || SQL_ROUTES.includes(route)) {
+      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route) || XML_ROUTES.includes(route) || CSV_ROUTES.includes(route) || SQL_ROUTES.includes(route) || PDF_ROUTES.includes(route)) {
         await navigate('/');
         await evaluate(client, `
           localStorage.clear();
@@ -908,6 +1015,7 @@ async function runAcceptance() {
           return true;
         `);
       }
+      if (PDF_ROUTES.includes(route)) await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
       await navigate(route);
       const result = await evaluate(client, flow);
       if (route === '/json/') assert.match(result.status, /Valid JSON/i, 'JSON privacy flow did not finish');
@@ -1168,6 +1276,28 @@ async function runAcceptance() {
           input: '', output: '', mode: 'format', dialect: 'postgres', keywordCase: 'upper', indent: '2', status: 'ready', copyDisabled: true,
         }, `${route} did not clear SQL input, output, and options`);
       }
+      if (PDF_ROUTES.includes(route)) {
+        assert.deepEqual(result.order, ['period-two.pdf', 'period-one.pdf'], `${route} did not merge the selected PDF pages locally in the chosen order`);
+        assert.equal(result.success.state, 'success', `${route} did not finish its local PDF merge: ${result.success.message}`);
+        assert.equal(result.success.fileCount, 2, `${route} did not merge both selected PDFs`);
+        assert.equal(result.success.pageCount, 2, `${route} did not merge the selected PDF pages locally`);
+        assert.equal(result.success.blobProtocol, 'blob:', `${route} did not provide a local PDF download`);
+        assert.equal(result.success.downloadName, 'merged.pdf', `${route} used an unexpected PDF filename`);
+        assert.equal(result.success.visible, true, `${route} hid its completed PDF download`);
+        assert.ok(result.success.elapsed < 5_000, `${route} PDF merge took ${result.success.elapsed} ms under 4x CPU throttling`);
+        const emptyState = { fileCount: 0, inputFiles: 0, downloadHidden: true, hasDownloadHref: false, state: 'ready' };
+        assert.deepEqual(result.afterPagehide, emptyState, `${route} retained PDF inputs or output after pagehide`);
+        assert.deepEqual(result.afterPersistedPageshow, emptyState, `${route} retained PDF inputs or output after persisted pageshow`);
+        assert.equal(result.revokedCount, 1, `${route} did not revoke the temporary PDF download URL`);
+        assert.equal(result.invalid.state, 'error', `${route} did not reject an invalid PDF`);
+        assert.equal(result.invalid.hasDownload, false, `${route} retained stale PDF output after an error`);
+        assert.doesNotMatch(result.invalid.message, /private-pdf-sentinel/i, `${route} echoed a filename in its PDF error`);
+        assert.deepEqual(result.cleared, emptyState, `${route} did not clear the PDF queue and output`);
+        assert.deepEqual(result.storage, { local: [], session: [], cookies: '' }, `${route} stored PDF inputs or recent-tool history`);
+        pdfLifecycle.push({ route, afterPagehide: result.afterPagehide, afterPersistedPageshow: result.afterPersistedPageshow, revokedCount: result.revokedCount });
+        pdfPerformance.push({ route, elapsed: result.success.elapsed, pageCount: result.success.pageCount, fileCount: result.success.fileCount });
+        await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+      }
       await wait(100);
       const networkRequests = requests.filter(request => /^https?:\/\//i.test(request.url));
       const permittedRegexAssets = REGEX_ROUTES.includes(route)
@@ -1180,7 +1310,18 @@ async function runAcceptance() {
               && ['/regex/regex-worker.js', '/regex/regex-engine.js'].includes(url.pathname);
           })
         : [];
-      const disallowedRequests = networkRequests.filter(request => !permittedRegexAssets.includes(request));
+      const permittedPdfAssets = PDF_ROUTES.includes(route)
+        ? networkRequests.filter(request => {
+            const url = new URL(request.url);
+            return request.method === 'GET'
+              && request.postData === ''
+              && url.origin === `http://127.0.0.1:${sitePort}`
+              && url.search === ''
+              && ['/pdf/pdf-merge-worker.js', '/pdf/pdf-engine.js', '/pdf/vendor/pdf-lib.min.js'].includes(url.pathname);
+          })
+        : [];
+      const permittedAssets = [...permittedRegexAssets, ...permittedPdfAssets];
+      const disallowedRequests = networkRequests.filter(request => !permittedAssets.includes(request));
       const unexpected = networkRequests.filter(request => {
         try { return new URL(request.url).origin !== `http://127.0.0.1:${sitePort}`; }
         catch { return false; }
@@ -1632,6 +1773,38 @@ async function runAcceptance() {
       sqlHistory.push({ route, ...result });
     }
 
+    const pdfHistory = [];
+    for (const route of PDF_ROUTES) {
+      await navigate(route);
+      const processed = await evaluate(client, PDF_HISTORY_FLOW);
+      assert.equal(processed.state, 'success', `${route} did not merge PDF files before history navigation`);
+      assert.equal(processed.pageCount, 2, `${route} did not create the expected two-page history fixture`);
+      assert.equal(processed.visible, true, `${route} did not expose a PDF download before history navigation`);
+      await navigate('/about/');
+      await evaluate(client, 'history.back(); return true;');
+      let restored = false;
+      for (let attempt = 0; attempt < 40; attempt += 1) {
+        await wait(50);
+        restored = await evaluate(client, `return location.pathname === '${route}' && document.readyState === 'complete' && Boolean(document.querySelector('#pdfFiles'));`);
+        if (restored) break;
+      }
+      assert.equal(restored, true, `${route} did not return through browser history`);
+      const result = await evaluate(client, `return {
+        inputFiles: document.querySelector('#pdfFiles').files.length,
+        rows: document.querySelector('#pdfFileList').children.length,
+        downloadHidden: document.querySelector('#downloadPdf').hidden,
+        hasDownloadHref: document.querySelector('#downloadPdf').hasAttribute('href'),
+        state: document.querySelector('#pdfStatus').dataset.state,
+        storage: { local: Object.keys(localStorage), session: Object.keys(sessionStorage), cookies: document.cookie },
+      };`);
+      assert.deepEqual(result, {
+        inputFiles: 0, rows: 0, downloadHidden: true, hasDownloadHref: false, state: 'ready',
+        storage: { local: [], session: [], cookies: '' },
+      }, `${route} restored PDF files or output from browser history`);
+      assert.doesNotMatch(JSON.stringify(result), /history-secret/, `${route} restored sensitive PDF state from browser history`);
+      pdfHistory.push({ route, ...result });
+    }
+
     const csvLifecycle = [];
     for (const route of CSV_ROUTES) {
       await navigate(route);
@@ -1975,6 +2148,7 @@ async function runAcceptance() {
       xmlMobile,
       csvMobile,
       sqlMobile,
+      pdfMobile,
       jwtStorage,
       textDiffNavigation,
       textDiffHistory,
@@ -1987,13 +2161,16 @@ async function runAcceptance() {
       xmlHistory,
       csvHistory,
       sqlHistory,
+      pdfHistory,
       csvLifecycle,
       sqlLifecycle,
+      pdfLifecycle,
       yamlPerformance,
       xmlPerformance,
       csvPerformance,
       csvWorstFieldPerformance,
       sqlPerformance,
+      pdfPerformance,
       cronPerformance,
       passwordResults,
       privacyFlows: privacy,
@@ -2024,7 +2201,7 @@ async function runAcceptance() {
 }
 
 module.exports = {
-  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, XML_ROUTES, XML_MOBILE_WIDTH, CSV_ROUTES, CSV_MOBILE_WIDTH, SQL_ROUTES, SQL_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
+  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, XML_ROUTES, XML_MOBILE_WIDTH, CSV_ROUTES, CSV_MOBILE_WIDTH, SQL_ROUTES, SQL_MOBILE_WIDTH, PDF_ROUTES, PDF_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
   runAcceptance, startStaticServer, stopBrowser, stopServer, browserBinary,
 };
 

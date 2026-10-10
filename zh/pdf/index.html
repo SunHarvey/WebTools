@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>PDF 合并工具：在本地合并 PDF 文件 | UtilCover</title>
+  <meta name="description" content="按照所选顺序在浏览器本地合并多个 PDF 文件。文件保留在你的设备上，不会上传，也不需要账户或 PDF 服务器。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/pdf/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/pdf/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/pdf/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/pdf/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/pdf/pdf.css">
+  <meta property="og:title" content="PDF 合并工具：在本地合并 PDF 文件 | UtilCover">
+  <meta property="og:description" content="在浏览器本地合并 PDF 文件。文档不会上传，也不会保存到浏览器存储。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/zh/pdf/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/zh/pdf/#application",
+      "name": "PDF 合并工具",
+      "url": "https://www.utilcover.com/zh/pdf/",
+      "description": "按照所选顺序在浏览器本地合并多个 PDF 文件。文件保留在你的设备上，不会上传，也不需要账户或 PDF 服务器。",
+      "inLanguage": "zh-CN",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/zh/pdf/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "工具",
+          "item": "https://www.utilcover.com/zh/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "PDF 合并工具",
+          "item": "https://www.utilcover.com/zh/pdf/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="platform-nav nav-links"><a href="/zh/#popular-tools">工具</a><a href="/zh/#categories">分类</a><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><button class="search-trigger" type="button" aria-label="搜索工具">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/pdf/">English</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>PDF 合并工具</h1><p>按照你选择的顺序合并 PDF 页面。所有处理都在当前浏览器中进行，文件不会上传。</p></section>
+  <section class="tool-card pdf-card" aria-label="本地 PDF 合并工具">
+    <p class="local-processing-note">PDF 文件仅在当前浏览器中处理，不会上传、写入浏览器存储，也不会加入最近使用记录。</p>
+    <div class="pdf-workspace">
+      <div class="field pdf-picker">
+        <label for="pdfFiles">选择 PDF 文件</label>
+        <input id="pdfFiles" type="file" accept="application/pdf,.pdf" multiple>
+        <small>可选择 2–20 个文件；每个文件最大 25 MiB，输入总大小上限为 40 MiB。</small>
+      </div>
+      <p id="pdfSummary" class="pdf-summary" aria-live="polite">选择至少两个 PDF 文件，即可在本地合并。</p>
+      <ol id="pdfFileList" class="pdf-file-list" aria-label="PDF 合并顺序"></ol>
+      <div class="pdf-actions">
+        <button id="mergePdfs" type="button" disabled>合并 PDF</button>
+        <button id="clearPdfs" class="danger" type="button">清除</button>
+        <a id="downloadPdf" class="button secondary" href="#" download="merged.pdf" hidden>下载合并后的 PDF</a>
+      </div>
+      <p id="pdfStatus" class="status" role="status" aria-live="polite" data-state="ready">选择至少两个 PDF 文件，即可在本地合并。</p>
+      <small>合并结果最多 60 MiB、500 页；处理 45 秒后会停止。</small>
+    </div>
+  </section>
+  <section class="tool-guide" aria-labelledby="pdf-guide-title">
+    <div class="guide-intro"><h2 id="pdf-guide-title">在浏览器中私密地合并 PDF 文件</h2><p>这个 PDF 合并工具会将多个 PDF 中的页面合并为一个可下载的文档。文件不会上传，处理会在浏览器本地进行。它使用随本站静态资源一起提供的 PDF 库，在浏览器本地读取文件，并通过同源浏览器 Worker 完成页面复制和 PDF 写入。文件字节不会发送给 UtilCover、第三方 API 或 CDN。本页面不会把文档内容写入 localStorage、sessionStorage 或最近使用记录。离开页面或通过浏览器历史返回时，临时文件列表和下载结果都会清除。</p></div>
+    <div class="guide-section how-to"><h2>如何合并 PDF 文件</h2><ol class="steps"><li><strong>选择至少两个 PDF 文件。</strong><span>从设备中选取文件。工具最多接收 20 个文件，会在本地检查 PDF 文件头，并在开始合并前检查文件大小限制。</span></li><li><strong>设置页面顺序。</strong><span>使用“上移”和“下移”按钮调整顺序。最终 PDF 会按照你设置的所选顺序，从列表顶部到底部依次排列。合并前也可以移除不需要的文件。</span></li><li><strong>合并并下载。</strong><span>点击“合并 PDF”，等待本地 Worker 完成后，下载名为 <code>merged.pdf</code> 的结果。建议使用可信的 PDF 阅读器检查文件。点击“清除”或离开页面，会清除页面中的临时列表和下载状态。</span></li></ol></div>
+    <div class="guide-section examples"><h2>使用示例与预期结果</h2><div class="example-grid"><article><h3>按指定顺序合并账单</h3><p>添加一月、二月和三月的账单，然后按月份调整顺序。工具按照列表顺序复制各文件页面，不会从文件名推断日期，也不会读取文档文本。</p></article><article><h3>合并不同纸张尺寸的页面</h3><p>Letter、A4 和横向页面可以放在同一个文件中。每页保留各自的页面尺寸；工具不会把全部页面缩放为同一种纸张，也不会把 PDF 页面栅格化成图片。</p></article><article><h3>分享前检查输出文件</h3><p>合并会创建新的 PDF 并重写文档结构，因此已有数字签名不再有效。交互式表单、书签、附件、文档元数据及其他文档级功能可能不会保留。</p></article></div></div>
+    <div class="guide-section limitations"><h2>文件支持、功能边界与资源限制</h2><p>本工具按照页面列表顺序合并可读取 PDF 的页面内容。它不提供拆分、压缩、格式转换、修复、OCR、脱敏、签名或 PDF 有效性验证。暂不支持密码保护的 PDF；工具不会询问或保存 PDF 密码。如果文件损坏、格式不受支持或受到密码保护，页面会清除旧结果并显示通用错误，不会展示文件内容或底层解析器诊断信息。</p><p>这是页面合并工具，不保证保留 PDF 的全部文档功能。重写会使原有数字签名失效；交互式表单字段、书签、附件、嵌入脚本、无障碍标签结构和部分元数据可能丢失或改变。请检查合并结果并保留原始文件。工具不会认证 PDF/A、PDF/UA 或其他归档及无障碍标准。</p><p>所有限制都在浏览器本地执行：最多 20 个文件、每个文件 25 MiB、输入总大小 40 MiB、合并总页数 500 页、输出 60 MiB。合并处理会在 45 秒后停止。这些限制用于约束常见设备上的浏览器工作量，但不保证每台设备都能同样快速地处理复杂 PDF。遇到超时或达到上限时，请改用更小的文件。</p><p>PDF 库随本站本地打包，仅在你开始合并时加载，不会从第三方 CDN 获取。Worker 通过浏览器内部消息接收文件数据，不会发起文件上传请求。无需账户，文件与合并结果也不会持久保存。浏览器扩展、设备备份和下载文件不受此页面控制。</p></div>
+    <div class="guide-section faq-list"><h2>PDF 合并常见问题</h2><details><summary>PDF 文件会上传吗？</summary><p>不会。文件读取和合并都在浏览器及其同源 Worker 中完成。文件数据不会发送到服务器、第三方 API 或 CDN，也不会写入浏览器存储或最近使用记录。</p></details><details><summary>可以合并带密码的 PDF 吗？</summary><p>不可以。工具不会询问 PDF 密码。受保护文件只会返回通用本地错误，密码和文档内容都不会传输。</p></details><details><summary>数字签名、表单和书签会保留吗？</summary><p>请勿依赖它们会保留。合并会写入新的 PDF，原有数字签名会失效；交互式表单、书签、附件或元数据也可能无法保留。</p></details><details><summary>可以压缩或拆分 PDF 吗？</summary><p>不可以。本页面只合并多个 PDF 的页面，不提供压缩、拆分、转换、修复、OCR 或验证功能。</p></details><details><summary>文件和页数上限是多少？</summary><p>最多选择 20 个 PDF；每个文件最大 25 MiB，输入总大小最多 40 MiB，合并总页数最多 500 页，输出最多 60 MiB。为保护浏览器标签页，处理会在 45 秒后停止。</p></details></div>
+    <nav class="related-tools" data-related-tools="pdf" aria-label="相关工具"><h2>相关工具</h2><div class="related-links"><a href="/zh/image/"><strong>图片压缩器</strong><span>在本地调整、压缩和转换图片。</span></a><a href="/zh/text/"><strong>文本工具箱</strong><span>统计、清理、排序和转换文本。</span></a><a href="/zh/csv/"><strong>CSV / TSV 与 JSON 转换器</strong><span>在本地转换 CSV/TSV 表格与扁平 JSON 数组。</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="页脚导航"><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><a href="/zh/contact/">联系</a><a href="/zh/licenses/">开源许可</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · 私密、快速的浏览器本地工具</p></footer>
+<script src="/pdf/pdf-engine.js"></script><script src="/pdf/pdf-tool.js"></script><script src="/pdf/pdf-app.js"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

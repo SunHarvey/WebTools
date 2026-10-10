@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>PDF Merger — Combine PDF Files Locally | UtilCover</title>
+  <meta name="description" content="Merge PDF files locally in your selected order. Files stay on your device; no upload, account, or PDF server is used.">
+  <link rel="canonical" href="https://www.utilcover.com/pdf/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/pdf/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/pdf/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/pdf/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/pdf/pdf.css">
+  <meta property="og:title" content="PDF Merger — Combine PDF Files Locally | UtilCover">
+  <meta property="og:description" content="Merge PDF files in your browser. Your documents are not uploaded or saved.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/pdf/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/pdf/#application",
+      "name": "PDF Merger",
+      "url": "https://www.utilcover.com/pdf/",
+      "description": "Merge PDF files locally in your selected order. Files stay on your device; no upload, account, or PDF server is used.",
+      "inLanguage": "en",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/pdf/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tools",
+          "item": "https://www.utilcover.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "PDF Merger",
+          "item": "https://www.utilcover.com/pdf/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/pdf/">中文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>PDF Merger</h1><p>Combine PDF pages in the order you choose. Processing stays in this browser; your files are not uploaded.</p></section>
+  <section class="tool-card pdf-card" aria-label="Local PDF merger">
+    <p class="local-processing-note">Your PDF files stay in this browser. They are not uploaded, saved to browser storage, or added to recent-tool history.</p>
+    <div class="pdf-workspace">
+      <div class="field pdf-picker">
+        <label for="pdfFiles">Choose PDF files</label>
+        <input id="pdfFiles" type="file" accept="application/pdf,.pdf" multiple>
+        <small>Select 2–20 files. Each file may be up to 25 MiB; the combined input limit is 40 MiB.</small>
+      </div>
+      <p id="pdfSummary" class="pdf-summary" aria-live="polite">Select two or more PDF files to merge locally.</p>
+      <ol id="pdfFileList" class="pdf-file-list" aria-label="PDF merge order"></ol>
+      <div class="pdf-actions">
+        <button id="mergePdfs" type="button" disabled>Merge PDFs</button>
+        <button id="clearPdfs" class="danger" type="button">Clear</button>
+        <a id="downloadPdf" class="button secondary" href="#" download="merged.pdf" hidden>Download merged PDF</a>
+      </div>
+      <p id="pdfStatus" class="status" role="status" aria-live="polite" data-state="ready">Select two or more PDF files to merge locally.</p>
+      <small>The merged file is limited to 60 MiB and 500 pages. Processing stops after 45 seconds.</small>
+    </div>
+  </section>
+  <section class="tool-guide" aria-labelledby="pdf-guide-title">
+    <div class="guide-intro"><h2 id="pdf-guide-title">Combine PDF files privately in your browser</h2><p>This PDF merger combines the pages from multiple PDF files into one downloadable document. It runs in your browser using a locally hosted PDF library, including the page-copying and document-writing operations needed to create a real PDF. Your PDF files are not uploaded. They are read into temporary browser memory and passed to a same-origin browser worker for processing; file bytes are never sent to UtilCover, a third-party API, or a CDN. The page does not save document contents in local or session storage or recent-tool history. Temporary selections and output are cleared when you leave the page or return through browser history.</p></div>
+    <div class="guide-section how-to"><h2>How to merge PDF files</h2><ol class="steps"><li><strong>Select at least two PDF files.</strong><span>Choose the files from your device. The merger accepts up to 20 files, checks their PDF headers locally, and rejects files outside the published size limits before starting the merge.</span></li><li><strong>Set the page order.</strong><span>Use the Move up and Move down controls to choose the document order. The final PDF follows this list from top to bottom. Remove a file to exclude it before merging.</span></li><li><strong>Merge and download.</strong><span>Select Merge PDFs, wait for the local worker to finish, then download the result as <code>merged.pdf</code>. Review the output in a trusted PDF viewer. Use Clear or navigate away to erase the temporary list and download state from this page.</span></li></ol></div>
+    <div class="guide-section examples"><h2>Examples and expected behavior</h2><div class="example-grid"><article><h3>Join statements in a chosen order</h3><p>Add January, February, and March statements, then arrange them chronologically. The merger copies each source PDF's pages in that selected order; it does not infer dates from filenames or inspect document text.</p></article><article><h3>Combine documents with different page sizes</h3><p>Letter, A4, and landscape pages can be combined. Each copied page keeps its own page dimensions; the tool does not resize pages to a common paper size or render the documents as images.</p></article><article><h3>Check the output before sharing</h3><p>The output is a newly written PDF. Rewriting changes the document structure, so existing digital signatures cannot remain valid. Interactive forms, bookmarks, attachments, document metadata, or other document-level features may not be preserved by a page merge.</p></article></div></div>
+    <div class="guide-section limitations"><h2>Supported files, limitations and resource limits</h2><p>The tool merges page content from ordinary readable PDFs in the displayed order. It does not split, compress, convert, repair, OCR, redact, sign, or validate PDF documents. Password-protected PDFs are not supported. The merger does not ask for or retain PDF passwords. If a file is damaged, unsupported, or protected, the tool clears any stale output and shows a generic error without displaying the file contents or parser diagnostics.</p><p>This is a page merger, not a document-feature preservation tool. Digital signatures are invalidated when the PDF is rewritten. Interactive form fields, bookmarks, attachments, embedded scripts, tagged accessibility structure, and some metadata may be lost or changed. Review the merged result and retain the original files. The tool does not guarantee conformance to PDF/A, PDF/UA, or any other archival or accessibility standard.</p><p>Limits are enforced in the browser: at most 20 files, 25 MiB per file, 40 MiB combined input, 500 pages across all files, and 60 MiB output. The merge operation is stopped after 45 seconds. These caps bound typical browser work but cannot guarantee that every device handles a complex PDF equally quickly. Choose smaller files if a merge times out or reaches a limit.</p><p>The PDF library is bundled with this site and loaded locally only when you start a merge; it is not fetched from a third-party CDN. The worker receives file bytes through browser messaging, not an HTTP request. The page makes no file-upload request, does not create an account, and does not persist your files or generated PDF. Browser extensions, device backups, and downloads are outside the page's control.</p></div>
+    <div class="guide-section faq-list"><h2>PDF merger FAQ</h2><details><summary>Are my PDF files uploaded?</summary><p>No. File reading and merging happen in the browser and its same-origin worker. The file data is not sent to a server, third-party API, or CDN, and the page does not store it in browser storage or recent-tool history.</p></details><details><summary>Can I merge password-protected PDFs?</summary><p>No. The tool does not ask for a PDF password. Protected files return a generic local error; the password or document content is never transmitted.</p></details><details><summary>Will signatures, forms, and bookmarks remain intact?</summary><p>Do not rely on that. The merger writes a new PDF; existing digital signatures are invalidated, and interactive forms, bookmarks, attachments, or metadata may not be preserved.</p></details><details><summary>Can I compress or split a PDF here?</summary><p>No. This page only combines pages from multiple PDFs. It does not provide compression, splitting, conversion, repair, OCR, or validation.</p></details><details><summary>What are the file and page limits?</summary><p>You can select up to 20 PDFs, with a maximum of 25 MiB per file, 40 MiB combined input, 500 total pages, and 60 MiB output. Processing is stopped after 45 seconds to protect the browser tab.</p></details></div>
+    <nav class="related-tools" data-related-tools="pdf" aria-label="Related tools"><h2>Related tools</h2><div class="related-links"><a href="/image/"><strong>Image Compressor</strong><span>Resize, compress and convert images locally.</span></a><a href="/text/"><strong>Text Toolkit</strong><span>Count, clean, sort and transform text.</span></a><a href="/csv/"><strong>CSV / TSV ↔ JSON Converter</strong><span>Convert CSV and TSV tables and flat JSON arrays locally.</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/licenses/">Licenses</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · Private, fast, client-side utilities</p></footer>
+<script src="/pdf/pdf-engine.js"></script><script src="/pdf/pdf-tool.js"></script><script src="/pdf/pdf-app.js"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>
