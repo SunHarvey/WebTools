@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>JPG、PNG 转 PDF：本地图片转 PDF 工具 | UtilCover</title>
+  <meta name="description" content="在浏览器中将 JPG、PNG 图片转换为 A4 PDF。可调整图片顺序，文件仅在本地处理，不会上传。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/image-to-pdf/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/image-to-pdf/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/image-to-pdf/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/image-to-pdf/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/image-to-pdf/image-pdf.css">
+  <meta property="og:title" content="JPG、PNG 转 PDF 工具 | UtilCover">
+  <meta property="og:description" content="在浏览器本地将 JPG、PNG 图片转换为可下载的 PDF。无需上传或账户。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/zh/image-to-pdf/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/zh/image-to-pdf/#application",
+      "name": "JPG、PNG 转 PDF",
+      "url": "https://www.utilcover.com/zh/image-to-pdf/",
+      "description": "在浏览器中将 JPG、PNG 图片转换为 A4 PDF。可调整图片顺序，文件仅在本地处理，不会上传。",
+      "inLanguage": "zh-CN",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/zh/image-to-pdf/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "工具",
+          "item": "https://www.utilcover.com/zh/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "JPG、PNG 转 PDF",
+          "item": "https://www.utilcover.com/zh/image-to-pdf/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="platform-nav nav-links"><a href="/zh/#popular-tools">工具</a><a href="/zh/#categories">分类</a><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><button class="search-trigger" type="button" aria-label="搜索工具">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/image-to-pdf/">English</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>JPG、PNG 转 PDF</h1><p>将图片转换为可下载的 PDF。调整图片顺序，所有处理都在当前设备本地完成。</p></section>
+  <section class="tool-card image-pdf-card" aria-label="本地图片转 PDF 工具">
+    <p class="local-processing-note">图片仅在当前浏览器中处理，不会上传、写入浏览器存储，也不会加入最近使用记录。</p>
+    <div class="image-pdf-workspace">
+      <div class="field image-pdf-picker"><label for="imagePdfFiles">选择 JPG 或 PNG 图片</label><input id="imagePdfFiles" type="file" accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple><small>可选择 1–20 张图片；每张最大 16 MiB、1200 万像素；输入总大小最多 40 MiB、总计 4000 万像素。</small></div>
+      <p id="imagePdfSummary" class="pdf-summary" aria-live="polite">选择 JPG 或 PNG 图片，即可在本地生成 PDF。</p>
+      <ol id="imagePdfFileList" class="pdf-file-list" aria-label="图片顺序"></ol>
+      <div class="pdf-actions"><button id="createImagePdf" type="button" disabled>生成 PDF</button><button id="clearImagePdf" class="danger" type="button">清除</button><a id="downloadImagePdf" class="button secondary" href="#" download="images.pdf" hidden>下载 PDF</a></div>
+      <p id="imagePdfStatus" class="status" role="status" aria-live="polite" data-state="ready">选择 JPG 或 PNG 图片，即可在本地生成 PDF。</p>
+      <small>每张图片生成一页 A4 页面；横向图片会自动使用横向页面。图片按比例完整适配，不会裁剪。输出上限 60 MiB；处理 45 秒后停止。</small>
+    </div>
+  </section>
+  <section class="tool-guide" aria-labelledby="image-pdf-guide-title">
+    <div class="guide-intro"><h2 id="image-pdf-guide-title">在浏览器本地私密地将图片转换为 PDF</h2><p>这个图片转 PDF 工具会将每张 JPG 或 PNG 图片放到单独的 A4 页面中。调整图片顺序后，即可生成并下载一个 PDF。PDF 库与转换 Worker 由本站提供；图片字节只在本地处理，不会发送到服务器、第三方 API 或 CDN。</p></div>
+    <div class="guide-section how-to"><h2>如何将 JPG 或 PNG 转换为 PDF</h2><ol class="steps"><li><strong>选择图片。</strong><span>从设备中选择一张或多张 JPG/JPEG 或 PNG 图片。工具会在本地检查文件大小与图片尺寸。</span></li><li><strong>调整页面顺序。</strong><span>使用“上移”和“下移”控制图片在 PDF 中出现的顺序，也可以移除不需要的图片。</span></li><li><strong>生成并下载 PDF。</strong><span>点击“生成 PDF”，处理完成后下载 <code>images.pdf</code>。每页使用 A4 纸张；横向图片使用横向页面，图片居中并按比例完整适配。</span></li></ol></div>
+    <div class="guide-section examples"><h2>转换效果说明</h2><div class="example-grid"><article><h3>合并扫描页面</h3><p>按顺序选择扫描件，即可生成多页 PDF。页面顺序由列表决定，不会根据文件名或时间自动排序。</p></article><article><h3>混合纵向和横向图片</h3><p>每张图片使用一张 A4 页面，并根据图片像素宽高自动选择纸张方向。图片会保留比例、完整放入页面并留出白边，不会裁剪或拉伸。</p></article><article><h3>保留原始图片</h3><p>工具会创建单独的 PDF，不会修改源图片。分享或归档前请检查下载的文档。</p></article></div></div>
+    <div class="guide-section limitations"><h2>支持格式与资源限制</h2><p>仅支持常规 JPEG/JPG 和 PNG 图片。不支持 SVG、WebP、GIF、HEIC/HEIF、动图或已有 PDF 文件。工具会把图片数据嵌入生成的 PDF，不提供 OCR、图片编辑或 PDF 压缩。</p><p>所有限制均在本地执行：最多 20 张图片、每张 16 MiB、输入总计 40 MiB、每张 1200 万像素、总计 4000 万像素、输出 60 MiB、单次处理 45 秒。超过限制或格式错误的文件会显示通用提示，不会展示文件内容或解析器诊断信息。</p><p>页面尺寸为 A4，并留有 36 点白边。图片按比例完整适配，不会裁剪。依赖 EXIF 方向信息的数码照片在 PDF 中可能无法保留该方向；请检查转换结果。本工具会创建新的 PDF，不会复制原图片的元数据。</p><p>文件会临时读入浏览器内存，并以字节形式发送给同源 Worker。文件不会上传、写入 localStorage 或 sessionStorage，也不会加入最近使用记录。离开页面或通过浏览器历史返回时，临时文件列表和下载链接都会清除。</p></div>
+    <div class="guide-section faq-list"><h2>图片转 PDF 常见问题</h2><details><summary>图片会上传吗？</summary><p>不会。图片读取与 PDF 创建都在浏览器及同源 Worker 中完成。图片字节不会发送到服务器、第三方 API 或 CDN，也不会保存到浏览器存储或最近使用记录。</p></details><details><summary>可以在同一份 PDF 中混合 JPG 和 PNG 吗？</summary><p>可以。可在同一批次中同时选择两种格式；每张图片按照列表顺序生成一个 PDF 页面。</p></details><details><summary>可以自选纸张尺寸或裁剪图片吗？</summary><p>当前版本使用 A4 页面，并根据图片尺寸自动选择纵向或横向；图片会按比例完整适配，不会裁剪。暂不支持自定义纸张尺寸、边距或裁剪。</p></details><details><summary>这个工具会压缩图片吗？</summary><p>不会。它会把图片嵌入 PDF 页面，不是图片压缩工具。生成的 PDF 输出上限为 60 MiB。</p></details></div>
+    <nav class="related-tools" data-related-tools="image-to-pdf" aria-label="相关工具"><h2>相关工具</h2><div class="related-links"><a href="/zh/image/"><strong>图片压缩器</strong><span>在本地调整、压缩和转换图片。</span></a><a href="/zh/pdf/"><strong>PDF 合并工具</strong><span>按照所选顺序在本地合并 PDF 页面；无需上传或账户。</span></a><a href="/zh/qr/"><strong>二维码生成器</strong><span>创建文本、网址和 Wi-Fi 二维码。</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="页脚导航"><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><a href="/zh/contact/">联系</a><a href="/zh/licenses/">开源许可</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · 私密、快速的浏览器本地工具</p></footer>
+<script src="/image-to-pdf/image-pdf-engine.js"></script><script src="/image-to-pdf/image-pdf-tool.js"></script><script src="/image-to-pdf/image-pdf-app.js"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

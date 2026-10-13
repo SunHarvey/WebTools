@@ -5,7 +5,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/" />
-    <lastmod>2026-10-10</lastmod>
+    <lastmod>2026-10-12</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/password/</loc>
@@ -138,7 +138,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/image/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/image/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/image/" />
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-10-12</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/xml/</loc>
@@ -167,6 +167,13 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/pdf/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/pdf/" />
     <lastmod>2026-10-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.utilcover.com/image-to-pdf/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/image-to-pdf/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/image-to-pdf/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/image-to-pdf/" />
+    <lastmod>2026-10-12</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/privacy/</loc>
@@ -201,7 +208,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/" />
-    <lastmod>2026-10-10</lastmod>
+    <lastmod>2026-10-12</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/password/</loc>
@@ -334,7 +341,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/image/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/image/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/image/" />
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-10-12</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/xml/</loc>
@@ -363,6 +370,13 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/pdf/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/pdf/" />
     <lastmod>2026-10-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.utilcover.com/zh/image-to-pdf/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.utilcover.com/image-to-pdf/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/image-to-pdf/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/image-to-pdf/" />
+    <lastmod>2026-10-12</lastmod>
   </url>
   <url>
     <loc>https://www.utilcover.com/zh/privacy/</loc>

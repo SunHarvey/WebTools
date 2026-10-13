@@ -29,13 +29,14 @@ test('browser acceptance covers every required EN and ZH mobile route', () => {
     '/csv/', '/zh/csv/',
     '/sql/', '/zh/sql/',
     '/pdf/', '/zh/pdf/',
+    '/image-to-pdf/', '/zh/image-to-pdf/',
   ]);
 });
 
 test('browser acceptance exercises all privacy-critical tools', () => {
   const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
   assert.deepEqual(Object.keys(acceptance.PRIVACY_FLOWS), [
-    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/', '/yaml/', '/zh/yaml/', '/xml/', '/zh/xml/', '/csv/', '/zh/csv/', '/sql/', '/zh/sql/', '/pdf/', '/zh/pdf/',
+    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/', '/yaml/', '/zh/yaml/', '/xml/', '/zh/xml/', '/csv/', '/zh/csv/', '/sql/', '/zh/sql/', '/pdf/', '/zh/pdf/', '/image-to-pdf/', '/zh/image-to-pdf/',
   ]);
 });
 
@@ -156,6 +157,15 @@ test('browser acceptance merges PDFs locally with bounded worker, history, lifec
   assert.match(source, /pdfLifecycle/);
   assert.match(source, /pdfPerformance/);
   assert.match(source, /pdf-lib\.min\.js/);
+});
+
+test('browser acceptance converts JPG and PNG images locally with lifecycle and privacy checks',()=>{
+  const acceptance=require(path.join(root,'scripts/browser-acceptance.cjs'));
+  assert.deepEqual(acceptance.IMAGE_PDF_ROUTES,['/image-to-pdf/','/zh/image-to-pdf/']);assert.equal(acceptance.IMAGE_PDF_MOBILE_WIDTH,320);
+  for(const route of acceptance.IMAGE_PDF_ROUTES)assert.ok(acceptance.PRIVACY_FLOWS[route]);
+  const source=fs.readFileSync(path.join(root,'scripts/browser-acceptance.cjs'),'utf8');
+  assert.match(source,/did not create one page per image/);assert.match(source,/retained selected images or PDF output after pagehide/);
+  assert.match(source,/imagePdfLifecycle/);assert.match(source,/imagePdfPerformance/);assert.match(source,/imagePdfHistory/);assert.match(source,/image-private-sentinel/);
 });
 
 test('package exposes the durable browser acceptance command', () => {

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>JPG &amp; PNG to PDF Converter — Convert Images Locally | UtilCover</title>
+  <meta name="description" content="Convert JPG and PNG images into an A4 PDF in your browser. Set image order and download privately—your files are never uploaded.">
+  <link rel="canonical" href="https://www.utilcover.com/image-to-pdf/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/image-to-pdf/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/image-to-pdf/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/image-to-pdf/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/image-to-pdf/image-pdf.css">
+  <meta property="og:title" content="JPG &amp; PNG to PDF Converter | UtilCover">
+  <meta property="og:description" content="Turn JPG and PNG images into a downloadable PDF locally in your browser. No upload or account.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/image-to-pdf/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/image-to-pdf/#application",
+      "name": "JPG & PNG to PDF",
+      "url": "https://www.utilcover.com/image-to-pdf/",
+      "description": "Convert JPG and PNG images into an A4 PDF in your browser. Set image order and download privately—your files are never uploaded.",
+      "inLanguage": "en",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/image-to-pdf/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tools",
+          "item": "https://www.utilcover.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "JPG & PNG to PDF",
+          "item": "https://www.utilcover.com/image-to-pdf/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/image-to-pdf/">中文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>JPG &amp; PNG to PDF</h1><p>Turn your images into a downloadable PDF. Choose their order and keep the entire conversion on this device.</p></section>
+  <section class="tool-card image-pdf-card" aria-label="Local image to PDF converter">
+    <p class="local-processing-note">Your images stay in this browser. They are not uploaded, saved to browser storage, or added to recent-tool history.</p>
+    <div class="image-pdf-workspace">
+      <div class="field image-pdf-picker"><label for="imagePdfFiles">Choose JPG or PNG images</label><input id="imagePdfFiles" type="file" accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple><small>Select 1–20 images. Each image may be up to 16 MiB and 12 megapixels; combined input is limited to 40 MiB and 40 megapixels.</small></div>
+      <p id="imagePdfSummary" class="pdf-summary" aria-live="polite">Choose JPG or PNG images to make a PDF locally.</p>
+      <ol id="imagePdfFileList" class="pdf-file-list" aria-label="Image order"></ol>
+      <div class="pdf-actions"><button id="createImagePdf" type="button" disabled>Create PDF</button><button id="clearImagePdf" class="danger" type="button">Clear</button><a id="downloadImagePdf" class="button secondary" href="#" download="images.pdf" hidden>Download PDF</a></div>
+      <p id="imagePdfStatus" class="status" role="status" aria-live="polite" data-state="ready">Choose JPG or PNG images to make a PDF locally.</p>
+      <small>Creates one A4 page per image, automatically switches page orientation for landscape images, and fits each image inside the page without cropping. Output is limited to 60 MiB; processing stops after 45 seconds.</small>
+    </div>
+  </section>
+  <section class="tool-guide" aria-labelledby="image-pdf-guide-title">
+    <div class="guide-intro"><h2 id="image-pdf-guide-title">Convert images to PDF privately in your browser</h2><p>This image-to-PDF converter places each selected JPG or PNG on its own A4 page. Arrange images in the order you want, then create and download a single PDF. The PDF library and conversion worker are served by this site; image bytes are processed locally and are not sent to a server, third-party API, or CDN.</p></div>
+    <div class="guide-section how-to"><h2>How to convert JPG or PNG to PDF</h2><ol class="steps"><li><strong>Select your images.</strong><span>Choose one or more JPG/JPEG or PNG files from your device. The tool checks file size and image dimensions locally before embedding them.</span></li><li><strong>Arrange the page order.</strong><span>Use Move up and Move down to control which image appears on each PDF page. Remove any image you do not want to include.</span></li><li><strong>Create and download the PDF.</strong><span>Select Create PDF and download <code>images.pdf</code> when conversion finishes. Each page uses A4 paper, landscape orientation for wider images, and a centered fit that preserves the image proportions.</span></li></ol></div>
+    <div class="guide-section examples"><h2>What to expect</h2><div class="example-grid"><article><h3>Combine scanned pages</h3><p>Select scans in sequence and arrange them to create a multi-page PDF. The order follows the list, not filenames or timestamps.</p></article><article><h3>Mix portrait and landscape images</h3><p>Each image gets an A4 page whose orientation follows its pixel dimensions. The image is scaled proportionally inside a small white margin; it is not cropped or stretched.</p></article><article><h3>Keep the original images</h3><p>The converter creates a separate PDF and does not change the source files. Review the downloaded document before sharing or archiving it.</p></article></div></div>
+    <div class="guide-section limitations"><h2>Supported formats and limits</h2><p>Only ordinary JPEG/JPG and PNG images are supported. SVG, WebP, GIF, HEIC/HEIF, animated images, and password-protected or existing PDF files are not accepted. JPEG and PNG image data is embedded in the generated PDF; no OCR, image editing, or PDF compression is performed.</p><p>Limits are enforced locally: up to 20 images, 16 MiB per image, 40 MiB total input, 12 megapixels per image, 40 megapixels total, 60 MiB output, and 45 seconds per conversion. Large or malformed files are rejected with a generic message; file contents and parser diagnostics are not displayed.</p><p>Pages use A4 dimensions and a 36-point white margin. Each image is fitted proportionally to the page, without cropping. Digital photos that rely on EXIF orientation metadata may not retain that orientation in the PDF; check the result before relying on it. The PDF is a new document and does not carry the original image files' metadata.</p><p>Files are temporarily read into browser memory and passed as bytes to a same-origin worker. They are not uploaded, placed in local or session storage, or saved to recent-tool history. Temporary selections and the download link are cleared when leaving the page or returning through browser history.</p></div>
+    <div class="guide-section faq-list"><h2>Image to PDF FAQ</h2><details><summary>Are my images uploaded?</summary><p>No. Image reading and PDF creation run locally in your browser and its same-origin worker. Image bytes are not sent to a server, third-party API, or CDN, and are not saved in browser storage or recent-tool history.</p></details><details><summary>Can I combine JPG and PNG images?</summary><p>Yes. You can select both formats in one batch. Each image becomes one PDF page in the order shown in the list.</p></details><details><summary>Can I choose paper size or crop an image?</summary><p>This version uses A4 pages, switches automatically between portrait and landscape based on image dimensions, and fits the full image without cropping. Custom paper sizes, margins, and cropping are not supported.</p></details><details><summary>Does this tool reduce image file size?</summary><p>No. It embeds image data to create PDF pages; it is not an image compressor. The generated PDF has a 60 MiB output limit.</p></details></div>
+    <nav class="related-tools" data-related-tools="image-to-pdf" aria-label="Related tools"><h2>Related tools</h2><div class="related-links"><a href="/image/"><strong>Image Compressor</strong><span>Resize, compress and convert images locally.</span></a><a href="/pdf/"><strong>PDF Merger</strong><span>Merge PDF pages in your chosen order locally; no upload or account.</span></a><a href="/qr/"><strong>QR Generator</strong><span>Create text, URL and Wi-Fi QR codes.</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/licenses/">Licenses</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · Private, fast, client-side utilities</p></footer>
+<script src="/image-to-pdf/image-pdf-engine.js"></script><script src="/image-to-pdf/image-pdf-tool.js"></script><script src="/image-to-pdf/image-pdf-app.js"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

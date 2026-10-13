@@ -34,6 +34,7 @@ const MOBILE_ROUTES = [
   '/csv/', '/zh/csv/',
   '/sql/', '/zh/sql/',
   '/pdf/', '/zh/pdf/',
+  '/image-to-pdf/', '/zh/image-to-pdf/',
 ];
 const PASSWORD_RESULT_ROUTES = ['/password/', '/zh/password/'];
 const JWT_STORAGE_ROUTES = ['/jwt/', '/zh/jwt/'];
@@ -45,6 +46,43 @@ const XML_ROUTES = ['/xml/', '/zh/xml/'];
 const CSV_ROUTES = ['/csv/', '/zh/csv/'];
 const SQL_ROUTES = ['/sql/', '/zh/sql/'];
 const PDF_ROUTES = ['/pdf/', '/zh/pdf/'];
+const IMAGE_PDF_MOBILE_WIDTH = 320;
+const IMAGE_PDF_ROUTES = ['/image-to-pdf/', '/zh/image-to-pdf/'];
+const IMAGE_PDF_FIXTURES = `
+  const png = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg=='), value => value.charCodeAt(0));
+  const jpeg = Uint8Array.from(atob('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAQf/2gAMAwEAAhADEAAAAe//xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAEFAqf/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAEDAQE/AT//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAECAQE/AT//2Q=='), value => value.charCodeAt(0));
+  const setImageFiles = files => { const transfer = new DataTransfer(); for (const [bytes,name,type] of files) transfer.items.add(new File([bytes],name,{type})); const input=document.querySelector('#imagePdfFiles'); input.files=transfer.files; input.dispatchEvent(new Event('change',{bubbles:true})); };
+`;
+const IMAGE_PDF_PRIVACY_FLOW = `
+${IMAGE_PDF_FIXTURES}
+  const revoked=[];const originalRevoke=URL.revokeObjectURL;URL.revokeObjectURL=function(url){revoked.push(url);return originalRevoke.call(this,url);};
+  setImageFiles([[png,'page-one.png','image/png'],[jpeg,'page-two.jpg','image/jpeg']]);
+  document.querySelector('#imagePdfFileList').children[1].querySelector('[data-action="up"]').click();
+  const order=Array.from(document.querySelectorAll('.pdf-file-name'),item=>item.textContent);
+  const started=performance.now();document.querySelector('#createImagePdf').click();
+  for(let i=0;i<600&&document.querySelector('#imagePdfStatus').dataset.state==='working';i++)await new Promise(resolve=>setTimeout(resolve,25));
+  const success={state:document.querySelector('#imagePdfStatus').dataset.state,message:document.querySelector('#imagePdfStatus').textContent,pageCount:Number(document.querySelector('#downloadImagePdf').dataset.pageCount),downloadName:document.querySelector('#downloadImagePdf').download,blobProtocol:document.querySelector('#downloadImagePdf').href.startsWith('blob:')?'blob:':'',visible:!document.querySelector('#downloadImagePdf').hidden,elapsed:performance.now()-started};
+  window.dispatchEvent(new Event('pagehide'));
+  const snapshot=()=>({fileCount:document.querySelector('#imagePdfFileList').children.length,inputFiles:document.querySelector('#imagePdfFiles').files.length,downloadHidden:document.querySelector('#downloadImagePdf').hidden,hasDownloadHref:document.querySelector('#downloadImagePdf').hasAttribute('href'),state:document.querySelector('#imagePdfStatus').dataset.state});
+  const afterPagehide=snapshot();const persisted=new Event('pageshow');Object.defineProperty(persisted,'persisted',{value:true});window.dispatchEvent(persisted);const afterPersistedPageshow=snapshot();
+  URL.revokeObjectURL=originalRevoke;
+  setImageFiles([[new TextEncoder().encode('image-private-sentinel'),'image-private-sentinel.png','image/png']]);document.querySelector('#createImagePdf').click();
+  for(let i=0;i<100&&document.querySelector('#imagePdfStatus').dataset.state==='working';i++)await new Promise(resolve=>setTimeout(resolve,20));
+  const invalid={state:document.querySelector('#imagePdfStatus').dataset.state,message:document.querySelector('#imagePdfStatus').textContent,hasDownload:!document.querySelector('#downloadImagePdf').hidden};
+  document.querySelector('#clearImagePdf').click();
+  const storage={local:Object.keys(localStorage),session:Object.keys(sessionStorage),cookies:document.cookie};
+  return {order,success,afterPagehide,afterPersistedPageshow,revokedCount:revoked.length,invalid,cleared:snapshot(),storage};
+`;
+
+
+const IMAGE_PDF_HISTORY_FLOW = `
+${IMAGE_PDF_FIXTURES}
+  setImageFiles([[png,'history-image-one.png','image/png'],[jpeg,'history-image-two.jpg','image/jpeg']]);
+  document.querySelector('#createImagePdf').click();
+  for(let i=0;i<600&&document.querySelector('#imagePdfStatus').dataset.state==='working';i++)await new Promise(resolve=>setTimeout(resolve,25));
+  return {state:document.querySelector('#imagePdfStatus').dataset.state,pageCount:Number(document.querySelector('#downloadImagePdf').dataset.pageCount),visible:!document.querySelector('#downloadImagePdf').hidden};
+`;
+
 
 const PDF_FIXTURE_SETUP = `
   const pdfBytes = [
@@ -192,7 +230,7 @@ const PRIVACY_FLOWS = {
     return { count: document.querySelector('#passwordList').children.length };
   `,
   '/image/': `
-    const bytes = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M/wHwAEAQH/7yMK/wAAAABJRU5ErkJggg=='), value => value.charCodeAt(0));
+    const bytes = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg=='), value => value.charCodeAt(0));
     const file = new File([bytes], 'privacy-check.png', { type: 'image/png' });
     const transfer = new DataTransfer();
     transfer.items.add(file);
@@ -452,6 +490,8 @@ const PRIVACY_FLOWS = {
   '/zh/sql/': SQL_PRIVACY_FLOW,
   '/pdf/': PDF_PRIVACY_FLOW,
   '/zh/pdf/': PDF_PRIVACY_FLOW,
+  '/image-to-pdf/': IMAGE_PDF_PRIVACY_FLOW,
+  '/zh/image-to-pdf/': IMAGE_PDF_PRIVACY_FLOW,
 };
 
 const MIME_TYPES = {
@@ -906,6 +946,17 @@ async function runAcceptance() {
     }
     await client.send('Emulation.clearDeviceMetricsOverride');
 
+    const imagePdfMobile=[];
+    await client.send('Emulation.setDeviceMetricsOverride',{width:IMAGE_PDF_MOBILE_WIDTH,height:700,deviceScaleFactor:1,mobile:true});
+    for(const route of IMAGE_PDF_ROUTES){
+      await navigate(route);
+      const result=await evaluate(client,`return {viewport:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,inputVisible:document.querySelector('#imagePdfFiles').getBoundingClientRect().width>0,convertVisible:document.querySelector('#createImagePdf').getBoundingClientRect().width>0};`);
+      assert.ok(result.scrollWidth<=result.viewport+1,`${route} overflows at ${IMAGE_PDF_MOBILE_WIDTH}px: ${result.scrollWidth}px > ${result.viewport}px`);
+      assert.equal(result.inputVisible,true,`${route} hides the image picker`);assert.equal(result.convertVisible,true,`${route} hides conversion controls`);
+      imagePdfMobile.push({route,...result});
+    }
+    await client.send('Emulation.clearDeviceMetricsOverride');
+
     const jwtStorage = [];
     for (const route of JWT_STORAGE_ROUTES) {
       await navigate('/');
@@ -1002,8 +1053,10 @@ async function runAcceptance() {
     const privacy = [];
     const pdfLifecycle = [];
     const pdfPerformance = [];
+    const imagePdfLifecycle=[];
+    const imagePdfPerformance=[];
     for (const [route, flow] of Object.entries(PRIVACY_FLOWS)) {
-      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route) || XML_ROUTES.includes(route) || CSV_ROUTES.includes(route) || SQL_ROUTES.includes(route) || PDF_ROUTES.includes(route)) {
+      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route) || XML_ROUTES.includes(route) || CSV_ROUTES.includes(route) || SQL_ROUTES.includes(route) || PDF_ROUTES.includes(route) || IMAGE_PDF_ROUTES.includes(route)) {
         await navigate('/');
         await evaluate(client, `
           localStorage.clear();
@@ -1016,6 +1069,7 @@ async function runAcceptance() {
         `);
       }
       if (PDF_ROUTES.includes(route)) await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+      if (IMAGE_PDF_ROUTES.includes(route)) await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
       await navigate(route);
       const result = await evaluate(client, flow);
       if (route === '/json/') assert.match(result.status, /Valid JSON/i, 'JSON privacy flow did not finish');
@@ -1298,6 +1352,26 @@ async function runAcceptance() {
         pdfPerformance.push({ route, elapsed: result.success.elapsed, pageCount: result.success.pageCount, fileCount: result.success.fileCount });
         await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
       }
+      if (IMAGE_PDF_ROUTES.includes(route)) {
+        assert.deepEqual(result.order,['page-two.jpg','page-one.png'],`${route} did not preserve the selected image order`);
+        assert.equal(result.success.state,'success',`${route} conversion failed: ${result.success.message}`);
+        assert.equal(result.success.pageCount,2,`${route} did not create one page per image`);
+        assert.equal(result.success.blobProtocol,'blob:',`${route} did not offer a local PDF download`);
+        assert.equal(result.success.downloadName,'images.pdf');assert.equal(result.success.visible,true);
+        assert.ok(result.success.elapsed<5_000,`${route} image conversion took ${result.success.elapsed} ms under CPU throttling`);
+        const empty={fileCount:0,inputFiles:0,downloadHidden:true,hasDownloadHref:false,state:'ready'};
+        assert.deepEqual(result.afterPagehide,empty,`${route} retained selected images or PDF output after pagehide`);
+        assert.deepEqual(result.afterPersistedPageshow,empty,`${route} restored temporary image state from BFCache`);
+        assert.equal(result.revokedCount,1,`${route} did not revoke its temporary PDF URL`);
+        assert.equal(result.invalid.state,'error',`${route} accepted malformed image bytes`);
+        assert.equal(result.invalid.hasDownload,false,`${route} retained stale output after image failure`);
+        assert.doesNotMatch(result.invalid.message,/image-private-sentinel/i,`${route} echoed a filename in an error`);
+        assert.deepEqual(result.cleared,empty,`${route} did not clear the image queue and output`);
+        assert.deepEqual(result.storage,{local:[],session:[],cookies:''},`${route} stored image bytes or recent-tool history`);
+        imagePdfLifecycle.push({route,afterPagehide:result.afterPagehide,afterPersistedPageshow:result.afterPersistedPageshow,revokedCount:result.revokedCount});
+        imagePdfPerformance.push({route,elapsed:result.success.elapsed,pageCount:result.success.pageCount});
+        await client.send('Emulation.setCPUThrottlingRate',{rate:1});
+      }
       await wait(100);
       const networkRequests = requests.filter(request => /^https?:\/\//i.test(request.url));
       const permittedRegexAssets = REGEX_ROUTES.includes(route)
@@ -1320,7 +1394,14 @@ async function runAcceptance() {
               && ['/pdf/pdf-merge-worker.js', '/pdf/pdf-engine.js', '/pdf/vendor/pdf-lib.min.js'].includes(url.pathname);
           })
         : [];
-      const permittedAssets = [...permittedRegexAssets, ...permittedPdfAssets];
+      const permittedImagePdfAssets = IMAGE_PDF_ROUTES.includes(route)
+        ? networkRequests.filter(request => {
+            const url=new URL(request.url);
+            return request.method==='GET'&&request.postData===''&&url.origin===`http://127.0.0.1:${sitePort}`&&url.search===''&&
+              ['/image-to-pdf/image-pdf-worker.js','/image-to-pdf/image-pdf-engine.js','/pdf/vendor/pdf-lib.min.js'].includes(url.pathname);
+          })
+        : [];
+      const permittedAssets = [...permittedRegexAssets, ...permittedPdfAssets, ...permittedImagePdfAssets];
       const disallowedRequests = networkRequests.filter(request => !permittedAssets.includes(request));
       const unexpected = networkRequests.filter(request => {
         try { return new URL(request.url).origin !== `http://127.0.0.1:${sitePort}`; }
@@ -1805,6 +1886,22 @@ async function runAcceptance() {
       pdfHistory.push({ route, ...result });
     }
 
+    const imagePdfHistory=[];
+    for(const route of IMAGE_PDF_ROUTES){
+      await navigate(route);
+      const processed=await evaluate(client,IMAGE_PDF_HISTORY_FLOW);
+      assert.equal(processed.state,'success',`${route} failed before browser-history verification`);
+      assert.equal(processed.pageCount,2);assert.equal(processed.visible,true);
+      await navigate('/about/');await evaluate(client,'history.back();return true;');
+      let restored=false;
+      for(let attempt=0;attempt<40;attempt++){await wait(50);restored=await evaluate(client,`return location.pathname==='${route}'&&document.readyState==='complete'&&Boolean(document.querySelector('#imagePdfFiles'));`);if(restored)break;}
+      assert.equal(restored,true,`${route} did not return through browser history`);
+      const result=await evaluate(client,`return {inputFiles:document.querySelector('#imagePdfFiles').files.length,rows:document.querySelector('#imagePdfFileList').children.length,downloadHidden:document.querySelector('#downloadImagePdf').hidden,hasDownloadHref:document.querySelector('#downloadImagePdf').hasAttribute('href'),state:document.querySelector('#imagePdfStatus').dataset.state,storage:{local:Object.keys(localStorage),session:Object.keys(sessionStorage),cookies:document.cookie}};`);
+      assert.deepEqual(result,{inputFiles:0,rows:0,downloadHidden:true,hasDownloadHref:false,state:'ready',storage:{local:[],session:[],cookies:''}},`${route} restored image inputs or PDF output from history`);
+      assert.doesNotMatch(JSON.stringify(result),/history-image/);
+      imagePdfHistory.push({route,...result});
+    }
+
     const csvLifecycle = [];
     for (const route of CSV_ROUTES) {
       await navigate(route);
@@ -2149,6 +2246,9 @@ async function runAcceptance() {
       csvMobile,
       sqlMobile,
       pdfMobile,
+      imagePdfMobile,
+      imagePdfLifecycle,
+      imagePdfPerformance,
       jwtStorage,
       textDiffNavigation,
       textDiffHistory,
@@ -2162,6 +2262,7 @@ async function runAcceptance() {
       csvHistory,
       sqlHistory,
       pdfHistory,
+      imagePdfHistory,
       csvLifecycle,
       sqlLifecycle,
       pdfLifecycle,
@@ -2201,7 +2302,7 @@ async function runAcceptance() {
 }
 
 module.exports = {
-  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, XML_ROUTES, XML_MOBILE_WIDTH, CSV_ROUTES, CSV_MOBILE_WIDTH, SQL_ROUTES, SQL_MOBILE_WIDTH, PDF_ROUTES, PDF_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
+  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, XML_ROUTES, XML_MOBILE_WIDTH, CSV_ROUTES, CSV_MOBILE_WIDTH, SQL_ROUTES, SQL_MOBILE_WIDTH, PDF_ROUTES, PDF_MOBILE_WIDTH, IMAGE_PDF_ROUTES, IMAGE_PDF_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
   runAcceptance, startStaticServer, stopBrowser, stopServer, browserBinary,
 };
 

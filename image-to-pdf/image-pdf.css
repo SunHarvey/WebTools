@@ -1,0 +1,15 @@
+.image-pdf-card { max-width: 980px; margin-inline: auto; }
+.image-pdf-workspace { display: grid; gap: 1.25rem; }
+.image-pdf-picker { display: grid; gap: .55rem; }
+.image-pdf-picker input[type="file"] { max-width: 100%; padding: .75rem; border: 1px solid var(--border, #334155); border-radius: .65rem; background: var(--surface, #0f172a); color: inherit; }
+.image-pdf-picker small, .pdf-file-details small { color: var(--muted, #94a3b8); }
+.pdf-file-list { display: grid; gap: .6rem; margin: .85rem 0; padding: 0; list-style: none; }
+.pdf-file-row { display: flex; align-items: center; justify-content: space-between; gap: .85rem; min-width: 0; padding: .8rem; border: 1px solid var(--border, #334155); border-radius: .7rem; background: var(--surface, #0f172a); }
+.pdf-file-details { display: grid; gap: .25rem; min-width: 0; }
+.pdf-file-name { overflow-wrap: anywhere; font-weight: 600; }
+.pdf-file-actions, .pdf-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.pdf-file-actions button { min-height: 2.35rem; padding: .35rem .65rem; }
+.pdf-summary { margin: .5rem 0; color: var(--muted, #94a3b8); }
+.pdf-actions { margin-top: 1rem; }
+#downloadImagePdf[hidden] { display: none; }
+@media (max-width: 640px) { .pdf-file-row { align-items: flex-start; flex-direction: column; } .pdf-file-actions { width: 100%; } .pdf-file-actions button { flex: 1 1 auto; } .pdf-actions > * { flex: 1 1 100%; } }
