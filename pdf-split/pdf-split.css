@@ -1,0 +1,10 @@
+.pdf-split-ranges { display: grid; gap: .55rem; }
+.pdf-split-ranges input[type="text"] { width: 100%; max-width: 34rem; min-height: 2.75rem; padding: .7rem .8rem; border: 1px solid var(--border, #334155); border-radius: .65rem; background: var(--surface, #0f172a); color: inherit; font: inherit; }
+.pdf-split-ranges input[type="text"]::placeholder { color: var(--muted, #94a3b8); opacity: .8; }
+.pdf-split-ranges small, #pdfSplitOutputs small { color: var(--muted, #94a3b8); }
+#pdfSplitOutputs:empty { display: none; }
+#pdfSplitOutputs .button { text-align: center; }
+@media (max-width: 640px) {
+  .pdf-split-ranges input[type="text"] { max-width: 100%; }
+  #pdfSplitOutputs .pdf-file-row { align-items: stretch; }
+}

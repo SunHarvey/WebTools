@@ -18,6 +18,52 @@ const CSV_MOBILE_WIDTH = 320;
 const SQL_MOBILE_WIDTH = 320;
 const PDF_MOBILE_WIDTH = 320;
 const MAX_RENDERED_DETAILS = 1_000;
+const PDF_SPLIT_ROUTES = ['/pdf-split/', '/zh/pdf-split/'];
+const PDF_SPLIT_MOBILE_WIDTH = 320;
+const PDF_SPLIT_FIXTURE_SETUP = `
+  const splitFixture = Uint8Array.from(atob('JVBERi0xLjcKJYGBgYEKCjEgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFsgNCAwIFIgNSAwIFIgNiAwIFIgXQovQ291bnQgMwo+PgplbmRvYmoKCjIgMCBvYmoKPDwKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDEgMCBSCj4+CmVuZG9iagoKNCAwIG9iago8PAovVHlwZSAvUGFnZQovUGFyZW50IDEgMCBSCi9SZXNvdXJjZXMgPDwKPj4KL01lZGlhQm94IFsgMCAwIDIwMCAzMDAgXQo+PgplbmRvYmoKCjUgMCBvYmoKPDwKL1R5cGUgL1BhZ2UKL1BhcmVudCAxIDAgUgovUmVzb3VyY2VzIDw8Cj4+Ci9NZWRpYUJveCBbIDAgMCA0MDAgNTAwIF0KPj4KZW5kb2JqCgo2IDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMSAwIFIKL1Jlc291cmNlcyA8PAo+PgovTWVkaWFCb3ggWyAwIDAgNTAwIDYwMCBdCj4+CmVuZG9iagoKNyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvT2JqU3RtCi9OIDEKL0ZpcnN0IDQKL0xlbmd0aCAxNjEKPj4Kc3RyZWFtCnic1U+7DoIwFN37FR114tBCAUNIDNDNxNmNSAcXmzT4/57bOLjoznBy2/O4D6uh+14V1xTX1z0k3fvZe6AB4CrCAWZiHYmOMPxTMy3fRENPBrnGAvZMjXmBIykZ0bO3/uRnVnqdeNhbvJX0+54rs8RHQvS/+3SDKi5xnZYt6MN0MjCuRFmhra1xt6MqxhSWLe73uLz/Iz5/XjgM6g1D12KjCmVuZHN0cmVhbQplbmRvYmoKCjggMCBvYmoKPDwKL1NpemUgOQovUm9vdCAyIDAgUgovSW5mbyAzIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvWFJlZgovTGVuZ3RoIDQ0Ci9XIFsgMSAyIDIgXQovSW5kZXggWyAwIDkgXQo+PgpzdHJlYW0KeJxjYGD4/5+RQYCBgZEhgoGBiYEdxOoCEU+BBKMDiJgNJJgWMjAAAIjCBWYKZW5kc3RyZWFtCmVuZG9iagoKc3RhcnR4cmVmCjY3MwolJUVPRg=='), value => value.charCodeAt(0));
+  const setPdfSplitFile = (bytes, name) => {
+    const transfer = new DataTransfer(); transfer.items.add(new File([bytes], name, { type: 'application/pdf' }));
+    const input = document.querySelector('#pdfSplitFile'); input.files = transfer.files;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+`;
+const PDF_SPLIT_PRIVACY_FLOW = `
+${PDF_SPLIT_FIXTURE_SETUP}
+  const revoked = []; const originalRevoke = URL.revokeObjectURL;
+  URL.revokeObjectURL = function (url) { revoked.push(url); return originalRevoke.call(this, url); };
+  document.querySelector('#pdfSplitRanges').value = '1-4';
+  setPdfSplitFile(splitFixture, 'split-private-sentinel.pdf');
+  document.querySelector('#splitPdf').click();
+  for (let i=0;i<1200&&document.querySelector('#pdfSplitStatus').dataset.state==='working';i++) await new Promise(resolve=>setTimeout(resolve,25));
+  const invalidRange={state:document.querySelector('#pdfSplitStatus').dataset.state,message:document.querySelector('#pdfSplitStatus').textContent,outputCount:document.querySelector('#pdfSplitOutputs').children.length};
+  const rangeInput=document.querySelector('#pdfSplitRanges');rangeInput.value='3, 1-2';rangeInput.dispatchEvent(new Event('input',{bubbles:true}));
+  const started = performance.now(); document.querySelector('#splitPdf').click();
+  for (let i=0;i<1200&&document.querySelector('#pdfSplitStatus').dataset.state==='working';i++) await new Promise(resolve=>setTimeout(resolve,25));
+  const links = Array.from(document.querySelectorAll('#pdfSplitOutputs a'));
+  const success = { state: document.querySelector('#pdfSplitStatus').dataset.state, outputCount: links.length,
+    names: links.map(link=>link.download), pageCounts: links.map(link=>Number(link.dataset.pageCount)),
+    blobProtocols: links.map(link=>link.href.startsWith('blob:')?'blob':''), visible: links.every(link=>link.getBoundingClientRect().width>0),
+    elapsed: performance.now()-started };
+  window.dispatchEvent(new Event('pagehide'));
+  const snapshot=()=>({inputFiles:document.querySelector('#pdfSplitFile').files.length,summary:document.querySelector('#pdfSplitSummary').textContent,
+    outputCount:document.querySelector('#pdfSplitOutputs').children.length,state:document.querySelector('#pdfSplitStatus').dataset.state});
+  const afterPagehide=snapshot(); const persisted=new Event('pageshow');Object.defineProperty(persisted,'persisted',{value:true});window.dispatchEvent(persisted);
+  const afterPersistedPageshow=snapshot(); URL.revokeObjectURL=originalRevoke;
+  document.querySelector('#pdfSplitRanges').value='1';setPdfSplitFile(new TextEncoder().encode('not a PDF'),'split-private-sentinel.pdf');document.querySelector('#splitPdf').click();
+  for(let i=0;i<100&&document.querySelector('#pdfSplitStatus').dataset.state==='working';i++)await new Promise(resolve=>setTimeout(resolve,20));
+  const invalid={state:document.querySelector('#pdfSplitStatus').dataset.state,message:document.querySelector('#pdfSplitStatus').textContent,outputCount:document.querySelector('#pdfSplitOutputs').children.length};
+  document.querySelector('#clearPdfSplit').click();
+  const storage={local:Object.keys(localStorage),session:Object.keys(sessionStorage),cookies:document.cookie};
+  return {success,invalidRange,afterPagehide,afterPersistedPageshow,revokedCount:revoked.length,invalid,cleared:snapshot(),storage};
+`;
+const PDF_SPLIT_HISTORY_FLOW = `
+${PDF_SPLIT_FIXTURE_SETUP}
+  document.querySelector('#pdfSplitRanges').value='3, 1-2';setPdfSplitFile(splitFixture,'history-split-secret.pdf');document.querySelector('#splitPdf').click();
+  for(let i=0;i<1200&&document.querySelector('#pdfSplitStatus').dataset.state==='working';i++)await new Promise(resolve=>setTimeout(resolve,25));
+  return {state:document.querySelector('#pdfSplitStatus').dataset.state,outputCount:document.querySelector('#pdfSplitOutputs').children.length};
+`;
+
 const MOBILE_ROUTES = [
   '/', '/zh/',
   '/json/', '/zh/json/',
@@ -35,6 +81,7 @@ const MOBILE_ROUTES = [
   '/sql/', '/zh/sql/',
   '/pdf/', '/zh/pdf/',
   '/image-to-pdf/', '/zh/image-to-pdf/',
+  '/pdf-split/', '/zh/pdf-split/',
 ];
 const PASSWORD_RESULT_ROUTES = ['/password/', '/zh/password/'];
 const JWT_STORAGE_ROUTES = ['/jwt/', '/zh/jwt/'];
@@ -217,6 +264,8 @@ const SQL_PRIVACY_FLOW = `
 `;
 
 const PRIVACY_FLOWS = {
+  '/pdf-split/': PDF_SPLIT_PRIVACY_FLOW,
+  '/zh/pdf-split/': PDF_SPLIT_PRIVACY_FLOW,
   '/json/': `
     const input = document.querySelector('#jsonInput');
     input.value = '{"local":true,"items":[1,2,3]}';
@@ -957,6 +1006,17 @@ async function runAcceptance() {
     }
     await client.send('Emulation.clearDeviceMetricsOverride');
 
+    const pdfSplitMobile=[];
+    await client.send('Emulation.setDeviceMetricsOverride',{width:PDF_SPLIT_MOBILE_WIDTH,height:700,deviceScaleFactor:1,mobile:true});
+    for(const route of PDF_SPLIT_ROUTES){
+      await navigate(route);
+      const result=await evaluate(client,`return {viewport:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,inputVisible:document.querySelector('#pdfSplitFile').getBoundingClientRect().width>0,rangeVisible:document.querySelector('#pdfSplitRanges').getBoundingClientRect().width>0,splitVisible:document.querySelector('#splitPdf').getBoundingClientRect().width>0};`);
+      assert.ok(result.scrollWidth<=result.viewport+1,`${route} overflows at ${PDF_SPLIT_MOBILE_WIDTH}px: ${result.scrollWidth}px > ${result.viewport}px`);
+      assert.equal(result.inputVisible,true,`${route} hides the PDF picker`);assert.equal(result.rangeVisible,true,`${route} hides range input`);assert.equal(result.splitVisible,true,`${route} hides split controls`);
+      pdfSplitMobile.push({route,...result});
+    }
+    await client.send('Emulation.clearDeviceMetricsOverride');
+
     const jwtStorage = [];
     for (const route of JWT_STORAGE_ROUTES) {
       await navigate('/');
@@ -1055,8 +1115,10 @@ async function runAcceptance() {
     const pdfPerformance = [];
     const imagePdfLifecycle=[];
     const imagePdfPerformance=[];
+    const pdfSplitLifecycle=[];
+    const pdfSplitPerformance=[];
     for (const [route, flow] of Object.entries(PRIVACY_FLOWS)) {
-      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route) || XML_ROUTES.includes(route) || CSV_ROUTES.includes(route) || SQL_ROUTES.includes(route) || PDF_ROUTES.includes(route) || IMAGE_PDF_ROUTES.includes(route)) {
+      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route) || XML_ROUTES.includes(route) || CSV_ROUTES.includes(route) || SQL_ROUTES.includes(route) || PDF_ROUTES.includes(route) || IMAGE_PDF_ROUTES.includes(route) || PDF_SPLIT_ROUTES.includes(route)) {
         await navigate('/');
         await evaluate(client, `
           localStorage.clear();
@@ -1070,6 +1132,7 @@ async function runAcceptance() {
       }
       if (PDF_ROUTES.includes(route)) await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
       if (IMAGE_PDF_ROUTES.includes(route)) await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+      if (PDF_SPLIT_ROUTES.includes(route)) await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
       await navigate(route);
       const result = await evaluate(client, flow);
       if (route === '/json/') assert.match(result.status, /Valid JSON/i, 'JSON privacy flow did not finish');
@@ -1372,6 +1435,30 @@ async function runAcceptance() {
         imagePdfPerformance.push({route,elapsed:result.success.elapsed,pageCount:result.success.pageCount});
         await client.send('Emulation.setCPUThrottlingRate',{rate:1});
       }
+      if (PDF_SPLIT_ROUTES.includes(route)) {
+        assert.equal(result.invalidRange.state,'error',`${route} accepted a page range beyond the document`);
+        assert.equal(result.invalidRange.outputCount,0,`${route} exposed outputs after an out-of-range selection`);
+        assert.doesNotMatch(result.invalidRange.message,/split-private-sentinel/i,`${route} echoed a filename in a range error`);
+        assert.equal(result.success.state,'success',`${route} split failed: ${result.success.state} ${result.success.message||''}`);
+        assert.equal(result.success.outputCount,2,`${route} did not create one output per requested range`);
+        assert.deepEqual(result.success.names,['page-3.pdf','pages-1-2.pdf'],`${route} did not preserve range order`);
+        assert.deepEqual(result.success.pageCounts,[1,2],`${route} returned an incorrect page count`);
+        assert.deepEqual(result.success.blobProtocols,['blob','blob'],`${route} did not create local downloads`);
+        assert.equal(result.success.visible,true,`${route} hid a completed PDF output`);
+        assert.ok(result.success.elapsed<5_000,`${route} split took ${result.success.elapsed} ms under 4x CPU throttling`);
+        const empty={inputFiles:0,summary:route.startsWith('/zh/')?'选择一个 PDF 并输入页码范围，即可拆分为多个 PDF。':'Choose one PDF and enter page ranges to split into separate PDFs.',outputCount:0,state:'ready'};
+        assert.deepEqual(result.afterPagehide,empty,`${route} retained PDF state after pagehide`);
+        assert.deepEqual(result.afterPersistedPageshow,empty,`${route} restored PDF state from BFCache`);
+        assert.equal(result.revokedCount,2,`${route} did not revoke every temporary PDF URL`);
+        assert.equal(result.invalid.state,'error',`${route} accepted malformed PDF bytes`);
+        assert.equal(result.invalid.outputCount,0,`${route} retained stale output after invalid PDF`);
+        assert.doesNotMatch(result.invalid.message,/split-private-sentinel/i,`${route} echoed a filename in its error`);
+        assert.deepEqual(result.cleared,empty,`${route} did not clear its inputs and outputs`);
+        assert.deepEqual(result.storage,{local:[],session:[],cookies:''},`${route} stored PDF data or recent-tool history`);
+        pdfSplitLifecycle.push({route,afterPagehide:result.afterPagehide,afterPersistedPageshow:result.afterPersistedPageshow,revokedCount:result.revokedCount});
+        pdfSplitPerformance.push({route,elapsed:result.success.elapsed,outputCount:result.success.outputCount,pageCounts:result.success.pageCounts});
+        await client.send('Emulation.setCPUThrottlingRate',{rate:1});
+      }
       await wait(100);
       const networkRequests = requests.filter(request => /^https?:\/\//i.test(request.url));
       const permittedRegexAssets = REGEX_ROUTES.includes(route)
@@ -1401,7 +1488,11 @@ async function runAcceptance() {
               ['/image-to-pdf/image-pdf-worker.js','/image-to-pdf/image-pdf-engine.js','/pdf/vendor/pdf-lib.min.js'].includes(url.pathname);
           })
         : [];
-      const permittedAssets = [...permittedRegexAssets, ...permittedPdfAssets, ...permittedImagePdfAssets];
+      const permittedPdfSplitAssets=PDF_SPLIT_ROUTES.includes(route)
+        ? networkRequests.filter(request=>{const url=new URL(request.url);return request.method==='GET'&&request.postData===''&&url.origin===`http://127.0.0.1:${sitePort}`&&url.search===''&&
+          ['/pdf-split/pdf-split-worker.js','/pdf/pdf-split-engine.js','/pdf/vendor/pdf-lib.min.js'].includes(url.pathname);})
+        : [];
+      const permittedAssets = [...permittedRegexAssets, ...permittedPdfAssets, ...permittedImagePdfAssets, ...permittedPdfSplitAssets];
       const disallowedRequests = networkRequests.filter(request => !permittedAssets.includes(request));
       const unexpected = networkRequests.filter(request => {
         try { return new URL(request.url).origin !== `http://127.0.0.1:${sitePort}`; }
@@ -1902,6 +1993,18 @@ async function runAcceptance() {
       imagePdfHistory.push({route,...result});
     }
 
+    const pdfSplitHistory=[];
+    for(const route of PDF_SPLIT_ROUTES){
+      await navigate(route);const processed=await evaluate(client,PDF_SPLIT_HISTORY_FLOW);
+      assert.equal(processed.state,'success',`${route} failed before history verification`);assert.equal(processed.outputCount,2);
+      await navigate('/about/');await evaluate(client,'history.back();return true;');let restored=false;
+      for(let attempt=0;attempt<40;attempt++){await wait(50);restored=await evaluate(client,`return location.pathname==='${route}'&&document.readyState==='complete'&&Boolean(document.querySelector('#pdfSplitFile'));`);if(restored)break;}
+      assert.equal(restored,true,`${route} did not return through browser history`);
+      const result=await evaluate(client,`return {inputFiles:document.querySelector('#pdfSplitFile').files.length,summary:document.querySelector('#pdfSplitSummary').textContent,range:document.querySelector('#pdfSplitRanges').value,outputCount:document.querySelector('#pdfSplitOutputs').children.length,state:document.querySelector('#pdfSplitStatus').dataset.state,storage:{local:Object.keys(localStorage),session:Object.keys(sessionStorage),cookies:document.cookie}};`);
+      assert.deepEqual(result,{inputFiles:0,summary:route.startsWith('/zh/')?'选择一个 PDF 并输入页码范围，即可拆分为多个 PDF。':'Choose one PDF and enter page ranges to split into separate PDFs.',range:'',outputCount:0,state:'ready',storage:{local:[],session:[],cookies:''}},`${route} restored PDF inputs or outputs from browser history`);
+      assert.doesNotMatch(JSON.stringify(result),/history-split-secret/);pdfSplitHistory.push({route,...result});
+    }
+
     const csvLifecycle = [];
     for (const route of CSV_ROUTES) {
       await navigate(route);
@@ -2247,8 +2350,11 @@ async function runAcceptance() {
       sqlMobile,
       pdfMobile,
       imagePdfMobile,
+      pdfSplitMobile,
       imagePdfLifecycle,
       imagePdfPerformance,
+      pdfSplitLifecycle,
+      pdfSplitPerformance,
       jwtStorage,
       textDiffNavigation,
       textDiffHistory,
@@ -2263,6 +2369,7 @@ async function runAcceptance() {
       sqlHistory,
       pdfHistory,
       imagePdfHistory,
+      pdfSplitHistory,
       csvLifecycle,
       sqlLifecycle,
       pdfLifecycle,
@@ -2302,7 +2409,7 @@ async function runAcceptance() {
 }
 
 module.exports = {
-  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, XML_ROUTES, XML_MOBILE_WIDTH, CSV_ROUTES, CSV_MOBILE_WIDTH, SQL_ROUTES, SQL_MOBILE_WIDTH, PDF_ROUTES, PDF_MOBILE_WIDTH, IMAGE_PDF_ROUTES, IMAGE_PDF_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
+  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, XML_ROUTES, XML_MOBILE_WIDTH, CSV_ROUTES, CSV_MOBILE_WIDTH, SQL_ROUTES, SQL_MOBILE_WIDTH, PDF_ROUTES, PDF_MOBILE_WIDTH, IMAGE_PDF_ROUTES, IMAGE_PDF_MOBILE_WIDTH, PDF_SPLIT_ROUTES, PDF_SPLIT_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
   runAcceptance, startStaticServer, stopBrowser, stopServer, browserBinary,
 };
 

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>PDF Splitter &amp; Page Extractor — Split PDF Locally | UtilCover</title>
+  <meta name="description" content="Split a PDF into separate files by page ranges in your browser. Files stay on your device and are never uploaded.">
+  <link rel="canonical" href="https://www.utilcover.com/pdf-split/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/pdf-split/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/pdf-split/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/pdf-split/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/pdf/pdf.css">
+  <link rel="stylesheet" href="/pdf-split/pdf-split.css">
+  <meta property="og:title" content="PDF Splitter &amp; Page Extractor | UtilCover">
+  <meta property="og:description" content="Extract page ranges into separate PDF files locally in your browser. No upload or account.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/pdf-split/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/pdf-split/#application",
+      "name": "PDF Splitter & Page Extractor",
+      "url": "https://www.utilcover.com/pdf-split/",
+      "description": "Split a PDF into separate files by page ranges in your browser. Files stay on your device and are never uploaded.",
+      "inLanguage": "en",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/pdf-split/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tools",
+          "item": "https://www.utilcover.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "PDF Splitter & Page Extractor",
+          "item": "https://www.utilcover.com/pdf-split/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/pdf-split/">中文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>PDF Splitter &amp; Page Extractor</h1><p>Turn selected page ranges into separate PDFs. Everything runs in this browser; your document is not uploaded.</p></section>
+  <section class="tool-card pdf-card" aria-label="Local PDF splitter">
+    <p class="local-processing-note">Your PDF stays in this browser. It is not uploaded, saved to browser storage, or added to recent-tool history.</p>
+    <div class="pdf-workspace">
+      <div class="field pdf-picker"><label for="pdfSplitFile">PDF file</label><div class="file-picker-row"><input class="file-input-native" id="pdfSplitFile" type="file" accept="application/pdf,.pdf" aria-describedby="pdfSplitFileHelp"><label class="button-link secondary file-picker-button" for="pdfSplitFile">Choose PDF file</label></div><small id="pdfSplitFileHelp">One PDF up to 25 MiB. Documents with more than 500 pages are not supported.</small></div>
+      <p id="pdfSplitSummary" class="pdf-summary" aria-live="polite">Choose one PDF and enter page ranges to split into separate PDFs.</p>
+      <div class="field pdf-split-ranges"><label for="pdfSplitRanges">Page ranges</label><input id="pdfSplitRanges" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="1-3, 5, 8-10" aria-describedby="pdfSplitRangeHelp"><small id="pdfSplitRangeHelp">Use commas between ranges. Each entry creates a separate PDF; for example, <code>1-3, 5, 8-10</code> creates three files. Ranges must not overlap.</small></div>
+      <div class="pdf-actions"><button id="splitPdf" type="button" disabled>Split PDF</button><button id="clearPdfSplit" class="danger" type="button">Clear</button></div>
+      <p id="pdfSplitStatus" class="status" role="status" aria-live="polite" data-state="ready">Choose one PDF and enter page ranges to split into separate PDFs.</p>
+      <ol id="pdfSplitOutputs" class="pdf-file-list" aria-label="Split PDF downloads"></ol>
+      <small>Limits: 20 ranges, 500 source/output pages, 60 MiB combined output, and 45 seconds per conversion. Password-protected PDFs are not supported.</small>
+    </div>
+  </section>
+  <section class="tool-guide" aria-labelledby="pdf-split-guide-title">
+    <div class="guide-intro"><h2 id="pdf-split-guide-title">Split PDF pages privately in your browser</h2><p>Enter comma-separated page numbers or continuous ranges. Each entry becomes its own PDF in the order entered. For example, <code>1-3, 5, 8-10</code> creates files containing pages 1–3, page 5, and pages 8–10. The PDF library and worker are served by this site; your document bytes are processed locally and are not sent to a server, third-party API, or CDN.</p></div>
+    <div class="guide-section how-to"><h2>How to split a PDF</h2><ol class="steps"><li><strong>Select one PDF.</strong><span>The file is checked locally. Password-protected PDFs and documents outside the published size and page limits are not supported.</span></li><li><strong>Enter the page ranges.</strong><span>Separate each page number or continuous range with a comma. A range such as <code>2-5</code> stays together in one output; <code>2-5, 8</code> creates two files. Pages cannot appear in more than one range.</span></li><li><strong>Split and download.</strong><span>Select Split PDF, then download each generated file. Output filenames are based on the selected page ranges, not on your source filename.</span></li></ol></div>
+    <div class="guide-section examples"><h2>Page-range examples</h2><div class="example-grid"><article><h3>Separate chapters</h3><p>Enter <code>1-12, 13-24</code> to create two PDFs, one for each chapter range. Output order follows the range list.</p></article><article><h3>Extract selected pages</h3><p>Enter <code>2, 7, 10-12</code> to create one-page files for pages 2 and 7 plus one file containing pages 10–12.</p></article></div></div>
+    <div class="guide-section limitations"><h2>Supported files and limits</h2><p>This tool accepts one readable, unencrypted PDF up to 25 MiB and 500 pages. You can enter up to 20 comma-separated ranges; the total number of pages across all outputs is limited to 500, all outputs together are limited to 60 MiB, and processing stops after 45 seconds. Invalid, overlapping, or out-of-range page selections are rejected locally.</p><p>Each output is a newly written PDF containing the selected pages. PDF page extraction does not guarantee preservation of interactive forms, bookmarks, attachments, document metadata, or digital signatures. Existing signatures cannot remain valid after rewriting. Review the results and keep the original document.</p><p>Files are temporarily read into browser memory and passed to a same-origin worker. They are not uploaded, stored in browser storage, or saved to recent-tool history. Selections and generated download links are cleared when leaving the page or returning through browser history.</p></div>
+    <div class="guide-section faq-list"><h2>PDF splitter FAQ</h2><details><summary>Are my PDFs uploaded?</summary><p>No. File reading and page extraction run locally in your browser and its same-origin worker. PDF bytes are not sent to a server, third-party API, or CDN and are not saved in browser storage or recent-tool history.</p></details><details><summary>How does the comma-separated range field work?</summary><p>Each comma-separated item creates one output file. For example, <code>1-3, 5, 8-10</code> creates three PDFs. Ranges are kept in the order entered and cannot overlap.</p></details><details><summary>Can I extract a single page?</summary><p>Yes. Enter a page number such as <code>7</code>. The output is a one-page PDF named <code>page-7.pdf</code>.</p></details><details><summary>Can I split a password-protected PDF?</summary><p>No. Password-protected PDFs are not supported. Do not enter or share a document password with this tool.</p></details></div>
+    <nav class="related-tools" data-related-tools="pdf-split" aria-label="Related tools"><h2>Related tools</h2><div class="related-links"><a href="/pdf/"><strong>PDF Merger</strong><span>Merge PDF pages in your chosen order locally; no upload or account.</span></a><a href="/image-to-pdf/"><strong>JPG &amp; PNG to PDF</strong><span>Turn ordered JPG and PNG images into an A4 PDF locally; no upload.</span></a><a href="/image/"><strong>Image Compressor</strong><span>Resize, compress and convert images locally.</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/licenses/">Licenses</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · Private, fast, client-side utilities</p></footer>
+<script src="/pdf/pdf-split-engine.js"></script><script src="/pdf-split/pdf-split-tool.js"></script><script src="/pdf-split/pdf-split-app.js"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

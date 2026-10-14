@@ -105,6 +105,10 @@
   ! Content-Security-Policy
   Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-r/aj4SI53Q4dLTwggBsQtwaTEQXRkTlTEf1NMiRVE1c='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; worker-src 'self'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
 
+/pdf-split/*
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-yRxHeXWrHK/bZ1H/CW+xtnDdGdWkFQw+i+gS5MxuGlk='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; worker-src 'self'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
+
 /privacy/*
   ! Content-Security-Policy
   Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-o7Jh3kHv2vPBX71fAf4KFrVIQgazjFCTmuAfRlyWQsA='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
@@ -220,6 +224,10 @@
 /zh/image-to-pdf/*
   ! Content-Security-Policy
   Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-6aYszob5nk3EmMoMPQwFLdq/6L05yGabZ9Xe+d+ZbW8='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; worker-src 'self'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
+
+/zh/pdf-split/*
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-NQPxRGLNPAf+9juodVB0I6MESkZl41uhmzYsI51rFUE='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'self' blob:; object-src 'none'; worker-src 'self'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
 
 /zh/privacy/*
   ! Content-Security-Policy

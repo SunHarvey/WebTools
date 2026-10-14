@@ -20,7 +20,7 @@ test('registers PDF merger as a bilingual local-only tool and SEO route', () => 
   assert.equal(tool.name.zh, 'PDF 合并工具');
   assert.ok(tool.description.en.includes('locally'));
   assert.ok(tool.description.zh.includes('本地'));
-  assert.deepEqual(RELATED_TOOLS.pdf, ['image', 'text', 'csv']);
+  assert.deepEqual(RELATED_TOOLS.pdf, ['pdf-split', 'image-to-pdf', 'image']);
   assert.ok(routes.includes('/pdf/'));
   assert.ok(routes.includes('/zh/pdf/'));
   for (const file of ['pdf/pdf-engine.js', 'pdf/pdf-tool.js', 'pdf/pdf-app.js', 'pdf/pdf-merge-worker.js']) {

@@ -30,13 +30,14 @@ test('browser acceptance covers every required EN and ZH mobile route', () => {
     '/sql/', '/zh/sql/',
     '/pdf/', '/zh/pdf/',
     '/image-to-pdf/', '/zh/image-to-pdf/',
+    '/pdf-split/', '/zh/pdf-split/',
   ]);
 });
 
 test('browser acceptance exercises all privacy-critical tools', () => {
   const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
   assert.deepEqual(Object.keys(acceptance.PRIVACY_FLOWS), [
-    '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/', '/yaml/', '/zh/yaml/', '/xml/', '/zh/xml/', '/csv/', '/zh/csv/', '/sql/', '/zh/sql/', '/pdf/', '/zh/pdf/', '/image-to-pdf/', '/zh/image-to-pdf/',
+    '/pdf-split/', '/zh/pdf-split/', '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/', '/yaml/', '/zh/yaml/', '/xml/', '/zh/xml/', '/csv/', '/zh/csv/', '/sql/', '/zh/sql/', '/pdf/', '/zh/pdf/', '/image-to-pdf/', '/zh/image-to-pdf/',
   ]);
 });
 
@@ -166,6 +167,20 @@ test('browser acceptance converts JPG and PNG images locally with lifecycle and 
   const source=fs.readFileSync(path.join(root,'scripts/browser-acceptance.cjs'),'utf8');
   assert.match(source,/did not create one page per image/);assert.match(source,/retained selected images or PDF output after pagehide/);
   assert.match(source,/imagePdfLifecycle/);assert.match(source,/imagePdfPerformance/);assert.match(source,/imagePdfHistory/);assert.match(source,/image-private-sentinel/);
+});
+
+test('browser acceptance splits PDFs locally with range, lifecycle, history, and bilingual mobile checks', () => {
+  const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
+  assert.deepEqual(acceptance.PDF_SPLIT_ROUTES, ['/pdf-split/', '/zh/pdf-split/']);
+  assert.equal(acceptance.PDF_SPLIT_MOBILE_WIDTH, 320);
+  for (const route of acceptance.PDF_SPLIT_ROUTES) assert.ok(acceptance.PRIVACY_FLOWS[route]);
+  const source = fs.readFileSync(path.join(root, 'scripts/browser-acceptance.cjs'), 'utf8');
+  assert.match(source, /did not preserve range order/);
+  assert.match(source, /pdfSplitLifecycle/);
+  assert.match(source, /pdfSplitPerformance/);
+  assert.match(source, /pdfSplitHistory/);
+  assert.match(source, /split-private-sentinel/);
+  assert.match(source, /permittedPdfSplitAssets/);
 });
 
 test('package exposes the durable browser acceptance command', () => {

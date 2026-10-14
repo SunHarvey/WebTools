@@ -634,8 +634,8 @@ test('calculator pages explain immediate basic arithmetic and input limits witho
 });
 
 test('PDF pages document local page merging, limits, unsupported features and privacy in both locales', () => {
-  assertGuide('pdf/index.html', 'en', ['/image/', '/text/', '/csv/']);
-  assertGuide('zh/pdf/index.html', 'zh', ['/zh/image/', '/zh/text/', '/zh/csv/']);
+  assertGuide('pdf/index.html', 'en', ['/pdf-split/', '/image-to-pdf/', '/image/']);
+  assertGuide('zh/pdf/index.html', 'zh', ['/zh/pdf-split/', '/zh/image-to-pdf/', '/zh/image/']);
   assertMetadata('pdf/index.html', /PDF Merger/i, /merge PDF.*locally/i);
   assertMetadata('zh/pdf/index.html', /PDF.*合并/, /本地.*合并.*PDF/);
   const english = guideFor('pdf/index.html').text;
@@ -661,6 +661,29 @@ test('PDF pages document local page merging, limits, unsupported features and pr
   assert.match(chinese, /500.*页/);
   assert.match(chinese, /60 MiB/);
   assert.match(chinese, /45 秒/);
+  assert.match(chinese, /不会上传/);
+});
+
+test('PDF splitter documents range outputs, local processing, limits and privacy in both locales', () => {
+  assertGuide('pdf-split/index.html', 'en', ['/pdf/', '/image-to-pdf/', '/image/']);
+  assertGuide('zh/pdf-split/index.html', 'zh', ['/zh/pdf/', '/zh/image-to-pdf/', '/zh/image/']);
+  assertMetadata('pdf-split/index.html', /PDF Splitter.*Page Extractor/i, /split.*PDF.*browser/i);
+  assertMetadata('zh/pdf-split/index.html', /PDF.*拆分/, /浏览器.*PDF/);
+  const english = guideFor('pdf-split/index.html').text;
+  assert.match(english, /1-3, 5, 8-10/);
+  assert.match(english, /20.*ranges/);
+  assert.match(english, /500.*pages/);
+  assert.match(english, /60 MiB/);
+  assert.match(english, /45 seconds/);
+  assert.match(english, /password-protected/);
+  assert.match(english, /not uploaded/i);
+  const chinese = guideFor('zh/pdf-split/index.html').text;
+  assert.match(chinese, /1-3, 5, 8-10/);
+  assert.match(chinese, /20.*组/);
+  assert.match(chinese, /500.*页/);
+  assert.match(chinese, /60 MiB/);
+  assert.match(chinese, /45 秒/);
+  assert.match(chinese, /密码保护/);
   assert.match(chinese, /不会上传/);
 });
 
