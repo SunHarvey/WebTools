@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>PDF Page Editor: Rotate &amp; Delete Pages Locally | UtilCover</title>
+  <meta name="description" content="Rotate selected PDF pages or remove pages locally in your browser. Your PDF stays on your device and is never uploaded.">
+  <link rel="canonical" href="https://www.utilcover.com/pdf-page-editor/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/pdf-page-editor/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/pdf-page-editor/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/pdf-page-editor/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/pdf/pdf.css">
+  <link rel="stylesheet" href="/pdf-page-editor/pdf-page-editor.css">
+  <meta property="og:title" content="PDF Page Editor: Rotate &amp; Delete Pages | UtilCover">
+  <meta property="og:description" content="Rotate selected PDF pages or remove pages locally. No upload or account required.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/pdf-page-editor/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/pdf-page-editor/#application",
+      "name": "PDF Page Editor",
+      "url": "https://www.utilcover.com/pdf-page-editor/",
+      "description": "Rotate selected PDF pages or remove pages locally in your browser. Your PDF stays on your device and is never uploaded.",
+      "inLanguage": "en",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/pdf-page-editor/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tools",
+          "item": "https://www.utilcover.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "PDF Page Editor",
+          "item": "https://www.utilcover.com/pdf-page-editor/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="Primary navigation"><div class="brand-cluster"><a class="brand" href="/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">Processed locally — never uploaded</span></div><div class="platform-nav nav-links"><a href="/#popular-tools">Tools</a><a href="/#categories">Categories</a><a href="/privacy/">Privacy</a><a href="/about/">About</a><button class="search-trigger" type="button" aria-label="Search tools">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/zh/pdf-page-editor/">中文</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>PDF Page Editor</h1><p>Rotate selected pages or remove pages from a PDF. Everything runs in this browser; your document is not uploaded.</p></section>
+  <section class="tool-card pdf-card" aria-label="Local PDF page editor">
+    <p class="local-processing-note">Your PDF stays in this browser. It is not uploaded, saved to browser storage, or added to recent-tool history.</p>
+    <div class="pdf-workspace">
+      <div class="field pdf-picker"><label for="pdfPageFile">PDF file</label><div class="file-picker-row"><input class="file-input-native" id="pdfPageFile" type="file" accept="application/pdf,.pdf" aria-describedby="pdfPageFileHelp"><label class="button-link secondary file-picker-button" for="pdfPageFile">Choose PDF file</label></div><small id="pdfPageFileHelp">One PDF up to 25 MiB. Documents with more than 500 pages are not supported.</small></div>
+      <p id="pdfPageSummary" class="pdf-summary" aria-live="polite">Choose one PDF, select pages, and choose a local edit.</p>
+      <div class="pdf-page-editor-controls">
+        <div class="field"><label for="pdfPageSelection">Pages to edit</label><input id="pdfPageSelection" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="all or 1-3, 5" aria-describedby="pdfPageSelectionHelp"><small id="pdfPageSelectionHelp">Enter “all” or comma-separated page numbers/ranges, such as <code>1-3, 5</code>. Ranges cannot overlap.</small></div>
+        <div class="field"><label for="pdfPageAction">Action</label><select id="pdfPageAction"><option value="rotate-right">Rotate clockwise 90°</option><option value="rotate-left">Rotate counterclockwise 90°</option><option value="rotate-180">Rotate 180°</option><option value="delete">Delete selected pages</option></select><small>Rotations are applied relative to each page’s current orientation.</small></div>
+      </div>
+      <div class="pdf-actions"><button id="editPdfPages" type="button" disabled>Apply and create PDF</button><button id="clearPdfPageEdit" class="danger" type="button">Clear</button></div>
+      <p id="pdfPageStatus" class="status" role="status" aria-live="polite" data-state="ready">Choose one PDF, select pages, and choose a local edit.</p>
+      <a id="downloadEditedPdf" class="button secondary" hidden>Download edited PDF</a>
+      <small>Limits: one PDF up to 25 MiB and 500 pages, 20 ranges, 60 MiB output, and 45 seconds per edit. Password-protected PDFs are not supported.</small>
+    </div>
+  </section>
+  <section class="tool-guide" aria-labelledby="pdf-page-editor-guide-title">
+    <div class="guide-intro"><h2 id="pdf-page-editor-guide-title">Edit PDF pages privately in your browser</h2><p>Choose a page, a continuous page range, or all pages. Rotate pages clockwise or counterclockwise by 90 degrees, rotate them by 180 degrees, or delete the selected pages. The edited PDF is created locally in your browser using a same-origin worker and the site’s bundled PDF library.</p></div>
+    <div class="guide-section how-to"><h2>How to edit PDF pages</h2><ol class="steps"><li><strong>Select one PDF.</strong><span>The file is read locally. Password-protected PDFs and documents outside the published size or page limits are not supported.</span></li><li><strong>Select pages and an action.</strong><span>Enter <code>all</code> or page numbers/ranges such as <code>1-3, 5</code>. Choose a rotation or delete action; at least one page must remain.</span></li><li><strong>Apply and download.</strong><span>The tool creates one edited PDF named <code>edited.pdf</code>. The original file is not changed.</span></li></ol></div>
+    <div class="guide-section examples"><h2>Page-edit examples</h2><div class="example-grid"><article><h3>Rotate a scanned page</h3><p>Enter <code>4</code> and choose clockwise or counterclockwise 90° rotation to change page 4 only.</p></article><article><h3>Remove unwanted pages</h3><p>Enter <code>1, 8-10</code> and choose Delete selected pages. The remaining pages keep their original order.</p></article></div></div>
+    <div class="guide-section limitations"><h2>Supported files and limits</h2><p>This tool accepts one readable, unencrypted PDF up to 25 MiB and 500 pages. Page selection supports up to 20 non-overlapping ranges. The output is limited to 60 MiB and processing stops after 45 seconds. Deleting every page is not allowed.</p><p>Page numbers refer to the original PDF. Rotations add to each selected page’s existing orientation. When pages are deleted, the remaining pages keep their original order and receive new page numbers in the downloaded file. Separate ranges with commas; overlapping page selections are rejected.</p><p>Rewriting a PDF can invalidate digital signatures. This tool does not guarantee preservation of interactive forms, bookmarks, attachments, or document metadata. Review the edited file and keep the original.</p><p>File reading and page editing run locally in browser memory and a same-origin worker. The document is not sent to a server, third-party API, or CDN, and is not saved in browser storage or recent-tool history. Temporary file selection and download links are cleared when leaving the page or restoring it through browser history.</p></div>
+    <div class="guide-section faq-list"><h2>PDF page editor FAQ</h2><details><summary>Are my PDFs uploaded?</summary><p>No. File reading and page editing happen locally in this browser and its same-origin worker. PDF data is not sent to a server, third-party API, or CDN.</p></details><details><summary>Can I rotate only some pages?</summary><p>Yes. Enter individual page numbers and ranges, for example <code>2, 5-7</code>, then choose a rotation. Use <code>all</code> to select every page.</p></details><details><summary>Can I delete every page?</summary><p>No. At least one page must remain in the output PDF.</p></details><details><summary>Will a digital signature remain valid?</summary><p>No. Editing rewrites the PDF, which invalidates existing digital signatures. Keep the original if its signature matters.</p></details></div>
+    <nav class="related-tools" data-related-tools="pdf-page-editor" aria-label="Related tools"><h2>Related tools</h2><div class="related-links"><a href="/pdf/"><strong>PDF Merger</strong><span>Merge PDF pages in your chosen order locally; no upload or account.</span></a><a href="/pdf-split/"><strong>PDF Splitter &amp; Page Extractor</strong><span>Split a PDF into page-range files locally; no upload.</span></a><a href="/image-to-pdf/"><strong>JPG &amp; PNG to PDF</strong><span>Turn ordered JPG and PNG images into an A4 PDF locally; no upload.</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/licenses/">Licenses</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · Private, fast, client-side utilities</p></footer>
+<script src="/pdf/pdf-page-editor-engine.js"></script><script src="/pdf-page-editor/pdf-page-editor-tool.js"></script><script src="/pdf-page-editor/pdf-page-editor-app.js"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

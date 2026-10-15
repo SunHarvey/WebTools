@@ -97,7 +97,7 @@ function renderHeaders(routeSources) {
     return [
       headerPattern(route),
       '  ! Content-Security-Policy',
-      `  Content-Security-Policy: ${csp(hash, route === '/regex/' || route === '/zh/regex/' || route === '/pdf/' || route === '/zh/pdf/' || route === '/image-to-pdf/' || route === '/zh/image-to-pdf/' || route === '/pdf-split/' || route === '/zh/pdf-split/')}`
+      `  Content-Security-Policy: ${csp(hash, route === '/regex/' || route === '/zh/regex/' || route === '/pdf/' || route === '/zh/pdf/' || route === '/image-to-pdf/' || route === '/zh/image-to-pdf/' || route === '/pdf-split/' || route === '/zh/pdf-split/' || route === '/pdf-page-editor/' || route === '/zh/pdf-page-editor/')}`
     ].join('\n');
   }).join('\n\n');
   const previewHeaders = [

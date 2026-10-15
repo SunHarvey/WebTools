@@ -634,8 +634,8 @@ test('calculator pages explain immediate basic arithmetic and input limits witho
 });
 
 test('PDF pages document local page merging, limits, unsupported features and privacy in both locales', () => {
-  assertGuide('pdf/index.html', 'en', ['/pdf-split/', '/image-to-pdf/', '/image/']);
-  assertGuide('zh/pdf/index.html', 'zh', ['/zh/pdf-split/', '/zh/image-to-pdf/', '/zh/image/']);
+  assertGuide('pdf/index.html', 'en', ['/pdf-page-editor/', '/pdf-split/', '/image-to-pdf/']);
+  assertGuide('zh/pdf/index.html', 'zh', ['/zh/pdf-page-editor/', '/zh/pdf-split/', '/zh/image-to-pdf/']);
   assertMetadata('pdf/index.html', /PDF Merger/i, /merge PDF.*locally/i);
   assertMetadata('zh/pdf/index.html', /PDF.*合并/, /本地.*合并.*PDF/);
   const english = guideFor('pdf/index.html').text;
@@ -665,8 +665,8 @@ test('PDF pages document local page merging, limits, unsupported features and pr
 });
 
 test('PDF splitter documents range outputs, local processing, limits and privacy in both locales', () => {
-  assertGuide('pdf-split/index.html', 'en', ['/pdf/', '/image-to-pdf/', '/image/']);
-  assertGuide('zh/pdf-split/index.html', 'zh', ['/zh/pdf/', '/zh/image-to-pdf/', '/zh/image/']);
+  assertGuide('pdf-split/index.html', 'en', ['/pdf/', '/pdf-page-editor/', '/image-to-pdf/']);
+  assertGuide('zh/pdf-split/index.html', 'zh', ['/zh/pdf/', '/zh/pdf-page-editor/', '/zh/image-to-pdf/']);
   assertMetadata('pdf-split/index.html', /PDF Splitter.*Page Extractor/i, /split.*PDF.*browser/i);
   assertMetadata('zh/pdf-split/index.html', /PDF.*拆分/, /浏览器.*PDF/);
   const english = guideFor('pdf-split/index.html').text;
@@ -685,6 +685,17 @@ test('PDF splitter documents range outputs, local processing, limits and privacy
   assert.match(chinese, /45 秒/);
   assert.match(chinese, /密码保护/);
   assert.match(chinese, /不会上传/);
+});
+
+test('PDF page editor documents local rotation and deletion, limitations, and privacy in both locales', () => {
+  assertGuide('pdf-page-editor/index.html', 'en', ['/pdf/', '/pdf-split/', '/image-to-pdf/']);
+  assertGuide('zh/pdf-page-editor/index.html', 'zh', ['/zh/pdf/', '/zh/pdf-split/', '/zh/image-to-pdf/']);
+  assertMetadata('pdf-page-editor/index.html', /PDF Page Editor.*Rotate.*Delete/i, /rotate.*remove.*locally/i);
+  assertMetadata('zh/pdf-page-editor/index.html', /PDF.*页面编辑器/, /浏览器.*本地.*旋转.*删除/);
+  const english = guideFor('pdf-page-editor/index.html').text;
+  for (const phrase of [/clockwise or counterclockwise/i, /180 degrees/i, /delete the selected pages/i, /at least one page must remain/i, /25 MiB/, /500 pages/, /20 non-overlapping ranges/, /60 MiB/, /45 seconds/, /digital signatures/i, /interactive forms/, /bookmarks.*attachments/i, /third-party API,? or CDN/i, /recent-tool history/i]) assert.match(english, phrase);
+  const chinese = guideFor('zh/pdf-page-editor/index.html').text;
+  for (const phrase of [/顺时针.*逆时针/, /180°|180 度/, /删除所选页面/, /至少保留一页/, /25 MiB/, /500.*页/, /20.*范围/, /60 MiB/, /45 秒/, /数字签名/, /交互式表单/, /书签.*附件/, /第三方 API.*CDN/, /最近使用工具/]) assert.match(chinese, phrase);
 });
 
 test('shared tool-guide styles are responsive and keyboard accessible', () => {

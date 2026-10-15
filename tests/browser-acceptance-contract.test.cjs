@@ -31,13 +31,14 @@ test('browser acceptance covers every required EN and ZH mobile route', () => {
     '/pdf/', '/zh/pdf/',
     '/image-to-pdf/', '/zh/image-to-pdf/',
     '/pdf-split/', '/zh/pdf-split/',
+    '/pdf-page-editor/', '/zh/pdf-page-editor/',
   ]);
 });
 
 test('browser acceptance exercises all privacy-critical tools', () => {
   const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
   assert.deepEqual(Object.keys(acceptance.PRIVACY_FLOWS), [
-    '/pdf-split/', '/zh/pdf-split/', '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/', '/yaml/', '/zh/yaml/', '/xml/', '/zh/xml/', '/csv/', '/zh/csv/', '/sql/', '/zh/sql/', '/pdf/', '/zh/pdf/', '/image-to-pdf/', '/zh/image-to-pdf/',
+    '/pdf-split/', '/zh/pdf-split/', '/pdf-page-editor/', '/zh/pdf-page-editor/', '/json/', '/password/', '/image/', '/hash/', '/jwt/', '/text-diff/', '/zh/text-diff/', '/regex/', '/zh/regex/', '/cron/', '/zh/cron/', '/yaml/', '/zh/yaml/', '/xml/', '/zh/xml/', '/csv/', '/zh/csv/', '/sql/', '/zh/sql/', '/pdf/', '/zh/pdf/', '/image-to-pdf/', '/zh/image-to-pdf/',
   ]);
 });
 
@@ -181,6 +182,20 @@ test('browser acceptance splits PDFs locally with range, lifecycle, history, and
   assert.match(source, /pdfSplitHistory/);
   assert.match(source, /split-private-sentinel/);
   assert.match(source, /permittedPdfSplitAssets/);
+});
+
+test('browser acceptance edits PDF pages locally with lifecycle, history, output and bilingual mobile checks', () => {
+  const acceptance = require(path.join(root, 'scripts/browser-acceptance.cjs'));
+  assert.deepEqual(acceptance.PDF_PAGE_EDITOR_ROUTES, ['/pdf-page-editor/', '/zh/pdf-page-editor/']);
+  assert.equal(acceptance.PDF_PAGE_EDITOR_MOBILE_WIDTH, 320);
+  for (const route of acceptance.PDF_PAGE_EDITOR_ROUTES) assert.ok(acceptance.PRIVACY_FLOWS[route]);
+  const source = fs.readFileSync(path.join(root, 'scripts/browser-acceptance.cjs'), 'utf8');
+  assert.match(source, /did not rotate selected PDF pages locally/);
+  assert.match(source, /did not delete selected PDF pages locally/);
+  assert.match(source, /pdfPageEditorLifecycle/);
+  assert.match(source, /pdfPageEditorHistory/);
+  assert.match(source, /permittedPdfPageEditorAssets/);
+  assert.match(source, /edited\.pdf/);
 });
 
 test('package exposes the durable browser acceptance command', () => {

@@ -25,6 +25,7 @@ const TOOLS = [
   { id: 'sql', icon: 'SQL', category: 'developer', popular: false, recordRecent: false, name: { en: 'SQL Formatter & Minifier', zh: 'SQL 格式化与压缩工具' }, description: { en: 'Format and compact PostgreSQL, MySQL, and SQLite SQL locally; no execution or upload.', zh: '在本地格式化并压缩 PostgreSQL、MySQL 与 SQLite SQL；不会执行或上传。' }, keywords: ['sql', 'formatter', 'minifier', 'postgresql', 'mysql', 'sqlite', 'query', 'database'] },
   { id: 'pdf', icon: 'PDF', category: 'developer', popular: false, recordRecent: false, name: { en: 'PDF Merger', zh: 'PDF 合并工具' }, description: { en: 'Merge PDF pages in your chosen order locally; no upload or account.', zh: '按照所选顺序在本地合并 PDF 页面；无需上传或账户。' }, keywords: ['pdf', 'merge', 'join', 'combine', 'pages', 'document'] },
   { id: 'image-to-pdf', icon: 'JPG→PDF', category: 'design', popular: false, recordRecent: false, name: { en: 'JPG & PNG to PDF', zh: 'JPG、PNG 转 PDF' }, description: { en: 'Turn ordered JPG and PNG images into an A4 PDF locally; no upload.', zh: '在本地按顺序将 JPG、PNG 图片转换为 A4 PDF；不会上传。' }, keywords: ['image to pdf', 'jpg to pdf', 'jpeg to pdf', 'png to pdf', 'convert images', 'photo to pdf'] },
+  { id: 'pdf-page-editor', icon: 'PDF↻', category: 'developer', popular: false, recordRecent: false, name: { en: 'PDF Page Editor', zh: 'PDF 页面编辑器' }, description: { en: 'Rotate or remove selected PDF pages locally; no upload.', zh: '在本地旋转或删除所选 PDF 页面；不会上传。' }, keywords: ['pdf page editor', 'rotate pdf', 'rotate pages', 'delete pdf pages', 'remove pages', 'pdf rotate', 'pdf edit', '旋转 PDF', '删除页面'] },
   { id: 'pdf-split', icon: 'PDF↘', category: 'developer', popular: false, recordRecent: false, name: { en: 'PDF Splitter & Page Extractor', zh: 'PDF 拆分与页面提取' }, description: { en: 'Split a PDF into page-range files locally; no upload.', zh: '在本地按页码范围拆分 PDF；不会上传。' }, keywords: ['pdf split', 'split pdf', 'extract pages', 'page range', 'pdf splitter', '拆分 PDF', '提取页面'] },
 ];
 
@@ -49,9 +50,10 @@ const RELATED_TOOLS = {
   xml: ['json', 'yaml', 'text-diff'],
   csv: ['json', 'yaml', 'xml'],
   sql: ['json', 'csv', 'yaml'],
-  pdf: ['pdf-split', 'image-to-pdf', 'image'],
-  'image-to-pdf': ['image', 'pdf', 'qr'],
-  'pdf-split': ['pdf', 'image-to-pdf', 'image'],
+  pdf: ['pdf-page-editor', 'pdf-split', 'image-to-pdf'],
+  'image-to-pdf': ['image', 'pdf-page-editor', 'pdf-split'],
+  'pdf-page-editor': ['pdf', 'pdf-split', 'image-to-pdf'],
+  'pdf-split': ['pdf', 'pdf-page-editor', 'image-to-pdf'],
 };
 
 function toolPath(tool, language = 'en') { return `${language === 'zh' ? '/zh' : ''}/${tool.id}/`; }

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#08111f">
+  <title>PDF 页面编辑器：本地旋转与删除页面 | UtilCover</title>
+  <meta name="description" content="在浏览器本地旋转 PDF 页面或删除页面。PDF 保留在你的设备上，不会上传。">
+  <link rel="canonical" href="https://www.utilcover.com/zh/pdf-page-editor/">
+  <link rel="alternate" hreflang="en" href="https://www.utilcover.com/pdf-page-editor/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.utilcover.com/zh/pdf-page-editor/">
+  <link rel="alternate" hreflang="x-default" href="https://www.utilcover.com/pdf-page-editor/">
+  <link rel="stylesheet" href="/shared/tools.css">
+  <link rel="stylesheet" href="/pdf/pdf.css">
+  <link rel="stylesheet" href="/pdf-page-editor/pdf-page-editor.css">
+  <meta property="og:title" content="PDF 页面编辑器：旋转与删除页面 | UtilCover">
+  <meta property="og:description" content="在浏览器本地旋转所选 PDF 页面或删除页面。无需上传或注册。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.utilcover.com/zh/pdf-page-editor/">
+  <meta property="og:image" content="https://www.utilcover.com/images/og-image.jpg">
+  <script src="/shared/locale-redirect.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.utilcover.com/zh/pdf-page-editor/#application",
+      "name": "PDF 页面编辑器",
+      "url": "https://www.utilcover.com/zh/pdf-page-editor/",
+      "description": "在浏览器本地旋转 PDF 页面或删除页面。PDF 保留在你的设备上，不会上传。",
+      "inLanguage": "zh-CN",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.utilcover.com/zh/pdf-page-editor/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "工具",
+          "item": "https://www.utilcover.com/zh/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "PDF 页面编辑器",
+          "item": "https://www.utilcover.com/zh/pdf-page-editor/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body class="tool-directory-page">
+<header class="site-header"><nav class="nav-shell" aria-label="主导航"><div class="brand-cluster"><a class="brand" href="/zh/"><img src="/images/logo.svg" alt="UtilCover" width="178" height="44"></a><span class="nav-trust">仅在本地处理，不会上传</span></div><div class="platform-nav nav-links"><a href="/zh/#popular-tools">工具</a><a href="/zh/#categories">分类</a><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><button class="search-trigger" type="button" aria-label="搜索工具">⌕ <kbd>Ctrl K</kbd></button><a class="language-link" href="/pdf-page-editor/">English</a></div></nav></header>
+<main class="page-shell">
+  <section class="hero"><h1>PDF 页面编辑器</h1><p>旋转所选页面，或从 PDF 中删除页面。所有操作均在此浏览器本地完成，文档不会上传。</p></section>
+  <section class="tool-card pdf-card" aria-label="本地 PDF 页面编辑器">
+    <p class="local-processing-note">PDF 保留在当前浏览器中，不会上传、保存到浏览器存储或加入最近使用工具。</p>
+    <div class="pdf-workspace">
+      <div class="field pdf-picker"><label for="pdfPageFile">PDF 文件</label><div class="file-picker-row"><input class="file-input-native" id="pdfPageFile" type="file" accept="application/pdf,.pdf" aria-describedby="pdfPageFileHelp"><label class="button-link secondary file-picker-button" for="pdfPageFile">选择 PDF 文件</label></div><small id="pdfPageFileHelp">单个 PDF 最大 25 MiB；超过 500 页的文档不受支持。</small></div>
+      <p id="pdfPageSummary" class="pdf-summary" aria-live="polite">选择一个 PDF、指定页面，并选择要在本地执行的操作。</p>
+      <div class="pdf-page-editor-controls">
+        <div class="field"><label for="pdfPageSelection">要编辑的页面</label><input id="pdfPageSelection" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="all 或 1-3, 5" aria-describedby="pdfPageSelectionHelp"><small id="pdfPageSelectionHelp">输入“all”或用逗号分隔页码/范围，例如 <code>1-3, 5</code>。范围不能重叠。</small></div>
+        <div class="field"><label for="pdfPageAction">操作</label><select id="pdfPageAction"><option value="rotate-right">顺时针旋转 90°</option><option value="rotate-left">逆时针旋转 90°</option><option value="rotate-180">旋转 180°</option><option value="delete">删除所选页面</option></select><small>旋转角度会基于页面当前方向累加。</small></div>
+      </div>
+      <div class="pdf-actions"><button id="editPdfPages" type="button" disabled>应用并生成 PDF</button><button id="clearPdfPageEdit" class="danger" type="button">清除</button></div>
+      <p id="pdfPageStatus" class="status" role="status" aria-live="polite" data-state="ready">选择一个 PDF、指定页面，并选择要在本地执行的操作。</p>
+      <a id="downloadEditedPdf" class="button secondary" hidden>下载修改后的 PDF</a>
+      <small>限制：单个 PDF 最大 25 MiB、500 页；最多 20 组范围；输出最大 60 MiB；每次处理最多 45 秒。暂不支持受密码保护的 PDF。</small>
+    </div>
+  </section>
+  <section class="tool-guide" aria-labelledby="pdf-page-editor-guide-title">
+    <div class="guide-intro"><h2 id="pdf-page-editor-guide-title">在浏览器本地私密编辑 PDF 页面</h2><p>选择单页、连续页码范围或全部页面。你可以顺时针或逆时针旋转 90°、旋转 180°，也可以删除所选页面。修改后的 PDF 由当前浏览器、同源 Worker 和本站打包的 PDF 库在本地生成。</p></div>
+    <div class="guide-section how-to"><h2>如何编辑 PDF 页面</h2><ol class="steps"><li><strong>选择一个 PDF。</strong><span>文件将在本地读取。暂不支持受密码保护或超出页面/大小限制的文档。</span></li><li><strong>选择页面和操作。</strong><span>输入 <code>all</code> 或页码范围，例如 <code>1-3, 5</code>。选择旋转或删除；输出至少保留一页。</span></li><li><strong>应用并下载。</strong><span>点击“应用并生成 PDF”，即可下载名为 <code>edited.pdf</code> 的新文件。原文件不会被修改。</span></li></ol></div>
+    <div class="guide-section examples"><h2>页面编辑示例</h2><div class="example-grid"><article><h3>旋转扫描页面</h3><p>输入 <code>4</code> 并选择顺时针或逆时针旋转 90°，即可只旋转第 4 页。</p></article><article><h3>删除不需要的页面</h3><p>输入 <code>1, 8-10</code> 并选择“删除所选页面”。剩余页面保持原有顺序。</p></article></div></div>
+    <div class="guide-section limitations"><h2>支持的文件和限制</h2><p>支持单个可读取、未加密且不超过 25 MiB、500 页的 PDF。页码范围最多 20 组，不能重叠；输出最大 60 MiB，处理超过 45 秒会停止。不能删除全部页面。</p><p>页码以原始 PDF 为准。旋转角度会在每页当前方向上累加。删除页面后，其余页面仍保持原有顺序，并在下载的新文件中重新编号。多个范围请用逗号分隔；相交的页面范围会被拒绝。</p><p>重新写入 PDF 可能导致数字签名失效。本工具不保证保留交互式表单、书签、附件或文档元数据。请检查修改后的文件并保留原件。</p><p>文件读取和页面编辑均在浏览器内存及同源 Worker 中进行。文档不会发送到服务器、第三方 API 或 CDN，也不会保存到浏览器存储或最近使用工具列表。离开页面或通过浏览器历史返回时，会清除临时文件选择和下载链接。</p></div>
+    <div class="guide-section faq-list"><h2>PDF 页面编辑器常见问题</h2><details><summary>PDF 会上传吗？</summary><p>不会。文件读取和页面编辑在当前浏览器及同源 Worker 中完成，PDF 数据不会发送到服务器、第三方 API 或 CDN。</p></details><details><summary>可以只旋转部分页面吗？</summary><p>可以。输入页码或范围，例如 <code>2, 5-7</code>，再选择旋转方式。输入 <code>all</code> 可选择全部页面。</p></details><details><summary>可以删除所有页面吗？</summary><p>不可以，输出 PDF 至少要保留一页。</p></details><details><summary>数字签名会保持有效吗？</summary><p>不会。编辑操作会重新写入 PDF，因此已有数字签名会失效。如果签名有效性很重要，请保留原文件。</p></details></div>
+    <nav class="related-tools" data-related-tools="pdf-page-editor" aria-label="相关工具"><h2>相关工具</h2><div class="related-links"><a href="/zh/pdf/"><strong>PDF 合并工具</strong><span>按照所选顺序在本地合并 PDF 页面；无需上传或账户。</span></a><a href="/zh/pdf-split/"><strong>PDF 拆分与页面提取</strong><span>在本地按页码范围拆分 PDF；不会上传。</span></a><a href="/zh/image-to-pdf/"><strong>JPG、PNG 转 PDF</strong><span>在本地按顺序将 JPG、PNG 图片转换为 A4 PDF；不会上传。</span></a></div></nav>
+  </section>
+</main>
+<footer><nav class="footer-nav" aria-label="页脚导航"><a href="/zh/privacy/">隐私</a><a href="/zh/about/">关于</a><a href="/zh/contact/">联系</a><a href="/zh/licenses/">开源许可</a><a href="https://github.com/SunHarvey/WebTools" target="_blank" rel="noopener noreferrer">GitHub</a></nav><p>UtilCover · 私密、快速的浏览器本地工具</p></footer>
+<script src="/pdf/pdf-page-editor-engine.js"></script><script src="/pdf-page-editor/pdf-page-editor-tool.js"></script><script src="/pdf-page-editor/pdf-page-editor-app.js"></script><script src="/shared/tools-data.js"></script><script src="/shared/site.js"></script></body>
+</html>

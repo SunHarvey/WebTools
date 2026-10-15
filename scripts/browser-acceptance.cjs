@@ -20,6 +20,8 @@ const PDF_MOBILE_WIDTH = 320;
 const MAX_RENDERED_DETAILS = 1_000;
 const PDF_SPLIT_ROUTES = ['/pdf-split/', '/zh/pdf-split/'];
 const PDF_SPLIT_MOBILE_WIDTH = 320;
+const PDF_PAGE_EDITOR_ROUTES = ['/pdf-page-editor/', '/zh/pdf-page-editor/'];
+const PDF_PAGE_EDITOR_MOBILE_WIDTH = 320;
 const PDF_SPLIT_FIXTURE_SETUP = `
   const splitFixture = Uint8Array.from(atob('JVBERi0xLjcKJYGBgYEKCjEgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFsgNCAwIFIgNSAwIFIgNiAwIFIgXQovQ291bnQgMwo+PgplbmRvYmoKCjIgMCBvYmoKPDwKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDEgMCBSCj4+CmVuZG9iagoKNCAwIG9iago8PAovVHlwZSAvUGFnZQovUGFyZW50IDEgMCBSCi9SZXNvdXJjZXMgPDwKPj4KL01lZGlhQm94IFsgMCAwIDIwMCAzMDAgXQo+PgplbmRvYmoKCjUgMCBvYmoKPDwKL1R5cGUgL1BhZ2UKL1BhcmVudCAxIDAgUgovUmVzb3VyY2VzIDw8Cj4+Ci9NZWRpYUJveCBbIDAgMCA0MDAgNTAwIF0KPj4KZW5kb2JqCgo2IDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMSAwIFIKL1Jlc291cmNlcyA8PAo+PgovTWVkaWFCb3ggWyAwIDAgNTAwIDYwMCBdCj4+CmVuZG9iagoKNyAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvT2JqU3RtCi9OIDEKL0ZpcnN0IDQKL0xlbmd0aCAxNjEKPj4Kc3RyZWFtCnic1U+7DoIwFN37FR114tBCAUNIDNDNxNmNSAcXmzT4/57bOLjoznBy2/O4D6uh+14V1xTX1z0k3fvZe6AB4CrCAWZiHYmOMPxTMy3fRENPBrnGAvZMjXmBIykZ0bO3/uRnVnqdeNhbvJX0+54rs8RHQvS/+3SDKi5xnZYt6MN0MjCuRFmhra1xt6MqxhSWLe73uLz/Iz5/XjgM6g1D12KjCmVuZHN0cmVhbQplbmRvYmoKCjggMCBvYmoKPDwKL1NpemUgOQovUm9vdCAyIDAgUgovSW5mbyAzIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvWFJlZgovTGVuZ3RoIDQ0Ci9XIFsgMSAyIDIgXQovSW5kZXggWyAwIDkgXQo+PgpzdHJlYW0KeJxjYGD4/5+RQYCBgZEhgoGBiYEdxOoCEU+BBKMDiJgNJJgWMjAAAIjCBWYKZW5kc3RyZWFtCmVuZG9iagoKc3RhcnR4cmVmCjY3MwolJUVPRg=='), value => value.charCodeAt(0));
   const setPdfSplitFile = (bytes, name) => {
@@ -64,6 +66,70 @@ ${PDF_SPLIT_FIXTURE_SETUP}
   return {state:document.querySelector('#pdfSplitStatus').dataset.state,outputCount:document.querySelector('#pdfSplitOutputs').children.length};
 `;
 
+const PDF_PAGE_EDITOR_FIXTURE_SETUP = `${PDF_SPLIT_FIXTURE_SETUP}
+  const setPdfPageEditorFile = (bytes, name) => {
+    const transfer = new DataTransfer(); transfer.items.add(new File([bytes], name, { type: 'application/pdf' }));
+    const input = document.querySelector('#pdfPageFile'); input.files = transfer.files;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+`;
+const PDF_PAGE_EDITOR_PRIVACY_FLOW = `
+${PDF_PAGE_EDITOR_FIXTURE_SETUP}
+  const revoked = []; const originalRevoke = URL.revokeObjectURL;
+  URL.revokeObjectURL = function (url) { revoked.push(url); return originalRevoke.call(this, url); };
+  const configure = (selection, action) => {
+    const pages = document.querySelector('#pdfPageSelection'); pages.value = selection; pages.dispatchEvent(new Event('input', { bubbles: true }));
+    const operation = document.querySelector('#pdfPageAction'); operation.value = action; operation.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+  setPdfPageEditorFile(splitFixture, 'page-editor-private-sentinel.pdf');
+  configure('2', 'rotate-right');
+  const rotateStarted = performance.now(); document.querySelector('#editPdfPages').click();
+  for (let i=0;i<1200&&document.querySelector('#pdfPageStatus').dataset.state==='working';i++) await new Promise(resolve=>setTimeout(resolve,25));
+  const rotation = { state: document.querySelector('#pdfPageStatus').dataset.state, message: document.querySelector('#pdfPageStatus').textContent,
+    action: document.querySelector('#downloadEditedPdf').dataset.action, pageCount: Number(document.querySelector('#downloadEditedPdf').dataset.pageCount),
+    downloadName: document.querySelector('#downloadEditedPdf').download, blob: document.querySelector('#downloadEditedPdf').href.startsWith('blob:'),
+    visible: !document.querySelector('#downloadEditedPdf').hidden, elapsed: performance.now()-rotateStarted };
+  configure('4', 'rotate-left'); document.querySelector('#editPdfPages').click();
+  for (let i=0;i<1200&&document.querySelector('#pdfPageStatus').dataset.state==='working';i++) await new Promise(resolve=>setTimeout(resolve,25));
+  const invalidRange = { state: document.querySelector('#pdfPageStatus').dataset.state, message: document.querySelector('#pdfPageStatus').textContent,
+    hasDownload: !document.querySelector('#downloadEditedPdf').hidden };
+  configure('2', 'delete');
+  const deleteStarted = performance.now(); document.querySelector('#editPdfPages').click();
+  for (let i=0;i<1200&&document.querySelector('#pdfPageStatus').dataset.state==='working';i++) await new Promise(resolve=>setTimeout(resolve,25));
+  const deletion = { state: document.querySelector('#pdfPageStatus').dataset.state, message: document.querySelector('#pdfPageStatus').textContent,
+    action: document.querySelector('#downloadEditedPdf').dataset.action, pageCount: Number(document.querySelector('#downloadEditedPdf').dataset.pageCount),
+    downloadName: document.querySelector('#downloadEditedPdf').download, blob: document.querySelector('#downloadEditedPdf').href.startsWith('blob:'),
+    visible: !document.querySelector('#downloadEditedPdf').hidden, elapsed: performance.now()-deleteStarted };
+  configure('all', 'delete'); document.querySelector('#editPdfPages').click();
+  for (let i=0;i<1200&&document.querySelector('#pdfPageStatus').dataset.state==='working';i++) await new Promise(resolve=>setTimeout(resolve,25));
+  const deleteAll = { state: document.querySelector('#pdfPageStatus').dataset.state, message: document.querySelector('#pdfPageStatus').textContent,
+    hasDownload: !document.querySelector('#downloadEditedPdf').hidden };
+  window.dispatchEvent(new Event('pagehide'));
+  const snapshot=()=>({inputFiles:document.querySelector('#pdfPageFile').files.length,summary:document.querySelector('#pdfPageSummary').textContent,
+    selection:document.querySelector('#pdfPageSelection').value,action:document.querySelector('#pdfPageAction').value,
+    downloadHidden:document.querySelector('#downloadEditedPdf').hidden,hasDownloadHref:document.querySelector('#downloadEditedPdf').hasAttribute('href'),
+    state:document.querySelector('#pdfPageStatus').dataset.state});
+  const afterPagehide=snapshot(); const persisted=new Event('pageshow');Object.defineProperty(persisted,'persisted',{value:true});window.dispatchEvent(persisted);
+  const afterPersistedPageshow=snapshot(); URL.revokeObjectURL=originalRevoke;
+  setPdfPageEditorFile(new TextEncoder().encode('not a PDF'), 'page-editor-private-sentinel.pdf');
+  configure('1', 'rotate-right'); document.querySelector('#editPdfPages').click();
+  for (let i=0;i<100&&document.querySelector('#pdfPageStatus').dataset.state==='working';i++) await new Promise(resolve=>setTimeout(resolve,20));
+  const invalidFile={state:document.querySelector('#pdfPageStatus').dataset.state,message:document.querySelector('#pdfPageStatus').textContent,hasDownload:!document.querySelector('#downloadEditedPdf').hidden};
+  document.querySelector('#clearPdfPageEdit').click();
+  const storage={local:Object.keys(localStorage),session:Object.keys(sessionStorage),cookies:document.cookie};
+  return {rotation,invalidRange,deletion,deleteAll,afterPagehide,afterPersistedPageshow,revokedCount:revoked.length,invalidFile,cleared:snapshot(),storage};
+`;
+const PDF_PAGE_EDITOR_HISTORY_FLOW = `
+${PDF_PAGE_EDITOR_FIXTURE_SETUP}
+  const transfer = new DataTransfer(); transfer.items.add(new File([splitFixture], 'history-page-editor-secret.pdf', { type: 'application/pdf' }));
+  const input = document.querySelector('#pdfPageFile'); input.files = transfer.files; input.dispatchEvent(new Event('change', { bubbles: true }));
+  const selection=document.querySelector('#pdfPageSelection');selection.value='1';selection.dispatchEvent(new Event('input',{bubbles:true}));
+  const action=document.querySelector('#pdfPageAction');action.value='rotate-right';action.dispatchEvent(new Event('change',{bubbles:true}));
+  document.querySelector('#editPdfPages').click();
+  for(let i=0;i<1200&&document.querySelector('#pdfPageStatus').dataset.state==='working';i++) await new Promise(resolve=>setTimeout(resolve,25));
+  return {state:document.querySelector('#pdfPageStatus').dataset.state,visible:!document.querySelector('#downloadEditedPdf').hidden,pageCount:Number(document.querySelector('#downloadEditedPdf').dataset.pageCount)};
+`;
+
 const MOBILE_ROUTES = [
   '/', '/zh/',
   '/json/', '/zh/json/',
@@ -82,6 +148,7 @@ const MOBILE_ROUTES = [
   '/pdf/', '/zh/pdf/',
   '/image-to-pdf/', '/zh/image-to-pdf/',
   '/pdf-split/', '/zh/pdf-split/',
+  '/pdf-page-editor/', '/zh/pdf-page-editor/',
 ];
 const PASSWORD_RESULT_ROUTES = ['/password/', '/zh/password/'];
 const JWT_STORAGE_ROUTES = ['/jwt/', '/zh/jwt/'];
@@ -266,6 +333,8 @@ const SQL_PRIVACY_FLOW = `
 const PRIVACY_FLOWS = {
   '/pdf-split/': PDF_SPLIT_PRIVACY_FLOW,
   '/zh/pdf-split/': PDF_SPLIT_PRIVACY_FLOW,
+  '/pdf-page-editor/': PDF_PAGE_EDITOR_PRIVACY_FLOW,
+  '/zh/pdf-page-editor/': PDF_PAGE_EDITOR_PRIVACY_FLOW,
   '/json/': `
     const input = document.querySelector('#jsonInput');
     input.value = '{"local":true,"items":[1,2,3]}';
@@ -1017,6 +1086,17 @@ async function runAcceptance() {
     }
     await client.send('Emulation.clearDeviceMetricsOverride');
 
+    const pdfPageEditorMobile=[];
+    await client.send('Emulation.setDeviceMetricsOverride',{width:PDF_PAGE_EDITOR_MOBILE_WIDTH,height:700,deviceScaleFactor:1,mobile:true});
+    for(const route of PDF_PAGE_EDITOR_ROUTES){
+      await navigate(route);
+      const result=await evaluate(client,`return {viewport:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,inputVisible:document.querySelector('#pdfPageFile').getBoundingClientRect().width>0,selectionVisible:document.querySelector('#pdfPageSelection').getBoundingClientRect().width>0,actionVisible:document.querySelector('#pdfPageAction').getBoundingClientRect().width>0,editVisible:document.querySelector('#editPdfPages').getBoundingClientRect().width>0};`);
+      assert.ok(result.scrollWidth<=result.viewport+1,`${route} overflows at ${PDF_PAGE_EDITOR_MOBILE_WIDTH}px: ${result.scrollWidth}px > ${result.viewport}px`);
+      assert.equal(result.inputVisible,true,`${route} hides the PDF picker`);assert.equal(result.selectionVisible,true,`${route} hides page selection`);assert.equal(result.actionVisible,true,`${route} hides page actions`);assert.equal(result.editVisible,true,`${route} hides edit controls`);
+      pdfPageEditorMobile.push({route,...result});
+    }
+    await client.send('Emulation.clearDeviceMetricsOverride');
+
     const jwtStorage = [];
     for (const route of JWT_STORAGE_ROUTES) {
       await navigate('/');
@@ -1117,8 +1197,10 @@ async function runAcceptance() {
     const imagePdfPerformance=[];
     const pdfSplitLifecycle=[];
     const pdfSplitPerformance=[];
+    const pdfPageEditorLifecycle=[];
+    const pdfPageEditorPerformance=[];
     for (const [route, flow] of Object.entries(PRIVACY_FLOWS)) {
-      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route) || XML_ROUTES.includes(route) || CSV_ROUTES.includes(route) || SQL_ROUTES.includes(route) || PDF_ROUTES.includes(route) || IMAGE_PDF_ROUTES.includes(route) || PDF_SPLIT_ROUTES.includes(route)) {
+      if (TEXT_DIFF_ROUTES.includes(route) || REGEX_ROUTES.includes(route) || CRON_ROUTES.includes(route) || YAML_ROUTES.includes(route) || XML_ROUTES.includes(route) || CSV_ROUTES.includes(route) || SQL_ROUTES.includes(route) || PDF_ROUTES.includes(route) || IMAGE_PDF_ROUTES.includes(route) || PDF_SPLIT_ROUTES.includes(route) || PDF_PAGE_EDITOR_ROUTES.includes(route)) {
         await navigate('/');
         await evaluate(client, `
           localStorage.clear();
@@ -1133,6 +1215,7 @@ async function runAcceptance() {
       if (PDF_ROUTES.includes(route)) await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
       if (IMAGE_PDF_ROUTES.includes(route)) await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
       if (PDF_SPLIT_ROUTES.includes(route)) await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+      if (PDF_PAGE_EDITOR_ROUTES.includes(route)) await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
       await navigate(route);
       const result = await evaluate(client, flow);
       if (route === '/json/') assert.match(result.status, /Valid JSON/i, 'JSON privacy flow did not finish');
@@ -1459,6 +1542,39 @@ async function runAcceptance() {
         pdfSplitPerformance.push({route,elapsed:result.success.elapsed,outputCount:result.success.outputCount,pageCounts:result.success.pageCounts});
         await client.send('Emulation.setCPUThrottlingRate',{rate:1});
       }
+      if (PDF_PAGE_EDITOR_ROUTES.includes(route)) {
+        assert.equal(result.rotation.state,'success',`did not rotate selected PDF pages locally on ${route}: ${result.rotation.message}`);
+        assert.equal(result.rotation.action,'rotate-right',`${route} returned the wrong rotation action`);
+        assert.equal(result.rotation.pageCount,3,`${route} changed the page count during rotation`);
+        assert.equal(result.rotation.downloadName,'edited.pdf',`${route} exposed an unexpected output name`);
+        assert.equal(result.rotation.blob,true,`${route} did not create a local rotation download`);
+        assert.equal(result.rotation.visible,true,`${route} hid the rotated PDF`);
+        assert.equal(result.invalidRange.state,'error',`${route} accepted a page outside the document`);
+        assert.equal(result.invalidRange.hasDownload,false,`${route} exposed output for an invalid page range`);
+        assert.doesNotMatch(result.invalidRange.message,/page-editor-private-sentinel/i,`${route} echoed a filename in a range error`);
+        assert.equal(result.deletion.state,'success',`did not delete selected PDF pages locally on ${route}: ${result.deletion.message}`);
+        assert.equal(result.deletion.action,'delete',`${route} returned the wrong deletion action`);
+        assert.equal(result.deletion.pageCount,2,`${route} did not remove exactly one page`);
+        assert.equal(result.deletion.downloadName,'edited.pdf',`${route} exposed an unexpected deletion output name`);
+        assert.equal(result.deletion.blob,true,`${route} did not create a local deletion download`);
+        assert.equal(result.deletion.visible,true,`${route} hid the edited PDF`);
+        assert.equal(result.deleteAll.state,'error',`${route} allowed deletion of every page`);
+        assert.equal(result.deleteAll.hasDownload,false,`${route} exposed output after rejecting an empty PDF`);
+        const empty={inputFiles:0,summary:route.startsWith('/zh/')?'选择一个 PDF、指定页面，并选择要在本地执行的操作。':'Choose one PDF, select pages, and choose a local edit.',selection:'',action:'rotate-right',downloadHidden:true,hasDownloadHref:false,state:'ready'};
+        assert.deepEqual(result.afterPagehide,empty,`${route} retained page-edit state after pagehide`);
+        assert.deepEqual(result.afterPersistedPageshow,empty,`${route} restored page-edit state from BFCache`);
+        assert.equal(result.revokedCount,2,`${route} did not revoke every temporary edited-PDF URL`);
+        assert.equal(result.invalidFile.state,'error',`${route} accepted malformed PDF bytes`);
+        assert.equal(result.invalidFile.hasDownload,false,`${route} retained stale output after invalid PDF`);
+        assert.doesNotMatch(result.invalidFile.message,/page-editor-private-sentinel/i,`${route} echoed a filename in an error`);
+        assert.deepEqual(result.cleared,empty,`${route} did not clear page selection and output`);
+        assert.deepEqual(result.storage,{local:[],session:[],cookies:''},`${route} stored PDF data or recent-tool history`);
+        assert.ok(result.rotation.elapsed<5_000,`${route} rotation took ${result.rotation.elapsed} ms under 4x CPU throttling`);
+        assert.ok(result.deletion.elapsed<5_000,`${route} deletion took ${result.deletion.elapsed} ms under 4x CPU throttling`);
+        pdfPageEditorLifecycle.push({route,afterPagehide:result.afterPagehide,afterPersistedPageshow:result.afterPersistedPageshow,revokedCount:result.revokedCount});
+        pdfPageEditorPerformance.push({route,rotationMs:result.rotation.elapsed,deletionMs:result.deletion.elapsed,rotatedPageCount:result.rotation.pageCount,remainingPages:result.deletion.pageCount});
+        await client.send('Emulation.setCPUThrottlingRate',{rate:1});
+      }
       await wait(100);
       const networkRequests = requests.filter(request => /^https?:\/\//i.test(request.url));
       const permittedRegexAssets = REGEX_ROUTES.includes(route)
@@ -1492,7 +1608,11 @@ async function runAcceptance() {
         ? networkRequests.filter(request=>{const url=new URL(request.url);return request.method==='GET'&&request.postData===''&&url.origin===`http://127.0.0.1:${sitePort}`&&url.search===''&&
           ['/pdf-split/pdf-split-worker.js','/pdf/pdf-split-engine.js','/pdf/vendor/pdf-lib.min.js'].includes(url.pathname);})
         : [];
-      const permittedAssets = [...permittedRegexAssets, ...permittedPdfAssets, ...permittedImagePdfAssets, ...permittedPdfSplitAssets];
+      const permittedPdfPageEditorAssets=PDF_PAGE_EDITOR_ROUTES.includes(route)
+        ? networkRequests.filter(request=>{const url=new URL(request.url);return request.method==='GET'&&request.postData===''&&url.origin===`http://127.0.0.1:${sitePort}`&&url.search===''&&
+          ['/pdf-page-editor/pdf-page-editor-worker.js','/pdf/pdf-page-editor-engine.js','/pdf/vendor/pdf-lib.min.js'].includes(url.pathname);})
+        : [];
+      const permittedAssets = [...permittedRegexAssets, ...permittedPdfAssets, ...permittedImagePdfAssets, ...permittedPdfSplitAssets, ...permittedPdfPageEditorAssets];
       const disallowedRequests = networkRequests.filter(request => !permittedAssets.includes(request));
       const unexpected = networkRequests.filter(request => {
         try { return new URL(request.url).origin !== `http://127.0.0.1:${sitePort}`; }
@@ -2005,6 +2125,19 @@ async function runAcceptance() {
       assert.doesNotMatch(JSON.stringify(result),/history-split-secret/);pdfSplitHistory.push({route,...result});
     }
 
+    const pdfPageEditorHistory=[];
+    for(const route of PDF_PAGE_EDITOR_ROUTES){
+      await navigate(route);const processed=await evaluate(client,PDF_PAGE_EDITOR_HISTORY_FLOW);
+      assert.equal(processed.state,'success',`${route} failed before history verification`);assert.equal(processed.visible,true);assert.equal(processed.pageCount,3);
+      await navigate('/about/');await evaluate(client,'history.back();return true;');let restored=false;
+      for(let attempt=0;attempt<40;attempt++){await wait(50);restored=await evaluate(client,`return location.pathname==='${route}'&&document.readyState==='complete'&&Boolean(document.querySelector('#pdfPageFile'));`);if(restored)break;}
+      assert.equal(restored,true,`${route} did not return through browser history`);
+      const result=await evaluate(client,`return {inputFiles:document.querySelector('#pdfPageFile').files.length,summary:document.querySelector('#pdfPageSummary').textContent,selection:document.querySelector('#pdfPageSelection').value,action:document.querySelector('#pdfPageAction').value,downloadHidden:document.querySelector('#downloadEditedPdf').hidden,hasDownloadHref:document.querySelector('#downloadEditedPdf').hasAttribute('href'),state:document.querySelector('#pdfPageStatus').dataset.state,storage:{local:Object.keys(localStorage),session:Object.keys(sessionStorage),cookies:document.cookie}};`);
+      const empty={inputFiles:0,summary:route.startsWith('/zh/')?'选择一个 PDF、指定页面，并选择要在本地执行的操作。':'Choose one PDF, select pages, and choose a local edit.',selection:'',action:'rotate-right',downloadHidden:true,hasDownloadHref:false,state:'ready',storage:{local:[],session:[],cookies:''}};
+      assert.deepEqual(result,empty,`${route} restored edited PDF or page selection from browser history`);
+      assert.doesNotMatch(JSON.stringify(result),/history-page-editor-secret/);pdfPageEditorHistory.push({route,...result});
+    }
+
     const csvLifecycle = [];
     for (const route of CSV_ROUTES) {
       await navigate(route);
@@ -2351,10 +2484,13 @@ async function runAcceptance() {
       pdfMobile,
       imagePdfMobile,
       pdfSplitMobile,
+      pdfPageEditorMobile,
       imagePdfLifecycle,
       imagePdfPerformance,
       pdfSplitLifecycle,
       pdfSplitPerformance,
+      pdfPageEditorLifecycle,
+      pdfPageEditorPerformance,
       jwtStorage,
       textDiffNavigation,
       textDiffHistory,
@@ -2370,6 +2506,7 @@ async function runAcceptance() {
       pdfHistory,
       imagePdfHistory,
       pdfSplitHistory,
+      pdfPageEditorHistory,
       csvLifecycle,
       sqlLifecycle,
       pdfLifecycle,
@@ -2409,7 +2546,7 @@ async function runAcceptance() {
 }
 
 module.exports = {
-  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, XML_ROUTES, XML_MOBILE_WIDTH, CSV_ROUTES, CSV_MOBILE_WIDTH, SQL_ROUTES, SQL_MOBILE_WIDTH, PDF_ROUTES, PDF_MOBILE_WIDTH, IMAGE_PDF_ROUTES, IMAGE_PDF_MOBILE_WIDTH, PDF_SPLIT_ROUTES, PDF_SPLIT_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
+  CDP_TIMEOUT_MS, MOBILE_ROUTES, PASSWORD_RESULT_ROUTES, JWT_STORAGE_ROUTES, TEXT_DIFF_ROUTES, REGEX_ROUTES, CRON_ROUTES, YAML_ROUTES, YAML_MOBILE_WIDTH, XML_ROUTES, XML_MOBILE_WIDTH, CSV_ROUTES, CSV_MOBILE_WIDTH, SQL_ROUTES, SQL_MOBILE_WIDTH, PDF_ROUTES, PDF_MOBILE_WIDTH, IMAGE_PDF_ROUTES, IMAGE_PDF_MOBILE_WIDTH, PDF_SPLIT_ROUTES, PDF_SPLIT_MOBILE_WIDTH, PDF_PAGE_EDITOR_ROUTES, PDF_PAGE_EDITOR_MOBILE_WIDTH, PRIVACY_FLOWS, CdpClient,
   runAcceptance, startStaticServer, stopBrowser, stopServer, browserBinary,
 };
 

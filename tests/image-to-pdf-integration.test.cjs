@@ -14,7 +14,7 @@ test('registers the image-to-PDF tool as a bilingual local-only route',()=>{
   const tool=findTool('image-to-pdf');assert.ok(tool);assert.equal(tool.category,'design');assert.equal(tool.recordRecent,false);
   assert.equal(tool.name.en,'JPG & PNG to PDF');assert.equal(tool.name.zh,'JPG、PNG 转 PDF');
   assert.match(tool.description.en,/locally/);assert.match(tool.description.zh,/本地/);
-  assert.deepEqual(RELATED_TOOLS['image-to-pdf'],['image','pdf','qr']);
+  assert.deepEqual(RELATED_TOOLS['image-to-pdf'],['image','pdf-page-editor','pdf-split']);
   assert.ok(routes.includes('/image-to-pdf/'));assert.ok(routes.includes('/zh/image-to-pdf/'));
   for(const file of ['image-to-pdf/image-pdf-engine.js','image-to-pdf/image-pdf-tool.js','image-to-pdf/image-pdf-app.js','image-to-pdf/image-pdf-worker.js'])assert.ok(pkg.scripts['check:js'].includes(`node --check ${file}`));
 });
